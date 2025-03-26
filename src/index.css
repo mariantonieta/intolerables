@@ -1,0 +1,24 @@
+:root {
+ --color-1: #FCE5C5;
+ --color-2: #2E1A47;
+ --color-3: #6CD34E;
+ --color-4: #F0532B;
+ --color-5: #FFAA33;
+ --color-6: #9E90D2;
+ --font-size: inherit;
+}
+html,
+body {
+  scroll-behavior: smooth;
+  height: 100dvh;
+  min-width: 390px;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size);
+  background: var(--color-1); 
+  color: var(--color-2);
+}
+a{
+  text-decoration: none;
+
+}
