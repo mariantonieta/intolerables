@@ -1,0 +1,71 @@
+.container{
+    text-align: center;
+    min-width: 100vh;
+    padding: 20px;
+    position: relative;
+
+}
+.buscador-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+#comida, #ubicacion{
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+}
+.buscar-btn{
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+.buscar-btn:hover {
+    background-color: #6d4c41;
+    border-radius: 20px;
+  }
+  
+h1{
+    color: var(--color-3);
+
+}
+#buscador{
+    background-color: transparent;
+    border:2px solid var(--color-3);
+    border-radius: 10px;
+    
+}
+.contenido{
+    position: absolute;
+    top: 250px; /* Asegura que las tarjetas comiencen desde arriba */
+    left: 50%;
+    transform: translateX(-50%); /* Centra las tarjetas */
+    width: 90%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 0; /* Asegura que las tarjetas estén sobre el mapa */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+.mapa-container{
+position: relative;
+top: 0;
+left: 0;
+
+height: 600px;
+z-index: 0;
+}
