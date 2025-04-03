@@ -11,7 +11,7 @@
   position: relative;
   top: 0;
   left: 0;
-  height: 400px; /* Aumenta la altura del mapa */
+  height: 800px; /* Aumenta la altura del mapa */
   width: 100%; /* Asegura que ocupe todo el ancho */
   z-index: 0; 
 }
@@ -23,6 +23,6 @@
 
 @media (max-width: 480px) {
   .mapa {
-    height: 40vh;
+    height: 50vh;
   }
 }

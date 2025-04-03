@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <>
     <Naviagation />
-<div className="home-content">
+<div className="container">
     
       <h1 className="center-text">ENCUENTRA</h1>
       <h2 className="left-text">EL RESTAURANT O LA RECETA</h2>

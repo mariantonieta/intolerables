@@ -44,28 +44,28 @@ h1{
     border-radius: 10px;
     
 }
+
+
 .contenido{
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
     position: absolute;
-    top: 250px; /* Asegura que las tarjetas comiencen desde arriba */
-    left: 50%;
+    top: 250px; left: 50%;
     transform: translateX(-50%); /* Centra las tarjetas */
-    width: 90%;
-    max-width: 600px;
-    background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
-    padding: 15px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 0; /* Asegura que las tarjetas estén sobre el mapa */
+    z-index: 0; 
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
   }
+  
 .mapa-container{
 position: relative;
 top: 0;
 left: 0;
 
-height: 600px;
+height: 900px;
 z-index: 0;
 }

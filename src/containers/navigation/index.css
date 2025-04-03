@@ -116,7 +116,7 @@ nav button:hover {
     .navbar-right {
         display: none;
     }
-    body.menu-open .home-content {
+    body.menu-open .container {
         margin-top:250px; }
 
 

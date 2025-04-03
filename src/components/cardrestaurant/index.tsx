@@ -1,5 +1,4 @@
-// components/RestauranteCard.tsx
-import React from "react";
+import "./index.css"
 
 interface RestauranteCardProps {
   nombre: string;
@@ -18,11 +17,11 @@ export default function RestauranteCard({
 }: RestauranteCardProps) {
   return (
     <div className="tarjeta">
-      <img src={imagen} alt={`Foto de ${nombre}`} />
+        <div className="tarjeta-titulo">{nombre}</div>
+      <img className="tarjeta-imagen" src={imagen} alt={`Foto de ${nombre}`} />
       <div className="tarjeta-contenido">
-        <h3>{nombre}</h3>
-        <p>{direccion}</p>
-        <button 
+        <p className="tarjeta-descripcion">{direccion}</p>
+        <button
           className={`favorito ${isFavorito ? "activo" : ""}`}
           onClick={onToggleFavorito}
         >

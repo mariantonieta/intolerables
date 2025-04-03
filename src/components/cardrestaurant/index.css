@@ -1,146 +1,48 @@
-/* Estilos para las tarjetas 
 .tarjeta {
-    width: 250px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    background: white;
-    margin: 10px;
-  }
-  
-  .tarjeta:hover {
-    transform: translateY(-5px);
-  }
-  
-  .tarjeta img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-  }
-  
-  .tarjeta-contenido {
-    padding: 15px;
-    position: relative;
-  }
-  
-  .tarjeta h3 {
-    margin: 0 0 8px 0;
-    color: #333;
-  }
-  
-  .tarjeta p {
-    margin: 0;
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .favorito {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .favorito:hover {
-    transform: scale(1.2);
-  }
-  
-  .favorito.activo {
-    color: red;
-  }/* 
-  /* Estilos para la tarjeta */
-.tarjeta {
-  width: 280px;
+  width: 260px;
+  background-color: #faebd7;
   border-radius: 15px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin: 15px;
+  text-align: center;
 }
 
-.tarjeta:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+.tarjeta-titulo {
+  background-color: #d1451b;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 16px;
 }
 
-/* Imagen con overlay */
 .tarjeta-imagen {
-  position: relative;
-  width: 100%;
-  height: 170px;
-  overflow: hidden;
-}
-
-.tarjeta img {
-  width: 100%;
-  height: 100%;
+  height: 160px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
-.tarjeta:hover img {
-  transform: scale(1.05);
+.tarjeta-contenido {
+  padding: 10px;
 }
 
-/* Botón de favorito */
+.tarjeta-descripcion {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
 .favorito {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.8);
+  background: none;
   border: none;
   font-size: 22px;
   cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  transition: all 0.2s ease-in-out;
+  transition: transform 0.2s ease;
 }
 
 .favorito:hover {
-  transform: scale(1.3);
-  background: rgba(255, 255, 255, 1);
+  transform: scale(1.2);
 }
 
 .favorito.activo {
   color: red;
-}
-
-/* Contenido de la tarjeta */
-.tarjeta-contenido {
-  padding: 15px;
-  text-align: center;
-}
-
-.tarjeta h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.tarjeta p {
-  margin: 5px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-/* Botón de ver más */
-.btn-detalles {
-  margin-top: 10px;
-  padding: 8px 15px;
-  font-size: 14px;
-  border: none;
-  background: #ff6347;
-  color: white;
-  border-radius: 20px;
-  cursor: pointer;
-}
-
-.btn-detalles:hover {
-  background: #d84315;
 }

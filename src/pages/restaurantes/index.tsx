@@ -2,24 +2,27 @@ import RestauranteCard from "../../components/cardrestaurant"
 import Mapa from "../../components/map"
 import Navigation from "../../containers/navigation"
 import "./index.css"
+import gluten from "../../../public/icons/gluten.svg";
+
 const restaurantesEjemplo = [
     {
       id: 1,
       nombre: "La Tagliatella",
       direccion: "Calle Gran Vía, 45, Madrid",
-      imagen: "https://source.unsplash.com/random/300x200/?restaurant,italian",
+      imagen: gluten,
     },
     {
       id: 2,
       nombre: "Goiko Grill",
       direccion: "Calle Princesa, 22, Madrid",
-      imagen: "https://source.unsplash.com/random/300x200/?burger,restaurant",
+      imagen: gluten,
     },
     {
       id: 3,
       nombre: "Sushi Shop",
       direccion: "Calle Serrano, 15, Madrid",
-      imagen: "https://source.unsplash.com/random/300x200/?sushi,restaurant",
+      imagen: gluten
+      
     }]
 export default function Restaurantes(){
     return (
