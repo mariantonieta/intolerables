@@ -1,0 +1,54 @@
+.container {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el contenido */
+}
+
+.buscador-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 600px;
+}
+
+#comida {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+}
+
+.buscar-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.buscar-btn:hover {
+    background-color: #6d4c41;
+    border-radius: 20px;
+}
+
+/* Estilos para las tarjetas de recetas */
+.contenido {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px; /* Aumenta el espacio entre tarjetas */
+    margin-top: 40px; /* Da espacio respecto al buscador */
+}
+
+.recipe-card {
+    margin: 20px; /* Espacio entre las tarjetas */
+}

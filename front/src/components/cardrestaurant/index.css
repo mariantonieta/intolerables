@@ -1,0 +1,48 @@
+.tarjeta {
+  width: 260px;
+  background-color: #faebd7;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.tarjeta-titulo {
+  background-color: #d1451b;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 16px;
+}
+
+.tarjeta-imagen {
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.tarjeta-contenido {
+  padding: 10px;
+}
+
+.tarjeta-descripcion {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.favorito {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.favorito:hover {
+  transform: scale(1.2);
+}
+
+.favorito.activo {
+  color: red;
+}
