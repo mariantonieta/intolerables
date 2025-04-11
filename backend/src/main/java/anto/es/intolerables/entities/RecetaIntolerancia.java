@@ -1,5 +1,6 @@
 package anto.es.intolerables.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,11 +19,13 @@ public class RecetaIntolerancia {
     private String cantidadIntolerancia;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "id_receta")
     private Receta receta;
 
     @ManyToOne
     @JoinColumn(name = "id_intolerancia")
+    @JsonManagedReference
     private Intolerancia intolerancia;
 
 

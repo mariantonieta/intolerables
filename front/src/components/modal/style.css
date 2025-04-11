@@ -1,34 +1,70 @@
-.MuiDialog-paper{
-    background-color: var(--color-6) !important;
-    border-radius: 15px;
-    padding: 20px;
+/* Estilo general del modal */
+.MuiDialog-paper {
+  background-color: var(--color-6) !important;
+  border-radius: 15px;
+  padding: 40px; /* Aumentado el padding */
+  height: 90%;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column; /* Estructura vertical */
+  justify-content: space-between; /
+ /* Ajuste el ancho del modal */
 }
-.titulo{
-    font-size: 25px;
-    font-weight: bold !important;
-    color: var(--color-5);
-    text-align: center;
-    
-}
-.contenido {
-    padding: 20px;
-  }
-  .texto {
-    font-size: 16px;
-    color: rgb(12, 12, 12);
-    text-align: justify;
-  }
-  .btns{
-    display: flex;
-    justify-content: center !important; 
-    padding: 20px;
-  
-  }
-  .btn-modal{
-    background-color: var(--color-3) !important;
-    color: var(--color-4) !important;
-    font-weight: bold !important;
-    padding: 8px 20px !important;
-    transition: 0.3s ease !important;
 
-  }
+
+/* Título */
+.titulo {
+  font-size: 30px; /* Título más grande */
+  font-weight: bold !important;
+  color: var(--color-5);
+  text-align: center;
+ 
+}
+
+/* Contenido */
+.contenido {
+  padding: 30px; /* Mayor padding para contenido */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Texto */
+.texto {
+  font-size: 18px; /* Aumentar el tamaño del texto */
+  color: rgb(12, 12, 12);
+  text-align: justify;
+  padding: 30px;
+  line-height: 1.6; /* Mejorar la legibilidad del texto */
+}
+
+/* Imagen */
+.modal-img {
+  width: 150px; /* Imagen más grande */
+  height: 150px;
+  border-radius: 10px; /* Bordes redondeados en la imagen */
+
+}
+
+/* Botones */
+.btns {
+  display: flex;
+  justify-content: center !important;
+  padding: 20px;
+}
+
+.btn-modal {
+  background-color: var(--color-3) !important;
+  color: var(--color-4) !important;
+  font-weight: bold !important;
+  padding: 10px 25px !important;
+  transition: 0.3s ease !important;
+  border-radius: 5px; /* Bordes redondeados en el botón */
+}
+
+/* Mejores animaciones y transiciones */
+.btn-modal:hover {
+  background-color: var(--color-5) !important; /* Cambiar color al pasar el ratón */
+  transform: scale(1.05); /* Efecto de zoom en el botón */
+}

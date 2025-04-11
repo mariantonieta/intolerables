@@ -1,5 +1,6 @@
 package anto.es.intolerables.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,11 @@ public class FavoritoRestaurante {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
+    @JsonBackReference
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
+    @JsonBackReference
     private Restaurante restaurante;
 }

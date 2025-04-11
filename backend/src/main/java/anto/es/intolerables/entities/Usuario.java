@@ -1,5 +1,7 @@
 package anto.es.intolerables.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
@@ -28,10 +30,12 @@ public class Usuario {
     private String paisUsuario;
     @Column(name = "ciudad_usuario")
     private String ciudadUsuario;
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<ComentarioRestaurante> comentarios;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonManagedReference
     private List<FavoritoRestaurante> favoritos;
 
     @OneToMany(mappedBy = "usuario")

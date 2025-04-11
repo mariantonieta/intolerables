@@ -19,6 +19,8 @@ public class IntoleranciaService {
         return repositorio.findById(id);
     }
     public Intolerancia save(Intolerancia intolerancia){
+
+
         return repositorio.save(intolerancia);
     }
     public void delete(Intolerancia intolerancia){

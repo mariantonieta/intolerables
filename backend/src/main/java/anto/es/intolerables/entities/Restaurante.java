@@ -1,5 +1,7 @@
 package anto.es.intolerables.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
@@ -27,10 +29,20 @@ public class Restaurante {
     private Double latitud;
 
     private Double longitud;
+    private String imageN;
+
+    private String url;
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<RestauranteIntolerancia> intolerancias;
+
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ComentarioRestaurante> comentarios;
 
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<FavoritoRestaurante> favoritos;
 
 }
