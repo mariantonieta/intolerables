@@ -5,9 +5,6 @@ interface RestauranteCardProps {
   nombre: string;
   direccion: string;
   categoria: string;
-  latitud: number;
-  //comentarios: string;
-  longitud: number;
   imagen: string;
   isFavorito?: boolean;
   url: string | null;
@@ -19,8 +16,7 @@ export default function RestauranteCard({
   nombre,
   direccion,
   categoria,
-  latitud,
-  longitud,
+ 
   url,
 
   //comentarios,
@@ -41,8 +37,6 @@ export default function RestauranteCard({
       <div className="tarjeta-contenido">
       <p className="tarjeta-descripcion"><strong>Dirección:</strong> {direccion}</p>
         <p className="tarjeta-categoria"><strong>Categoría:</strong> {categoria}</p>
-        <p className="tarjeta-latitud"><strong>Latitud:</strong> {latitud}</p>
-        <p className="tarjeta-longitud"><strong>Longitud:</strong> {longitud}</p>
         {url && (
           <button className="ver-mas-btn" onClick={handleVerMas}>
             Ver más en Yelp

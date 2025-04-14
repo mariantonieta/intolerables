@@ -16,22 +16,11 @@ import java.util.List;
 public class YepController {
     private final YelpService yelpService;
 
-    @GetMapping("/buscar/sin")
-    public List<Restaurante> buscarRestaurantes(@RequestParam String termino, @RequestParam String ubicacion) {
-        return yelpService.buscarRestaurantes(termino, ubicacion);
-}
     @GetMapping("/buscar")
-    public List<Restaurante> buscarPorIntoleranciaS(
-            @RequestParam String intolerancia,
-            @RequestParam String ubicacion) {
-        return yelpService.buscarPorIntolerancia(intolerancia, ubicacion);
-    }
-
-    @GetMapping("/buscar-por-intolerancia")
     public List<Restaurante> buscarPorIntolerancia(
             @RequestParam String intolerancia,
-            @RequestParam String ubicacion
-    ) {
-        return yelpService.buscarPorIntolerancia(intolerancia, ubicacion);
+            @RequestParam String ubicacion,
+            @RequestParam String comida) {
+        return yelpService.buscarPorIntolerancia(intolerancia, ubicacion, comida);
     }
 }

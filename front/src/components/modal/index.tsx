@@ -1,4 +1,4 @@
-import {Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography} from "@mui/material";
+import {Dialog, DialogTitle, DialogContent, Button, Typography} from "@mui/material";
 import './style.css'
 interface DialogProps{
     open: boolean;
@@ -7,22 +7,23 @@ interface DialogProps{
     content: string;
     imagen: string
     motivacion: string;
+    onSoyClick?: () => void;
      }
-    export default function Modal({ open, onClose, title, content, imagen, motivacion }: DialogProps) {
+    export default function Modal({ open, onClose, title, content, imagen, motivacion, onSoyClick }: DialogProps) {
         return (
-          <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl" className="container">
+          <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle className="titulo">{title}</DialogTitle>
-            <DialogContent className="contenido">
-            <img src={imagen} alt={title} style={{ width: '100px', height: '100px' }} />
-    
+            <DialogContent>
+            <img src={imagen} alt={title} className="modal-img"/>
               <Typography className="texto">{content}</Typography>
               {motivacion && <p><strong>¡No estás solo!:</strong> {motivacion}</p>}
             </DialogContent>
-            <DialogActions className="btns">
+            <div className="btns">
               <Button onClick={onClose} className="btn-modal">
                 Cerrar
               </Button>
-            </DialogActions>
+              <Button onClick={onSoyClick} className="btn-modal">Soy</Button>
+            </div>
           </Dialog>
         );
       }

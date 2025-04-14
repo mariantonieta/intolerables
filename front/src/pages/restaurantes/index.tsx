@@ -10,8 +10,6 @@ interface Restaurante {
   nombre: string;
   direccion: string;
   categoria: string;
-  latitud: number;
-  longitud: number;
   imagen: string ;
   url: string | null;
 }
@@ -48,24 +46,6 @@ useEffect(() =>{
   }
 }, []);
 
-const buscarRestaurantesPorIntolerancia = async () => {
-  if (!intolerancia || !ubicacion) {
-    alert("Faltan datos para buscar");
-    return;
-  }
-
-  try {
-    const response = await axios.get("http://localhost:9000/api/yelp/buscar-por-intolerancia", {
-      params: {
-        intolerancia: intolerancia,
-        ubicacion: ubicacion,
-      },
-    });
-    setRestaurantes(response.data);
-  } catch (error) {
-    console.error("Error buscando restaurantes por intolerancia:", error);
-  }
-};
   const buscarRestaurantes = async () => {
     if (!termino || !ubicacion) {
       alert("Por favor, introduce tanto la comida como la ubicación");
@@ -75,10 +55,14 @@ const buscarRestaurantesPorIntolerancia = async () => {
     try {
       const response = await axios.get("http://localhost:9000/api/yelp/buscar", {
         params: {
-          termino: termino,
+          intolerancia: intolerancia,
           ubicacion: ubicacion,
+          comida: termino
+
         },
       });
+      console.log("Restaurantes recibidos:", response.data);
+
       setRestaurantes(response.data);
     } catch (error) {
       console.error("Error al buscar restaurantes:", error);
@@ -105,28 +89,28 @@ const buscarRestaurantesPorIntolerancia = async () => {
             onChange={(e) => setUbicacion(e.target.value)}
           />
         <button className="buscar-btn" onClick={buscarRestaurantes}  >🔍</button>
-        <button className="buscar-btn" onClick={buscarRestaurantesPorIntolerancia}>
-            Buscar por intolerancia
-          </button>
         </div>
         <div className="mapa-container">
-        <Mapa/>
-       </div>
+      
         <div className="contenido">
           {restaurantes.map((restaurante) => (
+           
             <RestauranteCard
-              key={restaurante.id}
+            
               id={restaurante.id}
               nombre={restaurante.nombre}
               direccion={restaurante.direccion}
-              categoria={restaurante.categoria} // Asegúrate de que este campo exista
-              latitud={restaurante.latitud} // Asegúrate de que este campo exista
-              longitud={restaurante.longitud} 
+              categoria={restaurante.categoria} 
               url={restaurante.url}
               imagen={restaurante.imagen}
+           
               />
-          ))}
+        ))}
+        
           </div>
+          
+        <Mapa/>
+       </div>
         </div>
    
   

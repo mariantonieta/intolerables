@@ -3,7 +3,8 @@ package anto.es.intolerables.services;
 import anto.es.intolerables.entities.Intolerancia;
 import anto.es.intolerables.entities.Restaurante;
 import anto.es.intolerables.repositories.IntoleranciaRepository;
-import anto.es.intolerables.repositories.RestauranteIntolerancia;
+import anto.es.intolerables.entities.RestauranteIntolerancia;
+import anto.es.intolerables.repositories.RestauranteIntoleranciaRepository;
 import anto.es.intolerables.repositories.RestauranteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.List;
 public class SpooncularApiService {
     private final RestauranteRepository restauranteRepositorio;
     private final IntoleranciaRepository intoleranciaRepositorio;
-    private final RestauranteIntolerancia restauranteIntoleranciaRepo;
+    private final RestauranteIntoleranciaRepository restauranteIntoleranciaRepo;
     private final RestTemplate restTemplate = new RestTemplate();
     private final RestauranteRepository restauranteRepository;
 
@@ -39,6 +40,7 @@ public class SpooncularApiService {
                     .orElseGet(() -> restauranteRepository.save(restaurante));
 
             RestauranteIntolerancia relacion = new RestauranteIntolerancia();
+
             relacion.setIntolerancia(intolerancia);
             relacion.setRestaurante(restauranteExistente);
             restauranteIntoleranciaRepo.save(relacion);
@@ -73,7 +75,7 @@ public class SpooncularApiService {
         r1.setCategoria(categoria);
         r1.setLatitud(41.390205);
         r1.setLongitud(2.154007);
-        r1.setImageN("https://via.placeholder.com/150");
+        r1.setImagen("https://via.placeholder.com/150");
         r1.setUrl("https://mockrestaurant.com");
         mock.add(r1);
 

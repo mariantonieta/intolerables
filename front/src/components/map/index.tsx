@@ -25,7 +25,7 @@ export default function Mapa() {
   if (!position) return <p>Cargando mapa...</p>;
 
   return (
-    <div className="map-container">
+    <div className="mapa-container">
     <MapContainer
       key={position.toString()}
       center={position} // Tipo LatLngExpression

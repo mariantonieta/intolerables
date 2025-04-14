@@ -2,6 +2,7 @@ package anto.es.intolerables.controllers;
 
 import anto.es.intolerables.entities.Receta;
 import anto.es.intolerables.services.RecetaService;
+import anto.es.intolerables.services.SpooncularService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,15 @@ import java.util.Optional;
 @RequestMapping("/api/recetas")
 public class RecetaController {
     private final RecetaService recetaService;
+private final SpooncularService recetaSpooncularService;
+    @GetMapping("/buscar")
+    public ResponseEntity<?> buscarRecetasPorIntoleranciaYNombre(
+            @RequestParam String intolerancia,
+            @RequestParam(required = false) String query) {
+        List<Map<String, Object>> recetas = recetaSpooncularService.buscarRecetasPorIntolerancia(intolerancia, query);
 
+        return ResponseEntity.ok(Map.of("results", recetas));
+    }
     @GetMapping
     public ResponseEntity<List<Receta>> listarRecetas() {
         try {

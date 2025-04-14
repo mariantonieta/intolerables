@@ -4,6 +4,9 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import Modal from "../../components/modal";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ModalElegir from "../../containers/modal";
+
 interface Intolerancia{
   nombre: string;
   descripcion:string;
@@ -14,7 +17,9 @@ interface Intolerancia{
 export default function Intolerancias() {
   const [intolerancias, setIntolerancias] = useState<Intolerancia[]>([]);
   const [modalOpen, setModalOpen] = useState(false)
+  const [modalElegirOpen, setModalElegirOpen] = useState(false); 
   const [intoleSeleccionada, setIntoleSeleccionada] = useState<Intolerancia | null>(null);
+  const navigate = useNavigate()
 useEffect(() => {
   const cargarIntole= async()=>{
     try{
@@ -37,14 +42,24 @@ useEffect(() => {
     setModalOpen(false);
   };
 
-  const handleSoy = () => {
-  if(intoleSeleccionada){
-    //almaceno la intolerancia en el localStorage
-    localStorage.setItem("intoleranciaSeleccionada", intoleSeleccionada.nombre);
-    window.location.href = "/restaurantes"
-  }
-    // alert("Eres intolerante a...");
+  const handleSoy = (intolerancia: Intolerancia)  => {
+    setIntoleSeleccionada(intolerancia); // <- actualiza el estado
+    localStorage.setItem("intoleranciaSeleccionada", intolerancia.nombre);
+    setModalOpen(false);
+    setModalElegirOpen(true);    // alert("Eres intolerante a...");
   };
+  const handleCloseModal = () => setModalElegirOpen(false);
+
+  const handleRecetasClick = () => {
+    setModalOpen(false);
+    navigate("/recetas"); // Redirige a recetas
+  };
+
+  const handleRestaurantesClick = () => {
+    setModalOpen(false);
+    navigate("/restaurantes"); // Redirige a restaurantes
+  };
+
 
   return (
     <>
@@ -61,7 +76,7 @@ useEffect(() => {
     descripcion={intolerancia.descripcion}
     imagen={intolerancia.imagen} // Ruta como "/icons/gluten.svg"
     buttonSaberMas={() => handleSaberMas(intolerancia)}
-    buttonSoy={handleSoy}
+    buttonSoy={() => handleSoy(intolerancia)}
   />
 ))}
 
@@ -73,8 +88,15 @@ useEffect(() => {
       content={intoleSeleccionada?.detalles || ""}
       imagen={intoleSeleccionada?.imagen || ""}  // Pasando la imagen
       motivacion={intoleSeleccionada?.mensaje || ""} 
-    />
-      
+      onSoyClick={() => intoleSeleccionada && handleSoy(intoleSeleccionada)}
+
+  />
+           <ModalElegir
+        open={modalElegirOpen}
+        onClose={handleCloseModal}
+        onRecetasClick={handleRecetasClick}
+        onRestaurantesClick={handleRestaurantesClick}
+      />
     </>
   );
 }

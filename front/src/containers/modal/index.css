@@ -1,0 +1,29 @@
+
+  
+  .modal-btns {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-sizing: border-box;
+  }
+  
+  .modal-btns button {
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    background-color: var(--color-3);
+    color: var(--color-4);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .close-btn {
+    background-color: red;
+  }
+  

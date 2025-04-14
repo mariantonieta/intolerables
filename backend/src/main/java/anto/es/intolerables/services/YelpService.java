@@ -22,14 +22,17 @@ public class YelpService {
 
     private static final String YELP_API_URL = "https://api.yelp.com/v3/businesses/search";
 
-    // Llave API de Yelp (deberías almacenarla en application.properties)
     @Value("${yelp.api.key}")
     private String yelpApiKey;
+    public List<Restaurante> buscarPorIntolerancia(String intolerancia, String ubicacion, String comida) {
+        String categoriaYelp = getYelpCategoryForIntolerancia(intolerancia);
 
-    // Método para realizar la búsqueda de restaurantes a través de la API de Yelp
-    public List<Restaurante> buscarRestaurantes(String termino, String ubicacion) {
-        // URL para los parámetros de búsqueda
-        String url = String.format("%s?term=%s&location=%s", YELP_API_URL, termino, ubicacion);
+        return buscarRestaurantes(categoriaYelp, ubicacion, comida);
+    }
+
+    public List<Restaurante> buscarRestaurantes(String termino, String ubicacion, String comida) {
+        // URL para los parámetros de búsqueda (incluyendo comida como categoría)
+        String url = String.format("%s?term=%s&location=%s&category=%s", YELP_API_URL, termino, ubicacion, comida);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -50,7 +53,7 @@ public class YelpService {
                         restaurante.setCategoria(business.getCategories().get(0).getTitle());
                         restaurante.setLatitud(business.getCoordinates().getLatitude());
                         restaurante.setLongitud(business.getCoordinates().getLongitude());
-                        restaurante.setImageN(business.getImage_url());
+                        restaurante.setImagen(business.getImage_url());
                         restaurante.setUrl(business.getUrl());
                         return restaurante;
                     })
@@ -58,15 +61,9 @@ public class YelpService {
         } else {
             throw new RuntimeException("Error al consultar la API de Yelp");
         }
-
     }
 
-    public List<Restaurante> buscarPorIntolerancia(String intoleranica, String ubicacion) {
-        String categoriaYelp = getYelpCategoryForIntolerancia(intoleranica);
-        List<Restaurante> restaurantes = buscarRestaurantes(categoriaYelp, ubicacion);
-        return restaurantes;
-    }
-
+    // Método que mapea la intolerancia a la categoría correspondiente de Yelp
     private String getYelpCategoryForIntolerancia(String intolerancia) {
         switch (intolerancia.toLowerCase()) {
             case "gluten":
@@ -81,6 +78,7 @@ public class YelpService {
             case "halal":
                 return "halal";
             default:
-                return "restaurants";
+                return "restaurants";  // Default para cuando no hay una intolerancia específica
         }
-    }}
+    }
+}

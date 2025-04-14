@@ -2,69 +2,112 @@
 .MuiDialog-paper {
   background-color: var(--color-6) !important;
   border-radius: 15px;
-  padding: 40px; /* Aumentado el padding */
-  height: 90%;
-  width: 100%;
-  max-width: 100%;
+  padding: 0;
+  height: auto;
+  max-height: 50vh;
+  width: auto;
+  max-width: 700px;
   display: flex;
-  flex-direction: column; /* Estructura vertical */
-  justify-content: space-between; /
- /* Ajuste el ancho del modal */
+  flex-direction: column;
+  overflow: hidden !important;
 }
-
-
-/* Título */
-.titulo {
-  font-size: 30px; /* Título más grande */
-  font-weight: bold !important;
-  color: var(--color-5);
-  text-align: center;
- 
-}
-
-/* Contenido */
-.contenido {
-  padding: 30px; /* Mayor padding para contenido */
+.MuiDialogContent-root {
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  gap: 10px;
+}
+
+/* Título */
+.titulo {
+  font-weight: bold !important;
+  color: var(--color-5);
+  text-align: center;
+  margin: 20px 0 10px 0;
+  padding: 0;
+}
+
+/* Contenido */
+.MuiDialogContent-root {
+  padding: 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  gap: 10px;
+}
+
+.MuiDialogContent-root p {
+  text-align: justify;
+  margin: 0;
+  font-size: 20px !important;
 }
 
 /* Texto */
 .texto {
-  font-size: 18px; /* Aumentar el tamaño del texto */
+  font-size: 20px !important;
   color: rgb(12, 12, 12);
   text-align: justify;
-  padding: 30px;
-  line-height: 1.6; /* Mejorar la legibilidad del texto */
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  width: 100%;
 }
 
 /* Imagen */
 .modal-img {
-  width: 150px; /* Imagen más grande */
+  width: 150px;
   height: 150px;
-  border-radius: 10px; /* Bordes redondeados en la imagen */
-
+  margin-bottom: 10px;
 }
 
 /* Botones */
 .btns {
   display: flex;
-  justify-content: center !important;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
+  gap: 20px;
+  width: 100%;
+  margin-top: auto;
+  text-align: center;
 }
 
+/* Botón estilo */
 .btn-modal {
   background-color: var(--color-3) !important;
   color: var(--color-4) !important;
   font-weight: bold !important;
   padding: 10px 25px !important;
   transition: 0.3s ease !important;
-  border-radius: 5px; /* Bordes redondeados en el botón */
+  border-radius: 5px;
 }
 
-/* Mejores animaciones y transiciones */
 .btn-modal:hover {
-  background-color: var(--color-5) !important; /* Cambiar color al pasar el ratón */
-  transform: scale(1.05); /* Efecto de zoom en el botón */
+  background-color: var(--color-5) !important;
+  transform: scale(1.05);
+}
+@media (max-width: 600px) {
+  .modal-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .texto,
+  .MuiDialogContent-root p {
+    font-size: 16px !important;
+  }
+
+  .btn-modal {
+    padding: 8px 20px !important;
+    font-size: 14px;
+  }
+
+  .btns {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 }

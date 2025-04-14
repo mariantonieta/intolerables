@@ -29,7 +29,7 @@ public class Restaurante {
     private Double latitud;
 
     private Double longitud;
-    private String imageN;
+    private String imagen;
 
     private String url;
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)

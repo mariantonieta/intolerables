@@ -3,11 +3,11 @@
     min-width: 100vh;
     padding: 20px;
     position: relative;
-
+   
 }
 .buscador-container{
     display: flex;
-    justify-content: center;
+    background-color: transparent;   justify-content: center;
     align-items: center;
     gap: 10px;
     margin: 20px auto;
@@ -23,12 +23,31 @@
     font-size: 16px;
     outline: none;
 }
+#comida::placeholder,
+#ubicacion::placeholder {
+  background-color: transparent;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--color-3) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: transparent !important;
+  color: var(--color-3) !important;
+}
 .buscar-btn{
     background-color: transparent;
     border: none;
     padding: 10px;
     cursor: pointer;
 }
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: var(--color-3) !important; /* Asegura que el texto se vea */
+  }
+  
 .buscar-btn:hover {
     background-color: #6d4c41;
     border-radius: 20px;
@@ -47,25 +66,33 @@ h1{
 
 
 .contenido{
-    gap: 40px;
-    width: 100%;
-    max-width: 1200px;
-    position: absolute;
-    top: 250px; left: 50%;
-    transform: translateX(-50%); /* Centra las tarjetas */
-    border-radius: 10px;
-    z-index: 0; 
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    display: grid;            
+    grid-template-columns: repeat(3, 1fr);  
+    gap: 20px;                
+    padding: 20px;
+    position: absolute;      
+    margin-left: 40px;
+    padding: 10px;
+    z-index: 1;             
+    overflow-y: auto;
   }
   
 .mapa-container{
 position: relative;
 top: 0;
 left: 0;
-
-height: 900px;
 z-index: 0;
+height: 280vh;
+padding: 20px;
+flex-direction: column;
 }
+.RestauranteCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+  }
