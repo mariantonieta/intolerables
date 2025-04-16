@@ -11,7 +11,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioRepository repositorio;
-
+public Optional<Usuario> findByNombre(String nombre) {
+    return repositorio.findByNombre(nombre);
+}
     public List<Usuario> findAll() {
         return repositorio.findAll();
     }

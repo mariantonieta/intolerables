@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
+@Builder
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Table(name="usuario")
 public class Usuario {

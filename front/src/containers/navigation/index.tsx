@@ -1,11 +1,14 @@
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import logo from "../../../public/svg/logo.svg"
 import './index.css'
 import { useEffect, useState } from "react";
+import ModalRoL from "../../components/modalRoL";
 type NavigationProps = React.ComponentProps<"div">;
 
 export default function Navigation(props: NavigationProps) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const navigate = useNavigate();
     useEffect(() =>{
       if(menuOpen){
         document.body.classList.add("menu-open")
@@ -13,6 +16,15 @@ export default function Navigation(props: NavigationProps) {
         document.body.classList.remove("menu-open")
       }
     }, [menuOpen])
+    const handleLoginClick = () => {
+      setModalOpen(false);
+      navigate("/login");
+    };
+    
+    const handleRegisterClick = () => {
+      setModalOpen(false);
+      navigate("/register");
+    };
     return (
         <nav {...props} >
       
@@ -35,8 +47,17 @@ export default function Navigation(props: NavigationProps) {
            
             </div>
             <div className="navbar-right">
-           <button>UNETE</button>        
+          
+            <button onClick={() => setModalOpen(true)}>ÚNETE</button>
                 </div>
+                <ModalRoL
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onLoginClick={handleLoginClick}
+        onRegisterClick={handleRegisterClick}
+      />
         </nav>
+    
+      
     );
 }

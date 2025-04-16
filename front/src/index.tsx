@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home, Restaurantes, Recetas, Intolerancias} from './pages'
+import LoginForm from './pages/login';
+import Registro from './pages/register';
 //Rutas 
 
 
@@ -17,6 +19,9 @@ createRoot(document.getElementById('root')!).render(
        
         <Route path="/restaurantes" element={<Restaurantes />} />
         <Route path="/recetas" element={<Recetas />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<Registro />} />
+     
       </Routes>
     </BrowserRouter>
   </StrictMode>,

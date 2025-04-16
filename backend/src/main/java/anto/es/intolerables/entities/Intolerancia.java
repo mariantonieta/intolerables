@@ -24,7 +24,7 @@ public class Intolerancia {
 
     @Column(name="descripcion_intolerancia")
     private String descripcion;
-
+    @Column(length = 1200)
     private  String detalles;
     private  String mensaje;
 

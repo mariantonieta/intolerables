@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "../../components/modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ModalElegir from "../../containers/modal";
+import ModalElegirRoR from "../../components/modalrecetaorestaurante";
 
 interface Intolerancia{
   nombre: string;
@@ -23,8 +23,12 @@ export default function Intolerancias() {
 useEffect(() => {
   const cargarIntole= async()=>{
     try{
-      const response = await axios.get('http://localhost:9000/api/intolerancias');
+      const response = await axios.get('http://localhost:9000/api/intolerancias',{
+
+        withCredentials: true
+      });
       setIntolerancias(response.data)
+      console.log(response.data)
     
     }catch(error){
       console.log("Error al cargar la intolerancia", error)
@@ -91,7 +95,7 @@ useEffect(() => {
       onSoyClick={() => intoleSeleccionada && handleSoy(intoleSeleccionada)}
 
   />
-           <ModalElegir
+           <ModalElegirRoR
         open={modalElegirOpen}
         onClose={handleCloseModal}
         onRecetasClick={handleRecetasClick}
