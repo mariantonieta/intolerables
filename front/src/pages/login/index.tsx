@@ -1,83 +1,105 @@
-import  React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router';
-import "./index.css"
-interface LoginRequest{
-    nombre: string;
-    contrasena: string 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import "./index.css";
+import Navigation from "../../containers/navigation";
+import api from "../../services/axiosConfig"
+//datos tipados con TS que se enviara al backend
+interface LoginRequest {
+  nombre: string;
+  contrasena: string;
 }
 
 const LoginForm: React.FC = () => {
-    const [nombre, setNombre] = useState<string>('');
-    const [contrasena, setContrasena] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    const [successMessage, setSuccessMessage] = useState<string>('');
-  const navigate = useNavigate()
+  //uso el hook useState para el estado del formulario
+  const [nombre, setNombre] = useState<string>("");
+  const [contrasena, setContrasena] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const navigate = useNavigate();
+  //manejo del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const loginData : LoginRequest = { nombre, contrasena };
+    const loginData: LoginRequest = { nombre, contrasena };
 
     try {
-      const response = await axios.post('http://localhost:9000/usuario/login-api', loginData, {
-        withCredentials:true});
+      const response = await api.post("/api/auth/login",
 
-      // Si la respuesta es exitosa, mostramos un mensaje de éxito
+        loginData
+      );
+      const token = response.data.token;
+      localStorage.setItem("jwtToken",token)
+      console.log(token)
+      //si el login es exitoso, se muestra el mensaje y se redirije
       setSuccessMessage(response.data.mensaje);
-      setError(''); // Limpiamos cualquier error anterior
-navigate('/')
-      // Aquí podrías redirigir a una página protegida o guardar el estado de autenticación
-      // Ejemplo: Redirigir a la página de inicio:
-      // window.location.href = "/home";
+      setError("");
+      navigate("/");
     } catch (error) {
-      // En caso de error (como credenciales incorrectas), mostramos el mensaje de error
+      //manejo de error si falla el login con la API
       if (axios.isAxiosError(error) && error.response?.data) {
         setError(error.response.data.error);
       } else {
-        setError('Error al conectar con el servidor');
+        setError("Error al conectar con el servidor");
       }
-      setSuccessMessage(''); // Limpiamos cualquier mensaje de éxito
+      setSuccessMessage("");
     }
   };
+  //limpia el mensaje para no tener que recargar de nuevo la pagina
+  //y limpia los errores
+  useEffect(() => {
+    if (error || successMessage) {
+      const timer = setTimeout(() => {
+        setError("");
+        setSuccessMessage("");
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, successMessage]);
 
   return (
-    <div className='login-container'> 
-      <div className="login-card">
-      <h2>Hola</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nombre:</label>
-          <input
-            type="text"
-            placeholder='Nombre'
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            placeholder='Password'
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Iniciar sesión</button>
-      </form>
+    <>
+      <Navigation />
+      <div className="container">
+        <div className="container-login">
+          <div className="login-card">
+            <h2>Hola, Bienvenid@ again.</h2>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label>Nombre:</label>
+                <input
+                  type="text"
+                  placeholder="Introduce tu nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label>Contraseña:</label>
+                <input
+                  type="password"
+                  placeholder="Introduce tu contraseña"
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit">Iniciar sesión</button>
+            </form>
 
-      {/* Mostrar mensaje de éxito o error */}
-      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <div className="bottom-links">
-          <a href="#">Forgot password?</a>
-          <span> | </span>
-          <a href="/register">Sign up</a>
+            {successMessage && <div className="success">{successMessage}</div>}
+            {error && <div className="error">{error}</div>}
+            <div className="bottom-links">
+              <a href="#">Forgot password?</a>
+              <span> | </span>
+              <a href="/register">Sign up</a>
+            </div>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
+    </>
   );
 };
 

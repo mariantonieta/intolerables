@@ -1,0 +1,96 @@
+.formulario-receta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .card-receta {
+    background: rgba(255, 255, 255, 0.34);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  .card-receta h2 {
+    color: #6a1b9a;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .card-receta input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 2px solid #77259d;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .card-receta input:focus {
+    outline: none;
+    border-color: #8e24aa;
+    box-shadow: 0 0 5px #e1bee7;
+  }
+  
+  .card-receta button {
+    background: linear-gradient(135deg, #8e24aa, #ba68c8);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .card-receta button:hover {
+    background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .card-receta {
+      padding: 30px;
+    }
+  
+    .card-receta h2 {
+      font-size: 24px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card-receta {
+      padding: 25px;
+      border-radius: 16px;
+    }
+  
+    .card-receta h2 {
+      font-size: 20px;
+    }
+  
+    .card-receta input,
+    .card-receta button {
+      font-size: 15px;
+      padding: 10px;
+    }
+  }
+  

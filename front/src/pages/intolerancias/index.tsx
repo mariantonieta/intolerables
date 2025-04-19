@@ -3,7 +3,7 @@ import Navigation from "../../containers/navigation";
 import "./index.css";
 import { useEffect, useState } from "react";
 import Modal from "../../components/modal";
-import axios from "axios";
+import api from "../../services/axiosConfig"
 import { useNavigate } from "react-router-dom";
 import ModalElegirRoR from "../../components/modalrecetaorestaurante";
 
@@ -20,25 +20,23 @@ export default function Intolerancias() {
   const [modalElegirOpen, setModalElegirOpen] = useState(false); 
   const [intoleSeleccionada, setIntoleSeleccionada] = useState<Intolerancia | null>(null);
   const navigate = useNavigate()
-useEffect(() => {
-  const cargarIntole= async()=>{
-    try{
-      const response = await axios.get('http://localhost:9000/api/intolerancias',{
+  useEffect(() => {
+    const cargarIntole = async () => {
+      try {
+        const response = await api.get("/api/intolerancias");
+        setIntolerancias(response.data);
+        console.log("Intolerancias cargadas:", response.data);
+      } catch (error) {
+        console.error("Error al cargar la intolerancia", error);
+      }
+    };
 
-        withCredentials: true
-      });
-      setIntolerancias(response.data)
-      console.log(response.data)
-    
-    }catch(error){
-      console.log("Error al cargar la intolerancia", error)
-    }
-  }
-  cargarIntole()
-},[]);
+    cargarIntole();
+  }, []);
 
 
   const handleSaberMas = (intolerancia: Intolerancia) => {
+    console.log("INTOLERANCIA DETALLES:", intolerancia.detalles);
   setIntoleSeleccionada(intolerancia);
   setModalOpen(true); 
   };
@@ -90,7 +88,7 @@ useEffect(() => {
       onClose={handleClose}
       title={intoleSeleccionada?.nombre || ""}
       content={intoleSeleccionada?.detalles || ""}
-      imagen={intoleSeleccionada?.imagen || ""}  // Pasando la imagen
+      imagen={intoleSeleccionada?.imagen || ""}  // 
       motivacion={intoleSeleccionada?.mensaje || ""} 
       onSoyClick={() => intoleSeleccionada && handleSoy(intoleSeleccionada)}
 

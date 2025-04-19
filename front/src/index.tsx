@@ -4,7 +4,7 @@ import './index.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Restaurantes, Recetas, Intolerancias} from './pages'
+import { Home, Restaurantes, Recetas, Intolerancias, CrearReceta} from './pages'
 import LoginForm from './pages/login';
 import Registro from './pages/register';
 //Rutas 
@@ -21,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/recetas" element={<Recetas />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Registro />} />
+        <Route path="/addReceta" element={<CrearReceta />} />
      
       </Routes>
     </BrowserRouter>
