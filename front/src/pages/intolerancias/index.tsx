@@ -3,9 +3,9 @@ import Navigation from "../../containers/navigation";
 import "./index.css";
 import { useEffect, useState } from "react";
 import Modal from "../../components/modal";
-import api from "../../services/axiosConfig"
 import { useNavigate } from "react-router-dom";
 import ModalElegirRoR from "../../components/modalrecetaorestaurante";
+import api from "../../services/axiosConfig";
 
 interface Intolerancia{
   nombre: string;
@@ -44,11 +44,22 @@ export default function Intolerancias() {
     setModalOpen(false);
   };
 
-  const handleSoy = (intolerancia: Intolerancia)  => {
-    setIntoleSeleccionada(intolerancia); // <- actualiza el estado
-    localStorage.setItem("intoleranciaSeleccionada", intolerancia.nombre);
-    setModalOpen(false);
-    setModalElegirOpen(true);    // alert("Eres intolerante a...");
+  const handleSoy = async (intolerancia: Intolerancia)  => {
+    try {
+      setIntoleSeleccionada(intolerancia);
+      localStorage.setItem("intoleranciaSeleccionada", intolerancia.nombre);
+      setModalOpen(false);
+      setModalElegirOpen(true);
+  
+      // Hacer POST al backend para guardar la intolerancia del usuario
+      const response = await api.post("/api/intolerancias/seleccionar", {
+        nombre: intolerancia.nombre,
+      });
+  
+      console.log("✅ Intolerancia guardada en el servidor:", response.status);
+    } catch (error) {
+      console.error("❌ Error al guardar la intolerancia:", error);
+    }
   };
   const handleCloseModal = () => setModalElegirOpen(false);
 

@@ -28,8 +28,11 @@ const LoginForm: React.FC = () => {
 
         loginData
       );
+
       const token = response.data.token;
+      const usuarioId = response.data.usuario.id;
       localStorage.setItem("jwtToken",token)
+      localStorage.setItem("usuarioId", usuarioId.toString());
       console.log(token)
       //si el login es exitoso, se muestra el mensaje y se redirije
       setSuccessMessage(response.data.mensaje);

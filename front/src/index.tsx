@@ -7,6 +7,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home, Restaurantes, Recetas, Intolerancias, CrearReceta} from './pages'
 import LoginForm from './pages/login';
 import Registro from './pages/register';
+const handleOpenFavoritos = () => {
+  console.log("Favoritos abiertos!");
+};
 //Rutas 
 
 
@@ -17,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<Home />} />
         <Route path="/intolerancias" element={<Intolerancias />} />
        
-        <Route path="/restaurantes" element={<Restaurantes />} />
+        <Route path="/restaurantes" element={<Restaurantes onOpenFavoritos={handleOpenFavoritos}/>} />
         <Route path="/recetas" element={<Recetas />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Registro />} />
