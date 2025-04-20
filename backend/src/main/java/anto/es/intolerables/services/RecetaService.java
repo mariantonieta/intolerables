@@ -9,7 +9,6 @@
 
     import java.time.LocalDate;
     import java.util.List;
-    import java.util.Optional;
 
     @RequiredArgsConstructor
     @Service
@@ -18,25 +17,24 @@
         private final IngredienteRepository ingredienteRepositorio;
         private final RecetaIngredienteRepository recetaIngredienteRepository;
         private final RecetaPasosRepository recetaPasosRepositorio;
-        private final RestauranteRepository restauranteRepository;
-
+//obtine las recetas incluyendo las intolerancias
         @Transactional
-        public List<Receta> findAll() {
-            return recetaRepositorio.findAll();     }
+        public List<Receta> obtenerTodasLasRecetas() {
+            List<Receta> recetas = recetaRepositorio.findAll();
+            recetas.forEach(receta -> Hibernate.initialize(receta.getIntolerancias()));
+            return recetas;
+        }
 
         public Receta crearReceta(Receta receta) {
             receta.setFechaCreacionReceta(LocalDate.now());
-
-            // Guardamos la receta para obtener su ID
             Receta recetaGuardada = recetaRepositorio.save(receta);
 
-            // Guardamos ingredientes y pasos
             guardarIngredientes(recetaGuardada);
             guardarPasos(recetaGuardada);
 
             return recetaGuardada;
         }
-
+//guarda los ingrecientes para crearReceta
         private void guardarIngredientes(Receta recetaGuardada) {
             List<RecetaIngrediente> ingredientes = recetaGuardada.getIngredientes();
 
@@ -46,17 +44,16 @@
                 Ingrediente ingredienteOriginal = recetaIngrediente.getIngrediente();
 
                 if (ingredienteOriginal != null && ingredienteOriginal.getNombre() != null) {
-                    // Buscar o crear ingrediente
+
                     Ingrediente ingrediente = ingredienteRepositorio
                             .findByNombre(ingredienteOriginal.getNombre())
                             .orElseGet(() -> guardarNuevoIngrediente(ingredienteOriginal.getNombre()));
 
-                    // Asociar y guardar la relación
                     recetaIngrediente.setIngrediente(ingrediente);
                     recetaIngrediente.setReceta(recetaGuardada);
                     recetaIngredienteRepository.save(recetaIngrediente);
                 } else {
-                    System.out.println("RecetaIngrediente sin ingrediente válido");
+                    System.out.println("RecetaIngrediente sin ingrediente");
                 }
             }
         }

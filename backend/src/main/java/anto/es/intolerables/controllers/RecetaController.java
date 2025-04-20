@@ -20,9 +20,8 @@ import java.util.Optional;
 @RequestMapping("/api/recetas")
 public class RecetaController {
     private final RecetaService recetaService;
-    private final IngredienteRepository ingredienteRepository;
     private final SpooncularService recetaSpooncularService;
-    private final JwtTokenProvider tokenProvider;
+
 
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarRecetasPorIntoleranciaYNombre(
@@ -33,10 +32,9 @@ public class RecetaController {
         return ResponseEntity.ok(Map.of("results", recetas));
     }
     @GetMapping
+    @Transactional
     public List<Receta> obtenerTodasLasRecetas() {
-        List<Receta> recetas = recetaService.findAll();
-
-        // Inicializar las colecciones de manera explícita
+        List<Receta> recetas = recetaService.obtenerTodasLasRecetas();
         for (Receta receta : recetas) {
             Hibernate.initialize(receta.getIntolerancias());
             Hibernate.initialize(receta.getIngredientes());
@@ -47,16 +45,12 @@ public class RecetaController {
     }
     @PostMapping("/crear")
     public ResponseEntity<?> crearReceta(@RequestBody Receta receta, Authentication authentication) {
-        // Obtener el nombre de usuario del token JWT
         if (authentication != null) {
             String username = authentication.getName();
             System.out.println("Usuario autenticado: " + username);
-
-            // Lógica para crear la receta sin necesidad de validación de token
             Receta recetaCreada = recetaService.crearReceta(receta);
             return ResponseEntity.ok(recetaCreada);
         } else {
-            // Si no hay autenticación, devolver error
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("No se ha encontrado un usuario autenticado.");
         }

@@ -71,7 +71,7 @@ export default function Restaurantes({ onOpenFavoritos }: RestaurantesProps) {
       return;
     }
     try {
-      const response = await axios.get("http://localhost:9000/api/yelp/buscar", {
+      const response = await axios.get("http://localhost:9000/api/restaurantes/buscar", {
         params: {
           intolerancia: intolerancia,
           ubicacion: ubicacion,

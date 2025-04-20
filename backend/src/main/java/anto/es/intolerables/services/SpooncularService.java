@@ -1,15 +1,9 @@
     package anto.es.intolerables.services;
-
-    import anto.es.intolerables.entities.Ingrediente;
-    import anto.es.intolerables.entities.Receta;
-    import anto.es.intolerables.entities.RecetaIngrediente;
     import lombok.RequiredArgsConstructor;
     import org.springframework.beans.factory.annotation.Value;
     import org.springframework.stereotype.Service;
     import org.springframework.web.client.RestTemplate;
     import org.springframework.web.util.UriComponentsBuilder;
-
-    import java.time.LocalDate;
     import java.util.ArrayList;
     import java.util.HashMap;
     import java.util.List;
@@ -21,7 +15,7 @@
     @RequiredArgsConstructor
     public class SpooncularService {
         private final RestTemplate restTemplate = new RestTemplate();
-
+        //apiKey de spooncular
         @Value("${spoonacular.api.key}")
         private String spooncularApiKey;
 
@@ -48,7 +42,6 @@
 
             for (Map<String, Object> item : results) {
                 int recetaId = (int) item.get("id");
-                // Aquí definimos el detalleUrl dentro del bucle.
                 String detalleUrl = "https://api.spoonacular.com/recipes/" + recetaId + "/information?includeNutrition=false&apiKey=" + spooncularApiKey;
                 Map detalle = restTemplate.getForObject(detalleUrl, Map.class);
                 System.out.println("Detalle: " + detalle);
@@ -60,7 +53,6 @@
                 recetaMap.put("calories", extraerCaloriasDesdeSummary((String) item.get("summary")));
                 recetaMap.put("summary", item.get("summary"));
 
-                // extendedIngredients
                 List<Map<String, String>> ingredientesList = new ArrayList<>();
                 List<Map<String, Object>> ingredientesRaw = (List<Map<String, Object>>) detalle.get("extendedIngredients");
 
@@ -73,7 +65,6 @@
                 }
                 recetaMap.put("extendedIngredients", ingredientesList);
 
-                // analyzedInstructions
                 List<Map<String, Object>> instruccionesList = new ArrayList<>();
                 List<Map<String, Object>> instruccionesRaw = (List<Map<String, Object>>) detalle.get("analyzedInstructions");
                 if (instruccionesRaw != null && !instruccionesRaw.isEmpty()) {

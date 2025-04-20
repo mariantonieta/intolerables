@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
-
+//maneja los errores cuando un usuario no autorizado intenta acceder
 @RequiredArgsConstructor
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {

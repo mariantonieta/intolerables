@@ -13,7 +13,6 @@ import lombok.Setter;
 public class RecetaIngrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
     private String cantidad;
@@ -23,8 +22,11 @@ public class RecetaIngrediente {
     @JsonBackReference("receta-ingrediente")
     private Receta receta;
 
+    //cascade.Persist si tambien se guarda RecetaIngredinet tambien se guarda lo asociado
+    //merge actualiza
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_ingredientes")
+    //evita q serialice el campo cuando el objeto se convierte a JSON
     @JsonIgnore
     private Ingrediente ingrediente;
 

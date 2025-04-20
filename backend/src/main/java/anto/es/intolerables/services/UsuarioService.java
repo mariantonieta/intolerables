@@ -4,7 +4,6 @@ import anto.es.intolerables.entities.Usuario;
 import anto.es.intolerables.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -26,11 +25,5 @@ public Optional<Usuario> findByNombre(String nombre) {
         return repositorio.save(usuario);
     }
 
-    public void delete(Usuario usuario) {
-        repositorio.delete(usuario);
-    }
 
-    public void deleteById(Integer id) {
-        repositorio.deleteById(id);
-    }
 }

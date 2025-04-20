@@ -8,15 +8,24 @@ import api from "../../services/axiosConfig";
 
 type NavigationProps = React.ComponentProps<"div">;
 
+interface FavoritoRecetaDTO {
+  id: number;
+  nombreReceta: string;
+  imagenReceta: string;
+  fecha: string | null;
+}
+
 interface FavoritoRestauranteDTO {
   nombreRestaurante: string;
   fecha: string | null;
 }
+
 export default function Navigation(props: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [favoritosOpen, setFavoritosOpen] = useState(false); // Para el modal de favoritos
-  const [favoritos, setFavoritos] = useState<FavoritoRestauranteDTO[]>([]); // Ahora se almacenan los objetos completos
+  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]); // Favoritos de recetas
+  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]); // Favoritos de restaurantes
   const navigate = useNavigate();
 
   const isLoggedIn = () => !!localStorage.getItem("jwtToken");
@@ -43,21 +52,28 @@ export default function Navigation(props: NavigationProps) {
         console.log("Usuario no autenticado");
         return;
       }
-  
-      // Solicitar favoritos desde la API
-      const response = await api.get("/api/favoritos-restaurantes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      // Aquí asegúrate de que la respuesta sea un arreglo de favoritos
-      const favoritosCompletos = response.data; // Si la estructura es diferente, ajusta el mapeo
+      // Realizar las peticiones para obtener favoritos de recetas y favoritos de restaurantes en paralelo
+      const [favoritosRecetasResponse, favoritosRestaurantesResponse] = await Promise.all([
+        api.get("/api/favoritos-recetas", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        api.get("/api/favoritos-restaurantes", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
 
-      setFavoritos(favoritosCompletos); // Guardar los restaurantes completos en el estado
+      // Asignar los resultados a sus respectivos estados
+      setFavoritosRecetas(favoritosRecetasResponse.data); // Guardar los favoritos de recetas
+      setFavoritosRestaurantes(favoritosRestaurantesResponse.data); // Guardar los favoritos de restaurantes
+
       setFavoritosOpen(true); // Abrir el modal de favoritos
     } catch (error) {
-      console.error("Error al cargar favoritos", error);
+      console.error("Error al cargar los favoritos", error);
     }
   };
 
@@ -76,6 +92,7 @@ export default function Navigation(props: NavigationProps) {
         {isLoggedIn() && (
           <>
             <NavLink to="/addReceta">AÑADIR RECETA</NavLink>
+            <NavLink to="/recetasVip">RECETAS VIP</NavLink>
             <button onClick={handleOpenFavoritos} className="favorito-link">
               ❤️ Favoritos
             </button>
@@ -108,7 +125,8 @@ export default function Navigation(props: NavigationProps) {
       <ModalFavoritos
         open={favoritosOpen}
         onClose={() => setFavoritosOpen(false)}
-        favoritos={favoritos}
+        favoritosRecetas={favoritosRecetas} // Pasar favoritos de recetas
+        favoritosRestaurantes={favoritosRestaurantes} // Pasar favoritos de restaurantes
       />
     </nav>
   );

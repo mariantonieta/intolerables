@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class YelpDto {
-
+public class YelpDTO {
+//uso yelp dto para obtener los datos desde  la api y guardarlos
     private List<Business> businesses;
 
     @Getter

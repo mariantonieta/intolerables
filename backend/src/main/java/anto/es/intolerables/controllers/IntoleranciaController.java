@@ -4,9 +4,7 @@ import anto.es.intolerables.dto.IntoleranciaDTO;
 import anto.es.intolerables.entities.Intolerancia;
 import anto.es.intolerables.services.IntoleranciaService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

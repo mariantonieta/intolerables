@@ -11,10 +11,9 @@ public class IntoleranciaDTO {
     private String nombre;
     private String descripcion;
     private String imagen;
-    private String detalles;  // ¡Agregalo!
+    private String detalles;
     private String mensaje;
-
-    // Constructor que recibe directamente los parámetros esperados
+    //pq al instanciar un dto neceito generar los constructores
     public IntoleranciaDTO(Integer id, String nombre, String descripcion, String imagen, String detalles, String mensaje) {
         this.id = id;
         this.nombre = nombre;
@@ -25,7 +24,6 @@ public class IntoleranciaDTO {
     }
 
 
-    // Constructor que toma la entidad Intolerancia
     public IntoleranciaDTO(Intolerancia intolerancia) {
         this.id = intolerancia.getId();
         this.nombre = intolerancia.getNombre();

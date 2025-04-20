@@ -19,7 +19,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
-
+//genera el token
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";

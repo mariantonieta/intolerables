@@ -19,12 +19,11 @@ public class RestauranteIntolerancia {
 
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
-    @JsonBackReference("restaurante-intolerancias")  // Corrección aquí
+    @JsonBackReference("restaurante-intolerancias")
     private Restaurante restaurante;
 
     @ManyToOne
     @JoinColumn(name = "id_intolerancia")
-    @JsonBackReference("intolerancia-restaurantes")  // Corrección aquí
-
+    @JsonBackReference("intolerancia-restaurantes")
     private Intolerancia intolerancia;
 }

@@ -17,24 +17,20 @@ import java.util.Optional;
 public class IntoleranciaService {
     private final IntoleranciaRepository repositorio;
     private  final UsuarioRepository usuarioRepo;
+
     @Transactional
     public List<Intolerancia> findAll(){
         return repositorio.findAll();
     }
+
     public Optional<Intolerancia> findById(Integer id){
         return repositorio.findById(id);
     }
+
     public Intolerancia save(Intolerancia intolerancia){
-
-
         return repositorio.save(intolerancia);
     }
-    public void delete(Intolerancia intolerancia){
-        repositorio.delete(intolerancia);
-    }
-    public void deleteById(Integer id) {
-        repositorio.deleteById(id);
-    }
+    //se guarda el usuario y la relacion
     @Transactional
     public boolean asociarAUsuario(String nombreIntolerancia, String nombre) {
         Optional<Usuario> usuarioOpt = usuarioRepo.findByNombre(nombre);
@@ -48,10 +44,8 @@ public class IntoleranciaService {
             relacion.setUsuario(usuario);
             relacion.setIntolerancia(intolerancia);
 
-            // Agregamos a la lista del usuario
             usuario.getIntolerancias().add(relacion);
 
-            // Guardamos el usuario, con cascade se guarda la relación también
             usuarioRepo.save(usuario);
 
             return true;

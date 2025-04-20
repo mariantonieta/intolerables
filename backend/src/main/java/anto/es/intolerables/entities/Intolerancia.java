@@ -24,11 +24,14 @@ public class Intolerancia {
 
     @Column(name="descripcion_intolerancia")
     private String descripcion;
+
     @Column(length = 1200)
     private  String detalles;
+
     private  String mensaje;
 
     private String imagen;
+
     @OneToMany(mappedBy = "intolerancia")
     @JsonBackReference("receta-intolerancias")
     private List<RecetaIntolerancia> recetas;
@@ -36,7 +39,8 @@ public class Intolerancia {
     @OneToMany(mappedBy = "intolerancia", fetch = FetchType.EAGER)
     @JsonManagedReference(value = "intolerancia-usuarios")
     private List<UsuarioIntolerancia> usuarios;
-    @OneToMany(mappedBy = "intolerancia", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "intolerancia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "intolerancia-restaurantes")
     private List<RestauranteIntolerancia> restaurantes;
 

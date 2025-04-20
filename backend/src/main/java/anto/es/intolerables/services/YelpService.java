@@ -2,14 +2,13 @@ package anto.es.intolerables.services;
 
 import anto.es.intolerables.entities.Restaurante;
 import anto.es.intolerables.repositories.RestauranteRepository;
-import anto.es.intolerables.dto.YelpDto;
+import anto.es.intolerables.dto.YelpDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,30 +20,33 @@ public class YelpService {
     private final RestauranteRepository restauranteRepository;
 
     private static final String YELP_API_URL = "https://api.yelp.com/v3/businesses/search";
-
+    //apiKey que esta en applications.properties
     @Value("${yelp.api.key}")
     private String yelpApiKey;
+    //busca los restaurantes por los parametros
+    //intolerancia (el mas importante)
+    //ubicacion
+    //comida
     public List<Restaurante> buscarPorIntolerancia(String intolerancia, String ubicacion, String comida) {
         String categoriaYelp = getYelpCategoryForIntolerancia(intolerancia);
-
         return buscarRestaurantes(categoriaYelp, ubicacion, comida);
     }
 
     public List<Restaurante> buscarRestaurantes(String termino, String ubicacion, String comida) {
-        // URL para los parámetros de búsqueda (incluyendo comida como categoría)
+        // la url para que la busqueda sea mas personalizada
         String url = String.format("%s?term=%s&location=%s&category=%s", YELP_API_URL, termino, ubicacion, comida);
 
         RestTemplate restTemplate = new RestTemplate();
-
+        //autorizacion con la apiKey
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + yelpApiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<YelpDto> response = restTemplate.exchange(url, HttpMethod.GET, entity, YelpDto.class);
+        //llama a la api
+        ResponseEntity<YelpDTO> response = restTemplate.exchange(url, HttpMethod.GET, entity, YelpDTO.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            List<YelpDto.Business> businesses = response.getBody().getBusinesses();
-
+            List<YelpDTO.Business> businesses = response.getBody().getBusinesses();
+//transformar los datos a JSON
             return businesses.stream()
                     .map(business -> {
                         Restaurante restaurante = new Restaurante();
@@ -63,7 +65,7 @@ public class YelpService {
         }
     }
 
-    // Método que mapea la intolerancia a la categoría correspondiente de Yelp
+    // mapea la intolerancia a la categoría correspondiente de Yelp
     private String getYelpCategoryForIntolerancia(String intolerancia) {
         switch (intolerancia.toLowerCase()) {
             case "gluten":
@@ -73,12 +75,7 @@ public class YelpService {
                 return "vegan";
             case "vegetariano":
                 return "vegetarian";
-            case "kosher":
-                return "kosher";
-            case "halal":
-                return "halal";
             default:
-                return "restaurants";  // Default para cuando no hay una intolerancia específica
-        }
+                return "restaurants";   }
     }
 }

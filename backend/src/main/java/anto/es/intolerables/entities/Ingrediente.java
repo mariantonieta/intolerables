@@ -7,15 +7,15 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-
 @Getter
 @Setter
 @Table(name="ingredientes")
 public class Ingrediente {
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-@Column(name="id_ingredientes")
-private Integer id;
+    @Column(name="id_ingredientes")
+    private Integer id;
+
     @Column(name="nombre_ingrediente")
     private String nombre;
 

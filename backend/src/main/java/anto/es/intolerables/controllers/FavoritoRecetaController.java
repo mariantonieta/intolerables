@@ -1,11 +1,19 @@
 package anto.es.intolerables.controllers;
 
+import anto.es.intolerables.dto.FavoritoRecetaDTO;
 import anto.es.intolerables.entities.FavoritoReceta;
+import anto.es.intolerables.entities.Receta;
+import anto.es.intolerables.entities.Usuario;
+import anto.es.intolerables.repositories.FavoritoRecetaRepository;
+import anto.es.intolerables.repositories.RecetaRepository;
 import anto.es.intolerables.services.FavoritoRecetaService;
+import anto.es.intolerables.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import utils.BeanCopyUtils;
 
@@ -18,80 +26,66 @@ import java.util.Optional;
 @RequestMapping("/api/favoritos-recetas")
 public class FavoritoRecetaController {
     private final FavoritoRecetaService favoritoRecetaService;
+    private final UsuarioService usuarioService;
+    private final RecetaRepository recetaRepository;
+    private final FavoritoRecetaRepository favoritoRepo;
+
 
     @GetMapping
-    public ResponseEntity<List<FavoritoReceta>> listarFavoritos() {
-        try {
-            return ResponseEntity.ok(favoritoRecetaService.findAll());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<List<FavoritoRecetaDTO>> getFavoritos() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String nombreUsuario = authentication.getName();
+
+        Usuario usuario = usuarioService.findByNombre(nombreUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<FavoritoReceta> favoritos = favoritoRepo.findByUsuario(usuario);
+        List<FavoritoRecetaDTO> dtoList = favoritos.stream()
+                .map(FavoritoRecetaDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(dtoList);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FavoritoReceta> obtenerFavorito(@PathVariable Integer id) {
-        try {
-            return favoritoRecetaService.findById(id)
-                    .map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> crearFavorito(@Valid @RequestBody FavoritoReceta favorito) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String nombreUsuario = authentication.getName();
+            System.out.println("Usuario autenticado: " + authentication.getName());
+            Usuario usuario = usuarioService.findByNombre(nombreUsuario)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            if (favorito.getReceta() == null || favorito.getReceta().getId() == null) {
+                throw new RuntimeException("El objeto receta o su ID es nulo en la petición");
+            }
+
+            Receta receta = recetaRepository.findById(favorito.getReceta().getId())
+                    .orElseThrow(() -> new RuntimeException("La receta no existe en la base de datos"));
+
+            favorito.setUsuario(usuario);
+            favorito.setReceta(receta);
+
             FavoritoReceta f = favoritoRecetaService.save(favorito);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", f.getId()));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarFavorito(@PathVariable Integer id) {
-        try {
-            if (favoritoRecetaService.findById(id).isPresent()) {
-                favoritoRecetaService.deleteById(id);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        if (favoritoRecetaService.findById(id).isPresent()) {
+            favoritoRecetaService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> reemplazarFavorito(@PathVariable Integer id,
-                                                @Valid @RequestBody FavoritoReceta favorito) {
-        try {
-            if (favoritoRecetaService.findById(id).isPresent()) {
-                favoritoRecetaService.save(favorito);
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-        }
-    }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> actualizarFavorito(@PathVariable Integer id,
-                                                @Valid @RequestBody FavoritoReceta favorito) {
-        try {
-            Optional<FavoritoReceta> favoritoDB = favoritoRecetaService.findById(id);
-            if (favoritoDB.isPresent()) {
-                BeanCopyUtils.copyNonNullProperties(favorito, favoritoDB.get());
-                favoritoRecetaService.save(favoritoDB.get());
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-        }
-    }
 }

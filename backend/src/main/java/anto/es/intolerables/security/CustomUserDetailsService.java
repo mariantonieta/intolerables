@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-
+//para buscar al user en la base de datos al iniciar sesion
 @Service("userDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -26,7 +26,7 @@ public UserDetails loadUserByUsername(String nombre) throws UsernameNotFoundExce
     return User.builder()
             .username(usuario.getNombre())
             .password(usuario.getContrasena())
-            .authorities(Collections.emptyList()) // sin roles por ahora
+            .authorities(Collections.emptyList())
             .build();
 }
 }

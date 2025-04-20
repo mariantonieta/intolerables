@@ -33,31 +33,24 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody UsuarioDTO loginDto) {
         log.info("Intento de login para usuario: {}", loginDto.getNombre());
 
-        // Buscar al usuario por nombre
         return usuarioService.findByNombre(loginDto.getNombre())
                 .map(usuario -> {
-                    // Verificar que la contraseña coincida usando el PasswordEncoder
                     if (passwordEncoder.matches(loginDto.getContrasena(), usuario.getContrasena())) {
-                        // Obtener los detalles del usuario para generar el token
                         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getNombre());
                         String token = tokenProvider.generateToken(userDetails);
-                        log.info("Login exitoso para el usuario: {}", usuario.getNombre());
-
-                        // Responder con el token y datos del usuario
+                     //   log.info("Login exitoso para el usuario: {}", usuario.getNombre());
                         return ResponseEntity.ok(Map.of(
                                 "token", token,
                                 "usuario", Map.of("id", usuario.getId(), "nombre", usuario.getNombre())
                         ));
                     } else {
-                        // Contraseña incorrecta
-                        log.warn("Contraseña incorrecta para usuario: {}", loginDto.getNombre());
+                       // log.warn("Contraseña incorrecta para usuario: {}", loginDto.getNombre());
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                 .body(Map.of("error", "Contraseña incorrecta"));
                     }
                 })
                 .orElseGet(() -> {
-                    // Usuario no encontrado
-                    log.warn("Usuario no encontrado: {}", loginDto.getNombre());
+                    // log.warn("Usuario no encontrado: {}", loginDto.getNombre());
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
                             .body(Map.of("error", "Usuario no encontrado"));
                 });
@@ -85,10 +78,6 @@ public class AuthController {
                 .body(Map.of("mensaje", "Usuario registrado con éxito"));
     }
 
-@GetMapping("/usuarios")
-    public List<Usuario> obtenerUsuarios() {
-        return usuarioService.findAll();
-    }
     @GetMapping("/usuario/{id}")
     public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Integer id) {
         log.info("Buscando usuario con ID: {}", id);

@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+//es un filtro personalizado que extrae el token lo valida y autentica al usuario
 @Slf4j
 @RequiredArgsConstructor
 @Component

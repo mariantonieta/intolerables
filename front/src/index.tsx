@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home, Restaurantes, Recetas, Intolerancias, CrearReceta} from './pages'
 import LoginForm from './pages/login';
 import Registro from './pages/register';
+import RecetasComunidad from './pages/recetas-vip';
 const handleOpenFavoritos = () => {
   console.log("Favoritos abiertos!");
 };
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Registro />} />
         <Route path="/addReceta" element={<CrearReceta />} />
+        <Route path='/recetasVip' element={<RecetasComunidad/>}/>
      
       </Routes>
     </BrowserRouter>

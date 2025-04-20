@@ -26,22 +26,12 @@ public class YepController {
             @RequestParam String comida) {
         List<Restaurante> restaurantes = yelpService.buscarPorIntolerancia(intolerancia, ubicacion, comida);
 
-        // Asignar un ID y guardar los restaurantes
+       //gUARDA LOS RESULTADOS DE LA BUSQUEDA EN LA BBDD
         for (Restaurante restaurante : restaurantes) {
-            // Asignar un ID único (puedes usar un generador o lo que necesites)
             restauranteRepository.save(restaurante);
         }
 
-
-
         return restaurantes;
      }
-    private Integer generateUniqueId() {
-        // Generar un ID único, aquí puedes utilizar algún generador o base de datos
-        return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);      }
 
-    private List<Restaurante> obtenerRestaurantesDesdeYelp(String intolerancia, String ubicacion, String comida) {
-        // Implementación de la API de Yelp (ya la tienes en el servicio)
-        return List.of(); // Simulación de datos
-    }
 }

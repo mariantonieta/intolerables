@@ -15,12 +15,15 @@ import java.time.LocalDate;
 @Table(name="favorito_restaurante")
 @NoArgsConstructor
 @AllArgsConstructor
+//GENERA EL ID UNICO YA QUE CUANDO USO YELP API NO ME DA LOS RESTAURANTES CON IDs
 @EqualsAndHashCode(of = "id")
+
 public class FavoritoRestaurante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_favorito_restaurante")
     private Integer id;
+
     @Column(name="fecha_favorito_restaurante", nullable = false)
     private LocalDate fecha;
 

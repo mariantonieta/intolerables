@@ -20,9 +20,6 @@ public class FavoritoRecetaService {
     public FavoritoReceta save(FavoritoReceta favoritoReceta){
         return repositorio.save(favoritoReceta);
     }
-    public void delete(FavoritoReceta favoritoReceta){
-        repositorio.delete(favoritoReceta);
-    }
     public void deleteById(Integer id) {
         repositorio.deleteById(id);
     }

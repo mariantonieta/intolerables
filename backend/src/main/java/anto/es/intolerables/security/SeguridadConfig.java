@@ -47,29 +47,30 @@
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             // Configuración de CORS y Seguridad
             http
-                    .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuración de CORS
+                    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(auth -> auth
+                         //publicos
                             .requestMatchers(
                                     "/api/auth/register-api",
                                     "/api/intolerancias",
                                     "/api/recetas/buscar",
-                                    "/api/restaurantes",
-                                    "/api/auth/login",
-                                    "/api/yelp/buscar"
+                                    "/api/restaurantes/buscar",
+                                    "/api/auth/login"
 
                             ).permitAll()
+                            //privados
                             .requestMatchers(
 
                                     "/api/favoritos-restaurantes",
+                                    "/api/favoritos-recetas",
                                     "/api/recetas/crear",
                                     "/api/recetas",
                                     "/api/intolerancias",
                                     "/api/intolerancias/seleccionar",
                                     "/api/recetas/buscar",
-                                    "/api/restaurantes",
-                                    "/api/yelp/buscar"
+                                    "/api/restaurantes/buscar"
 
 
                                     ).authenticated()
@@ -81,7 +82,7 @@
             return http.build();
         }
 
-
+//CORS para el frontend
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
