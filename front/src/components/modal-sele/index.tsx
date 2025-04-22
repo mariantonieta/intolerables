@@ -1,7 +1,7 @@
 
 import { Dialog, DialogTitle, Button } from "@mui/material";
 import "./index.css";
-
+//modal base para reutilizarlo
 interface ModalBaseProps {
   open: boolean;
   onClose: () => void;

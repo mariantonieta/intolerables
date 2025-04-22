@@ -1,34 +1,32 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  Home,
+  Restaurantes,
+  Recetas,
+  Intolerancias,
+  CrearReceta,
+  RecetasComunidad,
+  LoginForm,
+  Registro,
+} from "./pages";
 
-//import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Restaurantes, Recetas, Intolerancias, CrearReceta} from './pages'
-import LoginForm from './pages/login';
-import Registro from './pages/register';
-import RecetasComunidad from './pages/recetas-vip';
-const handleOpenFavoritos = () => {
-  console.log("Favoritos abiertos!");
-};
-//Rutas 
-
-
-createRoot(document.getElementById('root')!).render(
+//Rutas
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-     <BrowserRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/intolerancias" element={<Intolerancias />} />
-       
-        <Route path="/restaurantes" element={<Restaurantes onOpenFavoritos={handleOpenFavoritos}/>} />
+        <Route path="/restaurantes" element={<Restaurantes />} />
         <Route path="/recetas" element={<Recetas />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Registro />} />
         <Route path="/addReceta" element={<CrearReceta />} />
-        <Route path='/recetasVip' element={<RecetasComunidad/>}/>
-     
+        <Route path="/recetasVip" element={<RecetasComunidad />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>,
-)
+  </StrictMode>
+);

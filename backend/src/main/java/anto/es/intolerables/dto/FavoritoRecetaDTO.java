@@ -8,11 +8,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class FavoritoRecetaDTO {
-    private String tituloReceta;
+    private Integer id;
+    private String nombreReceta;
     private LocalDate fecha;
 
     public FavoritoRecetaDTO(FavoritoReceta favorito) {
-        this.tituloReceta = favorito.getReceta().getTitulo();
+        this.id = favorito.getId();
+        this.nombreReceta = favorito.getReceta().getTitulo();
         this.fecha = favorito.getFecha();
     }
 }

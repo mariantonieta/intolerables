@@ -15,11 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import utils.BeanCopyUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,21 +30,20 @@ public class FavoritoRecetaController {
 
 
     @GetMapping
-    public ResponseEntity<List<FavoritoRecetaDTO>> getFavoritos() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String nombreUsuario = authentication.getName();
 
-        Usuario usuario = usuarioService.findByNombre(nombreUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        public ResponseEntity<List<FavoritoRecetaDTO>> getFavoritos() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String nombreUsuario = authentication.getName();
 
-        List<FavoritoReceta> favoritos = favoritoRepo.findByUsuario(usuario);
-        List<FavoritoRecetaDTO> dtoList = favoritos.stream()
-                .map(FavoritoRecetaDTO::new)
-                .toList();
+            Usuario usuario = usuarioService.findByNombre(nombreUsuario)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return ResponseEntity.ok(dtoList);
-    }
+            List<FavoritoReceta> favoritos = favoritoRepo.findByUsuario(usuario);
+            List<FavoritoRecetaDTO> dtoList = favoritos.stream()
+                    .map(FavoritoRecetaDTO::new)
+                    .toList();
 
+            return ResponseEntity.ok(dtoList);}
 
 
     @PostMapping
@@ -54,16 +51,26 @@ public class FavoritoRecetaController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String nombreUsuario = authentication.getName();
-            System.out.println("Usuario autenticado: " + authentication.getName());
+            System.out.println("Usuario autenticado: " + nombreUsuario);
+
             Usuario usuario = usuarioService.findByNombre(nombreUsuario)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            if (favorito.getReceta() == null || favorito.getReceta().getId() == null) {
-                throw new RuntimeException("El objeto receta o su ID es nulo en la petición");
+            if (favorito.getReceta() == null) {
+                throw new RuntimeException("El objeto receta es nulo en la petición");
+            }
+            if (favorito.getReceta().getId() == null) {
+                favorito.getReceta().setId(generarNuevoId());
             }
 
+
             Receta receta = recetaRepository.findById(favorito.getReceta().getId())
-                    .orElseThrow(() -> new RuntimeException("La receta no existe en la base de datos"));
+                    .orElseGet(() -> {
+                        Receta nuevaReceta = favorito.getReceta();
+                        nuevaReceta.setId(generarNuevoId());
+                        return recetaRepository.save(nuevaReceta);
+                    });
+            System.out.println("Receta recibida: " + favorito.getReceta());
 
             favorito.setUsuario(usuario);
             favorito.setReceta(receta);
@@ -77,6 +84,9 @@ public class FavoritoRecetaController {
         }
     }
 
+    private Integer generarNuevoId() {
+        return Math.abs((int) System.currentTimeMillis()); // Genera un número único
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarFavorito(@PathVariable Integer id) {
         if (favoritoRecetaService.findById(id).isPresent()) {

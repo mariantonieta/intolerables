@@ -1,8 +1,8 @@
-import { useState, ChangeEvent, FormEvent} from "react";
-import axios from "axios";
+import { useState, ChangeEvent, FormEvent } from "react";
 import "../login/index.css";
 import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
+import api from "../../services/axiosConfig";
 
 // Tipado en TS para enviar los datos al backend
 interface UsuarioForm {
@@ -24,7 +24,7 @@ export default function Registro() {
     paisUsuario: "",
     ciudad: "",
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [mensaje, setMensaje] = useState<string>("");
   const [errors, setErrors] = useState<Record<ErrorKeys, string>>({
@@ -35,7 +35,7 @@ export default function Registro() {
     ciudad: "",
   });
 
-   // Actualiza el valor del campo en el form
+  // Actualiza el valor del campo en el form
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
@@ -61,7 +61,7 @@ export default function Registro() {
     }
 
     const passwordRegex =
-    /^(?=.*[A-Z])(?=.*\d.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-.]).*$/;
+      /^(?=.*[A-Z])(?=.*\d.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-.]).*$/;
     if (!passwordRegex.test(form.contrasena)) {
       newErrors.contrasena =
         "Debe tener una mayúscula, dos números y un carácter especial.";
@@ -89,7 +89,7 @@ export default function Registro() {
 
     // Se hace el registro al backend
     try {
-      await axios.post("http://localhost:9000/usuario/register-api", form);
+      await api.post("/api/auth/register-api", form);
       setMensaje("¡Usuario registrado con éxito!");
       navigate("/login");
       setErrors({

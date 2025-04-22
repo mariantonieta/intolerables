@@ -1,5 +1,6 @@
 import React from "react";
-import "./index.css"; // Importamos los estilos
+import "./index.css";
+//modal para ver mas detalles de la receta
 
 interface ModalRecetaProps {
   open: boolean;

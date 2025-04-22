@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "@mui/material";
 import "../modal/style.css";
-
+//modal para mostrar los favoritos
 type FavoritoRecetaDTO = {
   id: number;
   nombreReceta: string;
@@ -28,7 +28,7 @@ export default function ModalFavoritos({
       <DialogContent>
         <h2 className="titulo">Tus Favoritos</h2>
 
-        {/* Mostrar Favoritos de Recetas */}
+     
         <div>
           <h3>Recetas</h3>
           {favoritosRecetas.length === 0 ? (
@@ -38,8 +38,8 @@ export default function ModalFavoritos({
               <div key={fav.id} className="texto">
                 <h4>
                   <a
-                    href={`/receta/${fav.id}`} // Aquí puedes agregar la URL para ver la receta
-                    className="favorito-link"
+                    href={`/receta/${fav.id}`} 
+                         className="favorito-link"
                   >
                     {fav.nombreReceta}
                   </a>
@@ -49,14 +49,13 @@ export default function ModalFavoritos({
           )}
         </div>
 
-        {/* Mostrar Favoritos de Restaurantes */}
-        <div>
+           <div>
           <h3>Restaurantes</h3>
           {favoritosRestaurantes.length === 0 ? (
             <p className="texto">Aún no tienes restaurantes favoritos guardados.</p>
           ) : (
             favoritosRestaurantes.map((fav) => (
-              <div key={fav.nombreRestaurante} className="texto"> {/* Usamos solo el nombre del restaurante como clave */}
+              <div key={fav.nombreRestaurante} className="texto"> 
                 <h4>
                   <a
                     href={`https://www.yelp.com/search?find_desc=${encodeURIComponent(

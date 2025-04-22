@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import "./index.css";
 import Navigation from "../../containers/navigation";
-import api from "../../services/axiosConfig"
+import api from "../../services/axiosConfig";
 //datos tipados con TS que se enviara al backend
 interface LoginRequest {
   nombre: string;
@@ -24,16 +24,17 @@ const LoginForm: React.FC = () => {
     const loginData: LoginRequest = { nombre, contrasena };
 
     try {
-      const response = await api.post("/api/auth/login",
+      const response = await api.post(
+        "/api/auth/login",
 
         loginData
       );
 
       const token = response.data.token;
       const usuarioId = response.data.usuario.id;
-      localStorage.setItem("jwtToken",token)
+      localStorage.setItem("jwtToken", token);
       localStorage.setItem("usuarioId", usuarioId.toString());
-      console.log(token)
+      //  console.log(token)
       //si el login es exitoso, se muestra el mensaje y se redirije
       setSuccessMessage(response.data.mensaje);
       setError("");
@@ -55,7 +56,7 @@ const LoginForm: React.FC = () => {
       const timer = setTimeout(() => {
         setError("");
         setSuccessMessage("");
-      }, 4000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }

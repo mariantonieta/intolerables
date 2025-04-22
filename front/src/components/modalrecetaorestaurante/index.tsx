@@ -1,6 +1,5 @@
 import ModalBase from "../modal-sele";
-
-
+//modal para ir a receta o restaurnates
 interface Props {
   open: boolean;
   onClose: () => void;

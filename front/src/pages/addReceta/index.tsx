@@ -3,7 +3,9 @@ import axios from "axios";
 import "./index.css";
 import api from "../../services/axiosConfig";
 import Navigation from "../../containers/navigation";
-
+import { useNavigate } from "react-router";
+//añadir receta si eres usuario
+//datos tipados q recibe el backend
 interface IngredienteForm {
   id: number | null;
   nombre: string;
@@ -43,19 +45,20 @@ export default function CrearReceta() {
   const [pasos, setPasos] = useState<string[]>([""]);
   const [calorias, setCalorias] = useState<number>(0);
   const [tipoReceta, setTipoReceta] = useState("");
+  const navigate = useNavigate();
 
+  //convertir la imagen a una url
   const handleImageUpload = async () => {
     if (!imageFile) return;
     const formData = new FormData();
     formData.append("image", imageFile);
-
+    //con la api de imgbb
     const response = await axios.post(
       "https://api.imgbb.com/1/upload?key=8e4557ecb19620ef5d4de4f4f54120ee",
       formData
     );
     return response.data.data.url;
   };
-
   const addReceta = async () => {
     let imageUrl = image;
     if (imageFile) {
@@ -91,10 +94,10 @@ export default function CrearReceta() {
 
     try {
       const token = localStorage.getItem("jwtToken");
-      console.log("Token almacenao:", token)
-      const response = await api.post("/api/recetas/crear", nuevaReceta,);
+      console.log("Token almacenao:", token);
+      const response = await api.post("/api/recetas/crear", nuevaReceta);
+      navigate("/recetasVip");
       console.log("Respuesta:", response.data);
-      alert("✅ Receta creada exitosamente!");
       setTitle("");
       setImage("");
       setImageFile(null);
@@ -116,115 +119,121 @@ export default function CrearReceta() {
   return (
     <>
       <Navigation />
-        <div className="container">
-    <div className="formulario-receta">
-      <div className="card-receta">
-        <h2>Crear nueva receta 🍽️</h2>
-        <input
-          type="text"
-          placeholder="Título de la receta"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="URL de la imagen (opcional)"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-        />
-        <input
-          type="number"
-          placeholder="Tiempo de preparación (min)"
-          value={readyInMinutes}
-          onChange={(e) =>
-            setReadyInMinutes(e.target.value === "" ? 0 : parseInt(e.target.value))
-          }
-        />
-        <input
-          type="number"
-          placeholder="Calorías"
-          value={calorias}
-          onChange={(e) =>
-            setCalorias(e.target.value === "" ? 0 : parseInt(e.target.value))
-          }
-        />
-        <input
-          type="text"
-          placeholder="Tipo de receta"
-          value={tipoReceta}
-          onChange={(e) => setTipoReceta(e.target.value)}
-        />
-
-        <h4>Ingredientes</h4>
-        {ingredients.map((ing, idx) => (
-          <div key={idx}>
+      <div className="container">
+        <div className="formulario-receta">
+          <div className="card-receta">
+            <h2>Crear nueva receta 🍽️</h2>
             <input
               type="text"
-              placeholder="Nombre"
-              value={ing.nombre}
-              onChange={(e) => {
-                const copia = [...ingredients];
-                copia[idx].nombre = e.target.value;
-                setIngredients(copia);
-              }}
+              placeholder="Título de la receta"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="URL de la imagen (opcional)"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
             />
             <input
               type="number"
-              placeholder="Cantidad"
-              value={ing.cantidad}
-              onChange={(e) => {
-                const copia = [...ingredients];
-                copia[idx].cantidad = parseFloat(e.target.value);
-                setIngredients(copia);
-              }}
+              placeholder="Tiempo de preparación (min)"
+              value={readyInMinutes}
+              onChange={(e) =>
+                setReadyInMinutes(
+                  e.target.value === "" ? 0 : parseInt(e.target.value)
+                )
+              }
+            />
+            <input
+              type="number"
+              placeholder="Calorías"
+              value={calorias}
+              onChange={(e) =>
+                setCalorias(
+                  e.target.value === "" ? 0 : parseInt(e.target.value)
+                )
+              }
             />
             <input
               type="text"
-              placeholder="Unidad"
-              value={ing.unidad}
-              onChange={(e) => {
-                const copia = [...ingredients];
-                copia[idx].unidad = e.target.value;
-                setIngredients(copia);
-              }}
+              placeholder="Tipo de receta"
+              value={tipoReceta}
+              onChange={(e) => setTipoReceta(e.target.value)}
             />
+
+            <h4>Ingredientes</h4>
+            {ingredients.map((ing, idx) => (
+              <div key={idx}>
+                <input
+                  type="text"
+                  placeholder="Nombre"
+                  value={ing.nombre}
+                  onChange={(e) => {
+                    const copia = [...ingredients];
+                    copia[idx].nombre = e.target.value;
+                    setIngredients(copia);
+                  }}
+                />
+                <input
+                  type="number"
+                  placeholder="Cantidad"
+                  value={ing.cantidad}
+                  onChange={(e) => {
+                    const copia = [...ingredients];
+                    copia[idx].cantidad = parseFloat(e.target.value);
+                    setIngredients(copia);
+                  }}
+                />
+                <input
+                  type="text"
+                  placeholder="Unidad"
+                  value={ing.unidad}
+                  onChange={(e) => {
+                    const copia = [...ingredients];
+                    copia[idx].unidad = e.target.value;
+                    setIngredients(copia);
+                  }}
+                />
+              </div>
+            ))}
+            <button
+              onClick={() =>
+                setIngredients([
+                  ...ingredients,
+                  { id: null, nombre: "", cantidad: 0, unidad: "" },
+                ])
+              }
+            >
+              Agregar ingrediente
+            </button>
+
+            <h4>Pasos</h4>
+            {pasos.map((paso, index) => (
+              <input
+                key={index}
+                value={paso}
+                placeholder={`Paso ${index + 1}`}
+                onChange={(e) => {
+                  const copia = [...pasos];
+                  copia[index] = e.target.value;
+                  setPasos(copia);
+                }}
+              />
+            ))}
+            <button onClick={() => setPasos([...pasos, ""])}>
+              Agregar paso
+            </button>
+
+            <button onClick={addReceta}>Crear receta</button>
           </div>
-        ))}
-        <button
-          onClick={() =>
-            setIngredients([
-              ...ingredients,
-              { id: null, nombre: "", cantidad: 0, unidad: "" },
-            ])
-          }
-        >
-          Agregar ingrediente
-        </button>
-
-        <h4>Pasos</h4>
-        {pasos.map((paso, index) => (
-          <input
-            key={index}
-            value={paso}
-            placeholder={`Paso ${index + 1}`}
-            onChange={(e) => {
-              const copia = [...pasos];
-              copia[index] = e.target.value;
-              setPasos(copia);
-            }}
-          />
-        ))}
-        <button onClick={() => setPasos([...pasos, ""])}>Agregar paso</button>
-
-        <button onClick={addReceta}>Crear receta</button>
+        </div>
       </div>
-    </div>
-    </div>
     </>
   );
 }

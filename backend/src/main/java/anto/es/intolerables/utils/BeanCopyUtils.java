@@ -1,4 +1,4 @@
-package utils;
+package anto.es.intolerables.utils;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;

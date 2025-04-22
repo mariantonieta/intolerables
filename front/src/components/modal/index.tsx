@@ -1,5 +1,6 @@
 import {Dialog, DialogTitle, DialogContent, Button, Typography} from "@mui/material";
 import './style.css'
+//modal para saber mas sobre una intolerancia
 interface DialogProps{
     open: boolean;
     onClose: ()=> void;

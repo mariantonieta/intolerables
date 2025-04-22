@@ -42,7 +42,7 @@
         @Column(name="tipo_receta")
         private String tipoReceta;
 
-        @OneToMany(mappedBy = "receta", fetch = FetchType.EAGER)  // EAGER para ingredientes
+        @OneToMany(mappedBy = "receta", fetch = FetchType.EAGER)
         @JsonManagedReference("receta-ingrediente")
         private List<RecetaIngrediente> ingredientes;
 

@@ -1,13 +1,10 @@
+import "./index.css";
 import RestauranteCard from "../../components/cardrestaurant";
 import Mapa from "../../components/map";
 import Navigation from "../../containers/navigation";
-import "./index.css";
 import api from "../../services/axiosConfig";
-import axios from "axios";
 import { useEffect, useState } from "react";
-interface RestaurantesProps {
-  onOpenFavoritos: () => void;
-}
+//Tipado como se esperan recibir los datos del backend
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -22,77 +19,73 @@ interface Restaurante {
   imagen: string;
   url: string | null;
 }
-export default function Restaurantes({ onOpenFavoritos }: RestaurantesProps) {
+export default function Restaurantes() {
   const [restaurantes, setRestaurantes] = useState<Restaurante[]>([]);
   const [termino, setTermino] = useState("");
   const [ubicacion, setUbicacion] = useState("");
   const [intolerancia, setIntolerancia] = useState("");
   const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Estado de carga
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  //se busca la intolerancia seleccionada del usuario para poder realizar la busqueda
   useEffect(() => {
-    const intoleranciaGuardada = localStorage.getItem("intoleranciaSeleccionada");
+    const intoleranciaGuardada = localStorage.getItem(
+      "intoleranciaSeleccionada"
+    );
     if (intoleranciaGuardada) {
       setIntolerancia(intoleranciaGuardada);
     }
   }, []);
 
-  // Cargar favoritos al iniciar
+  // Cargar los favoritos al iniciar
   useEffect(() => {
     const cargarFavoritos = async () => {
-      setIsLoading(true); // Iniciar carga de favoritos
+      setIsLoading(true);
       const token = localStorage.getItem("jwtToken");
       if (token) {
-        // Ya no decodificamos el token, solo necesitamos el id del usuario desde localStorage
         const usuarioId = localStorage.getItem("usuarioId");
-        console.log(usuarioId);  // Verifica si contiene el id del usuario
+        console.log(usuarioId);
       }
       try {
-        const response = await axios.get("http://localhost:9000/api/favoritos-restaurantes", {
+        const response = await api.get("/api/favoritos-restaurantes", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const ids = (response.data as FavoritoRestaurante[]).map((fav) => fav.restaurante?.id);
+        const ids = (response.data as FavoritoRestaurante[]).map(
+          (fav) => fav.restaurante?.id
+        );
         setFavoritosIds(ids);
       } catch (error) {
         console.error("Error al cargar favoritos:", error);
       } finally {
-        setIsLoading(false); // Finalizar carga
+        setIsLoading(false);
       }
     };
 
     cargarFavoritos();
   }, []);
-
+  //busqueda de restaurantes
   const buscarRestaurantes = async () => {
     if (!termino || !ubicacion) {
       alert("Por favor, introduce tanto la comida como la ubicación");
       return;
     }
     try {
-      const response = await axios.get("http://localhost:9000/api/restaurantes/buscar", {
+      const response = await api.get("/api/restaurantes/buscar", {
         params: {
           intolerancia: intolerancia,
           ubicacion: ubicacion,
           comida: termino,
         },
       });
-      setRestaurantes(response.data); // Actualiza el estado con los restaurantes encontrados
+      setRestaurantes(response.data);
     } catch (error) {
       console.error("Error al buscar restaurantes:", error);
-      alert("No se pudieron encontrar restaurantes. Inténtalo de nuevo.");
+      alert("No se pudieron encontrar restaurantes");
     }
   };
-
+  //agrega el restaurante de los favoritos
   const toggleFavorito = async (restauranteId: number) => {
-    const token = localStorage.getItem("jwtToken");
-
-    if (!token) {
-      alert("Debes iniciar sesión para guardar favoritos.");
-      return;
-    }
-
     try {
       const usuarioId = localStorage.getItem("usuarioId");
 
@@ -115,16 +108,12 @@ export default function Restaurantes({ onOpenFavoritos }: RestaurantesProps) {
             id: restauranteId,
           },
         };
-
+        //se agrega el favorito al modal de favoritos
         await api.post("/api/favoritos-restaurantes", favorito);
         setFavoritosIds((prev) => [...prev, restauranteId]);
       }
-
-      // Llamar a la función onOpenFavoritos cuando se agregue o elimine un favorito
-      onOpenFavoritos();
-
     } catch (error) {
-      console.error("Error al alternar favorito:", error);
+      console.error("Error con los favoritos", error);
       alert("Hubo un problema con los favoritos.");
     }
   };
@@ -158,11 +147,13 @@ export default function Restaurantes({ onOpenFavoritos }: RestaurantesProps) {
         <div className="mapa-container">
           <div className="contenido">
             {isLoading ? (
-              <p>Cargando favoritos...</p> // Mensaje de carga mientras se traen los favoritos
+              <p>Cargando favoritos...</p>
             ) : (
               restaurantes.map((restaurante) => (
                 <RestauranteCard
-                  key={restaurante.id ?? `${restaurante.nombre}-${Math.random()}`}
+                  key={
+                    restaurante.id ?? `${restaurante.nombre}-${Math.random()}`
+                  }
                   id={restaurante.id}
                   nombre={restaurante.nombre}
                   direccion={restaurante.direccion}

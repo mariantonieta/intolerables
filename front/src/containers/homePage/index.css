@@ -1,22 +1,33 @@
+.home-page {
+  overflow-x: hidden;
+}
+
+
 .img-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
 }
 .img-container img {
   max-width: 80%;
   height: auto;
+  transition: transform 0.3s ease;
 }
 .center-text,
 .left-text,
 .right-text {
   color: var(--color-4);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 .center-text {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: bold;
+  margin-bottom: 1rem;
 }
 .left-text,
 .right-text {
@@ -24,17 +35,18 @@
   top: 40%;
   font-weight: bold;
   font-size: 2rem;
+  opacity: 0;
+  transition: all 1s ease;
 }
 
 .left-text {
   left: 10%;
-  transform: rotate(-25deg);
+  transform: rotate(-25deg) translateX(-20px);
 }
 
 .right-text {
   right: 10%;
-  transform: rotate(25deg);
-}
+  transform: rotate(25deg) translateX(20px);}
 .btn {
   padding: 20px 30px;
   border: none;
@@ -44,26 +56,126 @@
   color: var(--color-1);
   font-weight: bold;
   font-size: 20px;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-6-hover);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+.fade-in{
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+
+}
+.fade-in.visible {
+  opacity: 1;
+    
+}
+.fade-in.left-text.visible {
+  opacity: 1;
+  transform: rotate(-35deg) translateX(0);
+}
+
+.fade-in.right-text.visible {
+  opacity: 1;
+  transform: rotate(35deg) translateX(0);
+}
+ 
+.img-flotante {
+  animation: floating 3s ease-in-out infinite;
+}
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.click {
+  animation: pulse 2s infinite;
+}
+
+@keyframes click {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.img-container img:hover {
+  transform: scale(1.05);
+}
+
 @media (max-width: 980px) {
-  .img-container {
-    margin-top: 0;
+  .container {
+    padding: 1rem;
   }
+  
+  .img-container {
+    margin-top: 2rem;
+  }
+  
   .left-text,
   .right-text {
     position: static;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin-top: 10px;
-    transform: rotate(0);
-    font-size: 1.5rem;
+    transform: none !important;
+    font-size: 1.8rem;
     text-align: center;
+    margin: 1rem 0;
+    opacity: 1;
   }
+  
   .center-text {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
+  
   .img-container img {
-    max-width: 90%;
+    max-width: 100%;
+  }
+  
+  .btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+  }
+}
+
+@media (max-width: 980px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .img-container {
+    margin-top: 2rem;
+  }
+  
+  .left-text,
+  .right-text {
+    position: static;
+    transform: none !important;
+    font-size: 1.8rem;
+    text-align: center;
+    margin: 1rem 0;
+    opacity: 1;
+  }
+  
+  .center-text {
+    font-size: 2.5rem;
+  }
+  
+  .img-container img {
+    max-width: 100%;
+  }
+  
+  .btn {
+    font-size: 1.2rem;
+    padding: 15px 30px;
   }
 }

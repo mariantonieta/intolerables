@@ -9,9 +9,8 @@ import api from "../../services/axiosConfig";
 type NavigationProps = React.ComponentProps<"div">;
 
 interface FavoritoRecetaDTO {
-  id: number;
+  id: number; 
   nombreReceta: string;
-  imagenReceta: string;
   fecha: string | null;
 }
 
@@ -23,9 +22,9 @@ interface FavoritoRestauranteDTO {
 export default function Navigation(props: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [favoritosOpen, setFavoritosOpen] = useState(false); // Para el modal de favoritos
-  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]); // Favoritos de recetas
-  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]); // Favoritos de restaurantes
+  const [favoritosOpen, setFavoritosOpen] = useState(false);
+  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]);
+  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]);
   const navigate = useNavigate();
 
   const isLoggedIn = () => !!localStorage.getItem("jwtToken");
@@ -44,7 +43,6 @@ export default function Navigation(props: NavigationProps) {
     navigate("/register");
   };
 
-  // Función para manejar la apertura de favoritos
   const handleOpenFavoritos = async () => {
     try {
       const token = localStorage.getItem("jwtToken");
@@ -53,25 +51,23 @@ export default function Navigation(props: NavigationProps) {
         return;
       }
 
-      // Realizar las peticiones para obtener favoritos de recetas y favoritos de restaurantes en paralelo
-      const [favoritosRecetasResponse, favoritosRestaurantesResponse] = await Promise.all([
-        api.get("/api/favoritos-recetas", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        api.get("/api/favoritos-restaurantes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-      ]);
+      const [favoritosRecetasResponse, favoritosRestaurantesResponse] =
+        await Promise.all([
+          api.get("/api/favoritos-recetas", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          api.get("/api/favoritos-restaurantes", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ]);
 
-      // Asignar los resultados a sus respectivos estados
-      setFavoritosRecetas(favoritosRecetasResponse.data); // Guardar los favoritos de recetas
-      setFavoritosRestaurantes(favoritosRestaurantesResponse.data); // Guardar los favoritos de restaurantes
-
-      setFavoritosOpen(true); // Abrir el modal de favoritos
+      setFavoritosRecetas(favoritosRecetasResponse.data);
+      setFavoritosRestaurantes(favoritosRestaurantesResponse.data);
+      setFavoritosOpen(true);
     } catch (error) {
       console.error("Error al cargar los favoritos", error);
     }
@@ -79,40 +75,55 @@ export default function Navigation(props: NavigationProps) {
 
   return (
     <nav {...props}>
-      <img src={logo} alt="Logo" className="logo" />
+      <div className="nav-container">
+        {/* Logo */}
+        <div className="nav-left">
+          <img src={logo} alt="Logo" className="logo" />
+        </div>
 
-      <div className={`menu ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
-        abrir
-        <span></span><span></span><span></span><span></span>
-      </div>
+        {/* Menú Hamburguesa (solo móvil) */}
+        <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
 
-      <div className={`navbar-menu ${menuOpen ? "open" : ""}`}>
-        <NavLink to="/">HOME</NavLink>
-        <NavLink to="/intolerancias">INTOLERANCIAS</NavLink>
-        {isLoggedIn() && (
-          <>
-            <NavLink to="/addReceta">AÑADIR RECETA</NavLink>
-            <NavLink to="/recetasVip">RECETAS VIP</NavLink>
-            <button onClick={handleOpenFavoritos} className="favorito-link">
+        {/* Menú Principal Centrado */}
+        <div className={`nav-center ${menuOpen ? "open" : ""}`}>
+          <div className="navbar-menu">
+            <NavLink to="/" onClick={() => setMenuOpen(false)}>HOME</NavLink>
+            <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>INTOLERANCIAS</NavLink>
+            {isLoggedIn() && (
+              <>
+                <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>AÑADIR RECETA</NavLink>
+                <NavLink to="/recetasVip" onClick={() => setMenuOpen(false)}>RECETAS VIP</NavLink>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Sección Derecha */}
+        <div className="nav-right">
+          {isLoggedIn() && (
+            <button onClick={() => {
+              handleOpenFavoritos();
+              setMenuOpen(false);
+            }} className="favorito-link">
               ❤️ Favoritos
             </button>
-          </>
-        )}
-      </div>
-
-      <div className="navbar-right">
-        {!isLoggedIn() ? (
-          <button onClick={() => setModalOpen(true)}>ÚNETE</button>
-        ) : (
-          <button
-            onClick={() => {
+          )}
+          
+          {!isLoggedIn() ? (
+            <button onClick={() => setModalOpen(true)}>ÚNETE</button>
+          ) : (
+            <button onClick={() => {
               localStorage.removeItem("jwtToken");
               navigate("/");
-            }}
-          >
-            CERRAR SESIÓN
-          </button>
-        )}
+            }}>
+              CERRAR SESIÓN
+            </button>
+          )}
+        </div>
       </div>
 
       <ModalRoL
@@ -125,8 +136,8 @@ export default function Navigation(props: NavigationProps) {
       <ModalFavoritos
         open={favoritosOpen}
         onClose={() => setFavoritosOpen(false)}
-        favoritosRecetas={favoritosRecetas} // Pasar favoritos de recetas
-        favoritosRestaurantes={favoritosRestaurantes} // Pasar favoritos de restaurantes
+        favoritosRecetas={favoritosRecetas}
+        favoritosRestaurantes={favoritosRestaurantes}
       />
     </nav>
   );

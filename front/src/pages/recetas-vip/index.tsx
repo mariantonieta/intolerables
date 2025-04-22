@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import RecetaCard from "../../components/cardreceta";
 import Navigation from "../../containers/navigation";
-import api from "../../services/axiosConfig"; // ← aquí usás tu config con token
+import api from "../../services/axiosConfig";
 import "../recetas/index.css";
 
 interface Receta {
-  id: number; // Agregar un ID para cada receta
+  id: number;
   titulo: string;
   imagen: string;
   duracionReceta: number;
@@ -16,69 +16,122 @@ interface Receta {
     unidad: string;
     ingrediente: { nombre: string };
   }[];
-  isFavorito?: boolean; // Puedes agregar esta propiedad para almacenar si es favorito
 }
+
+
 
 export default function RecetasComunidad() {
   const [recetas, setRecetas] = useState<Receta[]>([]);
+  const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
+  // Cargar recetas al iniciar
   useEffect(() => {
     const obtenerRecetas = async () => {
+      setIsLoading(true);
       try {
-        const res = await api.get("/api/recetas"); // Asegúrate que exista esta ruta en el backend
-        const recetasConFavoritos = res.data.map((receta: Receta) => ({
-          ...receta,
-          isFavorito: false, // Inicializamos todos los favoritos en false
-        }));
-        setRecetas(recetasConFavoritos);
+        const res = await api.get("/api/recetas");
+        setRecetas(res.data as Receta[]);
       } catch (err) {
-        console.error("Error al cargar recetas de la comunidad:", err);
+        console.error("Error al cargar recetas:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
-
+  
     obtenerRecetas();
   }, []);
+  
 
-  // Función para manejar el cambio de estado de favorito
-  const toggleFavorito = (id: number) => {
-    setRecetas((prevRecetas) =>
-      prevRecetas.map((receta) =>
-        receta.id === id ? { ...receta, isFavorito: !receta.isFavorito } : receta
-      )
-    );
+  const toggleFavorito = async (id: number) => {
+    const token = localStorage.getItem("jwtToken");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!token || !usuarioId) {
+      alert("Debes iniciar sesión para usar favoritos.");
+      return;
+    }
+
+    const yaEsFavorito = favoritosIds.includes(id);
+
+    try {
+      if (yaEsFavorito) {
+        await api.delete(`/api/favoritos-recetas/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setFavoritosIds((prev) => prev.filter((fid) => fid !== id));
+      } else {
+        console.log("Enviando a favoritos:", { receta: { id }, usuario: { id: parseInt(usuarioId) } });
+        
+        await api.post(
+          "/api/favoritos-recetas",
+          {
+            receta: { id },
+            usuario: { id: parseInt(usuarioId) },
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setFavoritosIds((prev) => [...prev, id]);
+      }
+    } catch (error) {
+      console.error("Error al actualizar favorito:", error);
+    }
   };
+
+  // Filtro básico por título
+  const recetasFiltradas = recetas.filter((receta) =>
+    receta.titulo.toLowerCase().includes(busqueda.toLowerCase())
+  );
 
   return (
     <>
       <Navigation />
       <div className="container">
-        <h1>Recetas de la Comunidad 👨‍👩‍👧‍👦</h1>
+        <h1>Encuentra tu safe place en Recetas de la Comunidad</h1>
+        <div className="buscador-container">
+          <input
+            type="text"
+            placeholder="Buscar receta de la comunidad..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
         <div className="contenido">
-          {recetas.map((receta) => (
-            <RecetaCard
-              key={receta.id}
-              id={receta.id} // Agregar el ID de la receta
-              nombre={receta.titulo}
-              imagen={receta.imagen}
-              tiempo={receta.duracionReceta}
-              calorias={receta.calorias || 100}
-              rating={5}
-              ingredientes={
-                receta.ingredientes && receta.ingredientes.length > 0
-                  ? receta.ingredientes.map(
-                      (i) => `${i.cantidad} ${i.unidad} ${i.ingrediente.nombre}`
-                    )
-                  : ["Sin ingredientes"]
-              }
-              preparacion={
-                receta.analyzedInstructions && receta.analyzedInstructions.length > 0
-                  ? receta.analyzedInstructions.map((p) => p.descripcion)
-                  : ["Sin pasos disponibles"]
-              }
-              isFavorito={receta.isFavorito || false} // Si la receta es favorita, pasa true
-              onToggleFavorito={() => toggleFavorito(receta.id)} // Pasamos la función toggleFavorito
-            />
-          ))}
+          {isLoading ? (
+            <p>Cargando recetas...</p>
+          ) : recetasFiltradas.length > 0 ? (
+            recetasFiltradas.map((receta) => (
+              <RecetaCard
+                key={receta.id}
+                id={receta.id}
+                nombre={receta.titulo}
+                imagen={receta.imagen}
+                tiempo={receta.duracionReceta}
+                calorias={receta.calorias || 100}
+                rating={5}
+                ingredientes={
+                  receta.ingredientes?.length
+                    ? receta.ingredientes.map(
+                        (i) =>
+                          `${i.cantidad} ${i.unidad} ${i.ingrediente.nombre}`
+                      )
+                    : ["Sin ingredientes"]
+                }
+                preparacion={
+                  receta.analyzedInstructions?.length
+                    ? receta.analyzedInstructions.map((p) => p.descripcion)
+                    : ["Sin pasos disponibles"]
+                }
+                isFavorito={favoritosIds.includes(receta.id)}
+                onToggleFavorito={() => toggleFavorito(receta.id)}
+              />
+            ))
+          ) : (
+            <p>No se encontraron recetas.</p>
+          )}
         </div>
       </div>
     </>
