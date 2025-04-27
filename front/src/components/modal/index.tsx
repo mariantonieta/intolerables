@@ -12,7 +12,8 @@ interface DialogProps{
      }
     export default function Modal({ open, onClose, title, content, imagen, motivacion, onSoyClick }: DialogProps) {
         return (
-          <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+          <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg"   PaperProps={{ className: "modal-animado" }}
+>
             <DialogTitle className="titulo">{title}</DialogTitle>
             <DialogContent>
             <img src={imagen} alt={title} className="modal-img"/>

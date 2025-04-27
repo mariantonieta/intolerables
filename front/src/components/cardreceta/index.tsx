@@ -20,7 +20,6 @@ export default function RecetaCard({
   imagen,
   tiempo,
   calorias,
-  rating,
   ingredientes,
   preparacion,
   isFavorito = false,
@@ -33,6 +32,7 @@ export default function RecetaCard({
   };
 
   return (
+    <>
     <div className="tarjeta">
       <div className="tarjeta-titulo">{nombre}</div>
       <img className="tarjeta-imagen" src={imagen} alt={`Foto de ${nombre}`} />
@@ -44,14 +44,7 @@ export default function RecetaCard({
         <p className="tarjeta-categoria">
           <strong>Calorías:</strong> {calorias} Kcal
         </p>
-        <p className="tarjeta-categoria">
-          <strong>Rating:</strong>{" "}
-          {[...Array(5)].map((_, i) => (
-            <span key={i} className={i < rating ? "star active" : "star"}>
-              ★
-            </span>
-          ))}
-        </p>
+        
 
         <button className="ver-mas-btn" onClick={openModal}>
           Ver receta completa
@@ -65,16 +58,18 @@ export default function RecetaCard({
         </button>
       </div>
 
-      <ModalReceta
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        title={nombre}
-        image={imagen}
-        tiempo={tiempo}
-        calorias={calorias}
-        ingredientes={ingredientes}
-        preparacion={preparacion}
-      />
     </div>
+    
+    <ModalReceta
+    open={isOpen}
+    onClose={() => setIsOpen(false)}
+    title={nombre}
+    image={imagen}
+    tiempo={tiempo}
+    calorias={calorias}
+    ingredientes={ingredientes}
+    preparacion={preparacion}
+  />
+  </>
   );
 }

@@ -17,6 +17,8 @@ body {
   font-size: var(--font-size);
   background: var(--color-1); 
   color: var(--color-2);
+
+
 }
 a{
   text-decoration: none;

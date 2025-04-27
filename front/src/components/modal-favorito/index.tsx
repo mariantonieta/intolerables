@@ -1,6 +1,5 @@
-import { Dialog, DialogContent } from "@mui/material";
-import "../modal/style.css";
-//modal para mostrar los favoritos
+import { Dialog, DialogContent, Typography, Button } from "@mui/material";
+import "../modal-receta/index.css"
 type FavoritoRecetaDTO = {
   id: number;
   nombreReceta: string;
@@ -24,59 +23,57 @@ export default function ModalFavoritos({
   favoritosRestaurantes,
 }: ModalFavoritosProps) {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
       <DialogContent>
-        <h2 className="titulo">Tus Favoritos</h2>
+        <div className="modal-content">
+          <button className="close-button" onClick={onClose}>✖</button>
 
-     
-        <div>
-          <h3>Recetas</h3>
-          {favoritosRecetas.length === 0 ? (
-            <p className="texto">Aún no tienes recetas favoritas guardadas.</p>
-          ) : (
-            favoritosRecetas.map((fav) => (
-              <div key={fav.id} className="texto">
-                <h4>
-                  <a
-                    href={`/receta/${fav.id}`} 
-                         className="favorito-link"
-                  >
-                    {fav.nombreReceta}
-                  </a>
-                </h4>
-              </div>
-            ))
-          )}
-        </div>
+          <div className="modal-title-container">
+            <Typography variant="h6" className="modal-title">Tus Favoritos</Typography>
+          </div>
 
-           <div>
-          <h3>Restaurantes</h3>
-          {favoritosRestaurantes.length === 0 ? (
-            <p className="texto">Aún no tienes restaurantes favoritos guardados.</p>
-          ) : (
-            favoritosRestaurantes.map((fav) => (
-              <div key={fav.nombreRestaurante} className="texto"> 
-                <h4>
-                  <a
-                    href={`https://www.yelp.com/search?find_desc=${encodeURIComponent(
-                      fav.nombreRestaurante
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="favorito-link"
-                  >
-                    {fav.nombreRestaurante}
-                  </a>
-                </h4>
-              </div>
-            ))
-          )}
-        </div>
+          <div className="modal-details">
+            <div className="column">
+              <Typography variant="h6" className="section-title">Recetas</Typography>
+              {favoritosRecetas.length === 0 ? (
+                <p className="texto">Aún no tienes recetas favoritas guardadas.</p>
+              ) : (
+                <ul>
+                  {favoritosRecetas.map((fav) => (
+                    <li key={fav.id}>
+                      <a href={`/receta/${fav.id}`} className="favorito-link">{fav.nombreReceta}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
-        <div className="btns">
-          <button onClick={onClose} className="btn-modal">
-            Cerrar
-          </button>
+            <div className="column">
+              <Typography variant="h6" className="section-title">Restaurantes</Typography>
+              {favoritosRestaurantes.length === 0 ? (
+                <p className="texto">Aún no tienes restaurantes favoritos guardados.</p>
+              ) : (
+                <ul>
+                  {favoritosRestaurantes.map((fav) => (
+                    <li key={fav.nombreRestaurante}>
+                      <a
+                        href={`https://www.yelp.com/search?find_desc=${encodeURIComponent(fav.nombreRestaurante)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="favorito-link"
+                      >
+                        {fav.nombreRestaurante}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          <Button onClick={onClose} className="ok-button">
+            OK
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -7,6 +7,7 @@ import anto.es.intolerables.entities.Usuario;
 import anto.es.intolerables.repositories.FavoritoRecetaRepository;
 import anto.es.intolerables.repositories.RecetaRepository;
 import anto.es.intolerables.services.FavoritoRecetaService;
+import anto.es.intolerables.services.RecetaService;
 import anto.es.intolerables.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class FavoritoRecetaController {
     private final UsuarioService usuarioService;
     private final RecetaRepository recetaRepository;
     private final FavoritoRecetaRepository favoritoRepo;
+    private final RecetaService recetaService;
 
 
     @GetMapping
@@ -85,7 +88,7 @@ public class FavoritoRecetaController {
     }
 
     private Integer generarNuevoId() {
-        return Math.abs((int) System.currentTimeMillis()); // Genera un número único
+        return Math.abs((int) System.currentTimeMillis());
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarFavorito(@PathVariable Integer id) {
@@ -94,6 +97,37 @@ public class FavoritoRecetaController {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/spoonacular")
+    @Transactional
+    public ResponseEntity<?> crearFavoritoDesdeSpoonacular(@RequestBody Map<String, Object> datosReceta) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String nombreUsuario = authentication.getName();
+
+            Usuario usuario = usuarioService.findByNombre(nombreUsuario)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            Receta receta = recetaService.convertirDesdeSpoonacular(datosReceta);
+
+            Receta recetaGuardada = recetaRepository.findByTitulo(receta.getTitulo())
+                    .orElseGet(() -> recetaService.crearReceta(receta));
+
+            FavoritoReceta favorito = new FavoritoReceta();
+            favorito.setUsuario(usuario);
+            favorito.setReceta(recetaGuardada);
+
+            FavoritoReceta favoritoGuardado = favoritoRecetaService.save(favorito);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "id", favoritoGuardado.getId(),
+                    "mensaje", "Receta de Spoonacular guardada como favorita correctamente"
+            ));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
 

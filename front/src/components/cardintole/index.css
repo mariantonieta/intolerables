@@ -9,6 +9,48 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
 }
+/* index.css */
+
+.card-intole {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeSlideUp 0.6s ease-out forwards;
+  }
+  
+  .card-intole:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .card-intole:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .card-intole:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes fadeSlideUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .card-intole {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-intole:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn-soy, .btn-mas {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-soy:hover, .btn-mas:hover {
+    background-color: var(--color-2);
+    transform: scale(1.05);
+  }
+  
+  
 .card-container{
 display: flex;
 justify-content: space-between;

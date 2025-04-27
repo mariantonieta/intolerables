@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RecetaCard from "../../components/cardreceta";
 import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
+import ModalAlerta from "../../components/modal-alerta";
 import "../recetas/index.css";
 
 interface Receta {
@@ -14,19 +15,19 @@ interface Receta {
   ingredientes?: {
     cantidad: number;
     unidad: string;
-    ingrediente: { nombre: string };
+    ingrediente: { nombre: string } | null;
   }[];
 }
-
-
 
 export default function RecetasComunidad() {
   const [recetas, setRecetas] = useState<Receta[]>([]);
   const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
   const [busqueda, setBusqueda] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [modalError, setModalError] = useState(false);
+  const [mensajeError, setMensajeError] = useState("");
 
-  // Cargar recetas al iniciar
+  // Función para cargar recetas
   useEffect(() => {
     const obtenerRecetas = async () => {
       setIsLoading(true);
@@ -34,24 +35,31 @@ export default function RecetasComunidad() {
         const res = await api.get("/api/recetas");
         setRecetas(res.data as Receta[]);
       } catch (err) {
-        console.error("Error al cargar recetas:", err);
+        setMensajeError(`Error al cargar recetas: ${err}`);
+        setModalError(true); 
       } finally {
         setIsLoading(false);
       }
     };
-  
+
     obtenerRecetas();
   }, []);
-  
+
+  const recetasFiltradas = recetas.filter((receta) =>
+    receta.titulo.toLowerCase().includes(busqueda.toLowerCase())  );
 
   const toggleFavorito = async (id: number) => {
     const token = localStorage.getItem("jwtToken");
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!token || !usuarioId) {
-      alert("Debes iniciar sesión para usar favoritos.");
+      setMensajeError("Debes iniciar sesión para usar favoritos.");
+      setModalError(true); 
       return;
     }
+
+    const receta = recetas.find((r) => r.id === id);
+    if (!receta) return;
 
     const yaEsFavorito = favoritosIds.includes(id);
 
@@ -62,8 +70,6 @@ export default function RecetasComunidad() {
         });
         setFavoritosIds((prev) => prev.filter((fid) => fid !== id));
       } else {
-        console.log("Enviando a favoritos:", { receta: { id }, usuario: { id: parseInt(usuarioId) } });
-        
         await api.post(
           "/api/favoritos-recetas",
           {
@@ -77,14 +83,10 @@ export default function RecetasComunidad() {
         setFavoritosIds((prev) => [...prev, id]);
       }
     } catch (error) {
-      console.error("Error al actualizar favorito:", error);
+      setMensajeError(`Error al actualizar favorito: ${error}`);
+      setModalError(true); 
     }
   };
-
-  // Filtro básico por título
-  const recetasFiltradas = recetas.filter((receta) =>
-    receta.titulo.toLowerCase().includes(busqueda.toLowerCase())
-  );
 
   return (
     <>
@@ -95,9 +97,10 @@ export default function RecetasComunidad() {
           <input
             type="text"
             placeholder="Buscar receta de la comunidad..."
+            id="receta"
             value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
+            onChange={(e) => setBusqueda(e.target.value)} 
+            />
         </div>
         <div className="contenido">
           {isLoading ? (
@@ -116,7 +119,9 @@ export default function RecetasComunidad() {
                   receta.ingredientes?.length
                     ? receta.ingredientes.map(
                         (i) =>
-                          `${i.cantidad} ${i.unidad} ${i.ingrediente.nombre}`
+                          i.ingrediente
+                            ? `${i.cantidad} ${i.unidad} ${i.ingrediente.nombre}`
+                            : "Ingrediente desconocido"
                       )
                     : ["Sin ingredientes"]
                 }
@@ -134,6 +139,12 @@ export default function RecetasComunidad() {
           )}
         </div>
       </div>
+
+      <ModalAlerta
+        open={modalError}
+        onClose={() => setModalError(false)}
+        mensaje={mensajeError}
+      />
     </>
   );
 }

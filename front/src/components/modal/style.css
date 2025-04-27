@@ -1,70 +1,68 @@
-/* Estilo general del modal */
 .MuiDialog-paper {
+  font-family: 'Poppins', sans-serif;
   background-color: var(--color-6) !important;
-  border-radius: 15px;
+  border-radius: 20px;
   padding: 0;
-  height: auto;
-  max-height: 50vh;
-  width: auto;
   max-width: 700px;
+  width: 90%;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden !important;
-}
-.MuiDialogContent-root {
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1 1 auto;
-  overflow-y: auto;
-  gap: 10px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+  animation: fadeInScale 0.4s ease-out;
 }
 
-/* Título */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .titulo {
-  font-weight: bold !important;
+  font-weight: 600 !important;
   color: var(--color-5);
   text-align: center;
   margin: 20px 0 10px 0;
-  padding: 0;
+  font-size: 2rem !important;
 }
 
-/* Contenido */
 .MuiDialogContent-root {
   padding: 0 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  gap: 10px;
+  gap: 15px;
+  overflow-y: auto;
 }
 
-.MuiDialogContent-root p {
-  text-align: justify;
-  margin: 0;
-  font-size: 20px !important;
-}
-
-/* Texto */
+.MuiDialogContent-root p,
 .texto {
-  font-size: 20px !important;
-  color: rgb(12, 12, 12);
+  font-size: 16px !important;
+  color: var(--color-4);
   text-align: justify;
   margin: 0;
-  padding: 0;
-  line-height: 1.5;
-  width: 100%;
+  line-height: 1.6;
+  transition: color 0.3s ease;
 }
 
-/* Imagen */
 .modal-img {
   width: 150px;
   height: 150px;
   margin-bottom: 10px;
+  transition: transform 0.3s ease;
 }
 
-/* Botones */
+.modal-img:hover {
+  transform: scale(1.05);
+}
+
 .btns {
   display: flex;
   justify-content: center;
@@ -76,33 +74,38 @@
   text-align: center;
 }
 
-/* Botón estilo */
 .btn-modal {
   background-color: var(--color-3) !important;
-  color: var(--color-4) !important;
+  color: white !important;
   font-weight: bold !important;
-  padding: 10px 25px !important;
-  transition: 0.3s ease !important;
-  border-radius: 5px;
+  padding: 12px 28px !important;
+  font-size: 16px;
+  border-radius: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .btn-modal:hover {
   background-color: var(--color-5) !important;
   transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
+
 @media (max-width: 600px) {
   .modal-img {
     width: 100px;
     height: 100px;
   }
 
-  .texto,
-  .MuiDialogContent-root p {
+  .MuiDialogContent-root p,
+  .texto {
     font-size: 16px !important;
   }
 
   .btn-modal {
-    padding: 8px 20px !important;
+    padding: 10px 20px !important;
     font-size: 14px;
   }
 

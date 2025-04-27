@@ -11,6 +11,7 @@ import {
   RecetasComunidad,
   LoginForm,
   Registro,
+  AboutUs 
 } from "./pages";
 
 //Rutas
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/register" element={<Registro />} />
         <Route path="/addReceta" element={<CrearReceta />} />
         <Route path="/recetasVip" element={<RecetasComunidad />} />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

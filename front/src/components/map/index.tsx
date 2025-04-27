@@ -1,22 +1,13 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useState, useEffect } from "react";
-import "./index.css";
-import "leaflet/dist/leaflet.css";
-
-//mostrar mapa
 import { LatLngExpression } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "./index.css";
 
-export default function Mapa() {
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
-  // Coordenadas de Madrid
-  useEffect(() => {
-    setTimeout(() => {
-      setPosition([40.4168, -3.7038]);
-      console.log("Nueva posición:", [40.4168, -3.7038]);
-    }, 1000);
-  }, []);
-  if (!position) return <p>Cargando mapa...</p>;
+interface MapaProps {
+  position: LatLngExpression;
+}
 
+export default function Mapa({ position }: MapaProps) {
   return (
     <div className="mapa-container">
       <MapContainer
@@ -28,7 +19,7 @@ export default function Mapa() {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <Marker position={position}>
-          <Popup>Restaurante en Madrid</Popup>
+          <Popup>Ubicación actual o seleccionada</Popup>
         </Marker>
       </MapContainer>
     </div>

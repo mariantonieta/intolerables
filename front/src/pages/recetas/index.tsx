@@ -4,6 +4,7 @@ import Navigation from "../../containers/navigation";
 import "./index.css";
 import api from "../../services/axiosConfig";
 import ModalFavoritos from "../../components/modal-favorito";
+import ModalAlerta from "../../components/modal-alerta";
 
 interface Receta {
   id: number;
@@ -16,7 +17,7 @@ interface Receta {
 }
 
 interface FavoritoReceta {
-  receta: {
+  receta?: {
     id: number;
     title: string;
   };
@@ -31,11 +32,14 @@ export default function Recetas() {
     { id: number; nombreReceta: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalError, setModalError] = useState(false);
+  const [mensajeError,setMensajeError] = useState("")
+
   useEffect(() => {
     const cargarFavoritos = async () => {
       const token = localStorage.getItem("jwtToken");
       if (!token) return;
-  
+
       setIsLoading(true);
       try {
         const res = await api.get("/api/favoritos-recetas", {
@@ -43,32 +47,34 @@ export default function Recetas() {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         const data = res.data as FavoritoReceta[];
-        const ids = data.map((fav) => fav.receta?.id).filter((id) => id !== undefined);
+        const ids = data.map((fav) => fav.receta?.id).filter((id): id is number => id !== undefined);
         const formateados = data
-          .filter((fav) => fav.receta)
+          .filter((fav): fav is { receta: { id: number; title: string } } => fav.receta !== undefined)
           .map((fav) => ({
             id: fav.receta.id,
             nombreReceta: fav.receta.title,
           }));
-  
+
         setFavoritos(ids);
         setFavoritosRecetasModal(formateados);
       } catch (error) {
-        console.error("Error al cargar favoritos de recetas", error);
+      setMensajeError(`Error al cargar en favoritos ${error}`) 
+      setModalError(true)
       } finally {
         setIsLoading(false);
       }
     };
-  
+
     cargarFavoritos();
   }, []);
-  
+
   const buscarRecetas = async () => {
     const intolerancia = localStorage.getItem("intoleranciaSeleccionada");
     if (!intolerancia || !busqueda) {
-      alert("Por favor, escribe qué querés buscar.");
+      setMensajeError("Por favor, escribe la receta que quieres buscar.");
+      setModalError(true); 
       return;
     }
 
@@ -76,11 +82,52 @@ export default function Recetas() {
       const res = await api.get(`/api/recetas/buscar`, {
         params: { intolerancia, query: busqueda },
       });
-
+     // console.log(res.data.results);
       setRecetas(res.data.results);
-    } catch (err) {
-      console.error("Error al buscar recetas:", err);
-      alert("No se pudieron encontrar recetas.");
+    } catch (error) {
+      setMensajeError(`Error no se pudieron encontrar las recetas ${error}`) 
+      setModalError(true);
+    }
+  };
+
+  const guardarRecetaFavoritaDesdeSpoonacular = async (receta: Receta) => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      setMensajeError("Debes iniciar sesión para guardar favoritos.");
+      setModalError(true);
+    }
+
+    try {
+      const payload = {
+        title: receta.title,
+        image: receta.image,
+        readyInMinutes: receta.readyInMinutes,
+        calories: receta.calories || 0,
+        extendedIngredients: receta.extendedIngredients?.map((i) => ({
+          name: i.original,
+        })) || [],
+        analyzedInstructions:
+          receta.analyzedInstructions?.[0]?.steps.map((s) => ({
+            step: s.step,
+          })) || [],
+      };
+
+       await api.post("/api/favoritos-recetas/spoonacular", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    //  console.log("Receta guardada como favorita:", res.data);
+    
+      setFavoritos((prev) => [...prev, receta.id]);
+      setFavoritosRecetasModal((prev) => [
+        ...prev,
+        { id: receta.id, nombreReceta: receta.title },
+      ]);
+    } catch (error) {
+      setMensajeError(`Error al actualizar en favoritos ${error}`) 
+      setModalError(true); 
     }
   };
 
@@ -89,9 +136,13 @@ export default function Recetas() {
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!token || !usuarioId) {
-      alert("Debes iniciar sesión para guardar favoritos.");
-      return;
+      setMensajeError("Debes iniciar sesión para guardar favoritos.");
+      setModalError(true);
+      return
     }
+
+    const receta = recetas.find((r) => r.id === id);
+    if (!receta) return;
 
     const yaEsFavorito = favoritos.includes(id);
 
@@ -101,33 +152,15 @@ export default function Recetas() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFavoritos((prev) => prev.filter((fid) => fid !== id));
-        setFavoritosRecetasModal((prev) => prev.filter((fav) => fav.id !== id));
-      } else {
-      
-        const token = localStorage.getItem("jwtToken");
-
-        await api.post(
-          "/api/favoritos-recetas",
-          { receta: { id } },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        setFavoritosRecetasModal((prev) =>
+          prev.filter((fav) => fav.id !== id)
         );
-        
-        const receta = recetas.find((r) => r.id === id);
-        if (receta) {
-          setFavoritos((prev) => [...prev, id]);
-          setFavoritosRecetasModal((prev) => [
-            ...prev,
-            { id: receta.id, nombreReceta: receta.title },
-          ]);
-        }
+      } else {
+        await guardarRecetaFavoritaDesdeSpoonacular(receta);
       }
     } catch (error) {
-      console.error("Error actualizar favorito:", error);
-    }
+      setMensajeError(`Error al actualizar en favoritos ${error}`) 
+     }
   };
 
   return (
@@ -138,6 +171,7 @@ export default function Recetas() {
         <div className="buscador-container">
           <input
             type="text"
+            id="receta"
             placeholder="¿Qué te apetece comer hoy?"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
@@ -145,12 +179,7 @@ export default function Recetas() {
           <button className="buscar-btn" onClick={buscarRecetas}>
             🔍
           </button>
-          <button
-            onClick={() => setModalFavoritosOpen(true)}
-            className="btn-ver-favoritos"
-          >
-            Ver Favoritos ❤️
-          </button>
+          
         </div>
 
         <div className="mapa-container">
@@ -190,6 +219,11 @@ export default function Recetas() {
         onClose={() => setModalFavoritosOpen(false)}
         favoritosRecetas={favoritosRecetasModal}
         favoritosRestaurantes={[]}
+      />
+      <ModalAlerta
+      open={modalError}
+      onClose={() => setModalError(false)}
+      mensaje={mensajeError}
       />
     </>
   );

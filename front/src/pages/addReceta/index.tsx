@@ -4,8 +4,7 @@ import "./index.css";
 import api from "../../services/axiosConfig";
 import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
-//añadir receta si eres usuario
-//datos tipados q recibe el backend
+
 interface IngredienteForm {
   id: number | null;
   nombre: string;
@@ -32,6 +31,7 @@ interface NuevaReceta {
     descripcion: string;
   }[];
   intolerancias: string[];
+  publica?: boolean; // <-- NUEVO: hacemos la receta pública
 }
 
 export default function CrearReceta() {
@@ -47,18 +47,17 @@ export default function CrearReceta() {
   const [tipoReceta, setTipoReceta] = useState("");
   const navigate = useNavigate();
 
-  //convertir la imagen a una url
   const handleImageUpload = async () => {
     if (!imageFile) return;
     const formData = new FormData();
     formData.append("image", imageFile);
-    //con la api de imgbb
     const response = await axios.post(
       "https://api.imgbb.com/1/upload?key=8e4557ecb19620ef5d4de4f4f54120ee",
       formData
     );
     return response.data.data.url;
   };
+
   const addReceta = async () => {
     let imageUrl = image;
     if (imageFile) {
@@ -90,14 +89,25 @@ export default function CrearReceta() {
         descripcion: paso,
       })),
       intolerancias: [],
+      publica: true, // <-- Le decimos explícitamente que la receta es pública
     };
 
     try {
       const token = localStorage.getItem("jwtToken");
-      console.log("Token almacenao:", token);
-      const response = await api.post("/api/recetas/crear", nuevaReceta);
-      navigate("/recetasVip");
-      console.log("Respuesta:", response.data);
+      console.log("Token almacenado:", token);
+      console.log("Receta que se va a crear:", nuevaReceta);
+
+      const response = await api.post("/api/recetas/crear", nuevaReceta, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Respuesta del backend:", response.data);
+
+      alert("Receta creada con éxito ✅");
+
+      // Limpiar los campos
       setTitle("");
       setImage("");
       setImageFile(null);
@@ -106,13 +116,15 @@ export default function CrearReceta() {
       setPasos([""]);
       setCalorias(0);
       setTipoReceta("");
+
+      navigate("/recetasVip"); // Redirigir
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error de Axios:", error.response?.data || error.message);
       } else {
         console.error("Error desconocido:", error);
       }
-      alert("Ocurrió un error al crear la receta");
+      alert("❌ Ocurrió un error al crear la receta");
     }
   };
 
@@ -123,53 +135,84 @@ export default function CrearReceta() {
         <div className="formulario-receta">
           <div className="card-receta">
             <h2>Crear nueva receta 🍽️</h2>
-            <input
-              type="text"
-              placeholder="Título de la receta"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="URL de la imagen (opcional)"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-            />
-            <input
-              type="number"
-              placeholder="Tiempo de preparación (min)"
-              value={readyInMinutes}
-              onChange={(e) =>
-                setReadyInMinutes(
-                  e.target.value === "" ? 0 : parseInt(e.target.value)
-                )
-              }
-            />
-            <input
-              type="number"
-              placeholder="Calorías"
-              value={calorias}
-              onChange={(e) =>
-                setCalorias(
-                  e.target.value === "" ? 0 : parseInt(e.target.value)
-                )
-              }
-            />
-            <input
-              type="text"
-              placeholder="Tipo de receta"
-              value={tipoReceta}
-              onChange={(e) => setTipoReceta(e.target.value)}
-            />
+
+            <div className="form-group">
+              <label htmlFor="titulo">Título de la receta</label>
+              <input
+                type="text"
+                id="titulo"
+                placeholder="Título de la receta"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="imagen">URL de la imagen (opcional)</label>
+              <input
+                type="text"
+                id="imagen"
+                placeholder="URL de la imagen (opcional)"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="imageFile">Subir una imagen</label>
+              <input
+                type="file"
+                id="imageFile"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="readyInMinutes">Tiempo de preparación (min)</label>
+              <input
+                type="number"
+                id="readyInMinutes"
+                placeholder="Tiempo de preparación (min)"
+                value={readyInMinutes}
+                onChange={(e) =>
+                  setReadyInMinutes(
+                    e.target.value === "" ? 0 : parseInt(e.target.value)
+                  )
+                }
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="calorias">Calorías</label>
+              <input
+                type="number"
+                id="calorias"
+                placeholder="Calorías"
+                value={calorias}
+                onChange={(e) =>
+                  setCalorias(
+                    e.target.value === "" ? 0 : parseInt(e.target.value)
+                  )
+                }
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="tipoReceta">Tipo de receta</label>
+              <input
+                type="text"
+                id="tipoReceta"
+                placeholder="Tipo de receta"
+                value={tipoReceta}
+                onChange={(e) => setTipoReceta(e.target.value)}
+              />
+            </div>
 
             <h4>Ingredientes</h4>
             {ingredients.map((ing, idx) => (
-              <div key={idx}>
+              <div key={idx} className="form-group">
+                <label>Nombre</label>
                 <input
                   type="text"
                   placeholder="Nombre"
@@ -180,6 +223,8 @@ export default function CrearReceta() {
                     setIngredients(copia);
                   }}
                 />
+
+                <label>Cantidad</label>
                 <input
                   type="number"
                   placeholder="Cantidad"
@@ -190,6 +235,8 @@ export default function CrearReceta() {
                     setIngredients(copia);
                   }}
                 />
+
+                <label>Unidad</label>
                 <input
                   type="text"
                   placeholder="Unidad"
@@ -202,15 +249,14 @@ export default function CrearReceta() {
                 />
               </div>
             ))}
-            <button
-              onClick={() =>
-                setIngredients([
-                  ...ingredients,
-                  { id: null, nombre: "", cantidad: 0, unidad: "" },
-                ])
-              }
-            >
-              Agregar ingrediente
+
+            <button className="add-btn" onClick={() =>
+              setIngredients([
+                ...ingredients,
+                { id: null, nombre: "", cantidad: 0, unidad: "" },
+              ])
+            }>
+              ➕ Agregar ingrediente
             </button>
 
             <h4>Pasos</h4>
@@ -226,11 +272,10 @@ export default function CrearReceta() {
                 }}
               />
             ))}
-            <button onClick={() => setPasos([...pasos, ""])}>
-              Agregar paso
-            </button>
 
-            <button onClick={addReceta}>Crear receta</button>
+            <button className="add-btn" onClick={() => setPasos([...pasos, ""])}>➕ Agregar paso</button>
+
+            <button className="crear-btn" onClick={addReceta}>✅ Crear receta</button>
           </div>
         </div>
       </div>

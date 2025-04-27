@@ -1,5 +1,5 @@
 import { useNavigate, NavLink } from "react-router-dom";
-import logo from "../../../public/svg/logo.svg";
+
 import "./index.css";
 import { useEffect, useState } from "react";
 import ModalRoL from "../../components/modalRoL";
@@ -76,23 +76,21 @@ export default function Navigation(props: NavigationProps) {
   return (
     <nav {...props}>
       <div className="nav-container">
-        {/* Logo */}
         <div className="nav-left">
-          <img src={logo} alt="Logo" className="logo" />
+          <img src="/svg/logo.svg" alt="Logo" className="logo" />
         </div>
 
-        {/* Menú Hamburguesa (solo móvil) */}
         <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
           <span></span>
           <span></span>
           <span></span>
         </div>
 
-        {/* Menú Principal Centrado */}
         <div className={`nav-center ${menuOpen ? "open" : ""}`}>
           <div className="navbar-menu">
             <NavLink to="/" onClick={() => setMenuOpen(false)}>HOME</NavLink>
             <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>INTOLERANCIAS</NavLink>
+            <NavLink to="/about"  onClick={() => setMenuOpen(false)}>SOBRE MI</NavLink> 
             {isLoggedIn() && (
               <>
                 <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>AÑADIR RECETA</NavLink>
@@ -101,8 +99,6 @@ export default function Navigation(props: NavigationProps) {
             )}
           </div>
         </div>
-
-        {/* Sección Derecha */}
         <div className="nav-right">
           {isLoggedIn() && (
             <button onClick={() => {

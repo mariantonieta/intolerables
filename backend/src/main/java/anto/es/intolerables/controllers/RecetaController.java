@@ -1,7 +1,7 @@
 package anto.es.intolerables.controllers;
+
 import anto.es.intolerables.entities.Receta;
-import anto.es.intolerables.repositories.IngredienteRepository;
-import anto.es.intolerables.security.jwt.JwtTokenProvider;
+import anto.es.intolerables.repositories.RecetaRepository;
 import anto.es.intolerables.services.RecetaService;
 import anto.es.intolerables.services.SpooncularService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,18 +20,23 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/recetas")
 public class RecetaController {
+
     private final RecetaService recetaService;
     private final SpooncularService recetaSpooncularService;
+    private final RecetaRepository recetaRepository;
 
-
+    // Método para buscar recetas desde la API de Spoonacular
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarRecetasPorIntoleranciaYNombre(
             @RequestParam String intolerancia,
             @RequestParam(required = false) String query) {
+        // Llamada al servicio que consulta la API de Spoonacular
         List<Map<String, Object>> recetas = recetaSpooncularService.buscarRecetasPorIntolerancia(intolerancia, query);
 
         return ResponseEntity.ok(Map.of("results", recetas));
     }
+
+    // Obtener todas las recetas guardadas en la base de datos
     @GetMapping
     @Transactional
     public List<Receta> obtenerTodasLasRecetas() {
@@ -43,6 +49,8 @@ public class RecetaController {
 
         return recetas;
     }
+
+    // Crear receta manualmente desde el frontend
     @PostMapping("/crear")
     public ResponseEntity<?> crearReceta(@RequestBody Receta receta, Authentication authentication) {
         if (authentication != null) {
@@ -56,5 +64,22 @@ public class RecetaController {
         }
     }
 
+    // Guardar una receta obtenida desde la API de Spoonacular
+    @PostMapping("/guardar")
+    public ResponseEntity<?> guardarRecetaDesdeSpoonacular(@RequestBody Map<String, Object> datosReceta) {
+        try {
+            // Convertir los datos de la receta de Spoonacular a la entidad Receta
+            Receta receta = recetaService.convertirDesdeSpoonacular(datosReceta);
 
+            // Verificar si la receta ya existe en la base de datos por título
+            Receta recetaGuardada = recetaRepository.findByTitulo(receta.getTitulo())
+                    .orElseGet(() -> recetaRepository.save(receta)); // Si no existe, se guarda
+
+            // Retornar el ID de la receta guardada
+            return ResponseEntity.ok(Map.of("id", recetaGuardada.getId()));
+        } catch (Exception e) {
+            // En caso de error, retornar el mensaje de error
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        }
+    }
 }

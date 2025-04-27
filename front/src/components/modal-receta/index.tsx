@@ -1,6 +1,6 @@
 import React from "react";
-import "./index.css";
-//modal para ver mas detalles de la receta
+import { Dialog, DialogContent, Button, Typography } from "@mui/material";
+import './index.css';
 
 interface ModalRecetaProps {
   open: boolean;
@@ -23,45 +23,52 @@ const ModalReceta: React.FC<ModalRecetaProps> = ({
   ingredientes,
   preparacion,
 }) => {
-  if (!open) return null;
-
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="close-button" onClick={onClose}>
-          ✖
-        </button>
-        <h2 className="modal-title">{title}</h2>
-        <div className="modal-info">
-          <p>{tiempo} Min</p>
-          <p>{calorias} Kcal</p>
-        </div>
-        <img src={image} alt={title} className="modal-image" />
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
+      <DialogContent>
+          <div className="modal-content">
+            <button className="close-button" onClick={onClose}>
+              ✖
+            </button>
+            <div className="modal-header">
+              <img src={image} alt={title} className="modal-image" />
+              <div className="modal-info">
+                <Typography variant="body2">{tiempo} Min</Typography>
+                <Typography variant="body2">{calorias} Kcal</Typography>
+              </div>
+            </div>
 
-        <div className="modal-details">
-          <div className="column">
-            <h3 className="section-title">INGREDIENTES:</h3>
-            <ul>
-              {ingredientes.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="column">
-            <h3 className="section-title">PREPARACIÓN:</h3>
-            <ul>
-              {preparacion.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+            <div className="modal-title-container">
+              <Typography variant="h6" className="modal-title">{title}</Typography>
+            </div>
 
-        <button className="ok-button" onClick={onClose}>
-          OK
-        </button>
-      </div>
-    </div>
+            <div className="modal-details">
+              <div className="column">
+                <Typography variant="h6" className="section-title">Ingredientes</Typography>
+                <ul>
+                  {ingredientes.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="column">
+                <Typography variant="h6" className="section-title">Preparación</Typography>
+                <ul>
+                  {preparacion.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <Button onClick={onClose} className="ok-button">
+              OK
+            </Button>
+          </div>
+
+      </DialogContent>
+    </Dialog>
   );
 };
 

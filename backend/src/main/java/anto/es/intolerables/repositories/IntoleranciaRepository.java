@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface IntoleranciaRepository extends JpaRepository<Intolerancia, Integer> {
     Optional<Intolerancia> findByNombreContainingIgnoreCase(String nombre);
 
-    String nombreIn(Collection<String> nombres);
-}
+ }

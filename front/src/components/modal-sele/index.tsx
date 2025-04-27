@@ -7,15 +7,24 @@ interface ModalBaseProps {
   onClose: () => void;
   title: string;
   actions: { label: string; onClick: () => void; variant?: "text" | "outlined" | "contained" }[];
+  children?: React.ReactNode;
 }
 
-const ModalBase: React.FC<ModalBaseProps> = ({ open, onClose, title, actions }) => {
+const ModalBase: React.FC<ModalBaseProps> = ({ open, onClose, title, actions, children }) => {
   if (!open) return null;
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle className="titulo">{title}</DialogTitle>
+    
+      <DialogTitle className="titulo">{title}
+        
+      </DialogTitle>
+      <div className="modal-content">
+        {children}
+      </div>
+        
       <div className="modal-btns">
+
         {actions.map((action, index) => (
           <Button
             key={index}

@@ -4,7 +4,7 @@ import Mapa from "../../components/map";
 import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 import { useEffect, useState } from "react";
-//Tipado como se esperan recibir los datos del backend
+import ModalAlerta from "../../components/modal-alerta";
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -19,6 +19,7 @@ interface Restaurante {
   imagen: string;
   url: string | null;
 }
+
 export default function Restaurantes() {
   const [restaurantes, setRestaurantes] = useState<Restaurante[]>([]);
   const [termino, setTermino] = useState("");
@@ -26,17 +27,21 @@ export default function Restaurantes() {
   const [intolerancia, setIntolerancia] = useState("");
   const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  //se busca la intolerancia seleccionada del usuario para poder realizar la busqueda
+  const [coordenadas, setCoordenadas] = useState<[number, number]>([40.4168, -3.7038]);
+  const [openModal, setOpenModal] = useState(false);
+  const [mensajeModal, setMensajeModal] = useState("");
+  const mostrarAlerta = (mensaje: string) => {
+    setMensajeModal(mensaje); 
+    setOpenModal(true); 
+   };
+  
   useEffect(() => {
-    const intoleranciaGuardada = localStorage.getItem(
-      "intoleranciaSeleccionada"
-    );
+    const intoleranciaGuardada = localStorage.getItem("intoleranciaSeleccionada");
     if (intoleranciaGuardada) {
       setIntolerancia(intoleranciaGuardada);
     }
   }, []);
 
-  // Cargar los favoritos al iniciar
   useEffect(() => {
     const cargarFavoritos = async () => {
       setIsLoading(true);
@@ -55,22 +60,68 @@ export default function Restaurantes() {
           (fav) => fav.restaurante?.id
         );
         setFavoritosIds(ids);
-      } catch (error) {
-        console.error("Error al cargar favoritos:", error);
-      } finally {
+      } catch  {
+        //console.error("Error al cargar favoritos:", error);
+        } finally {
         setIsLoading(false);
       }
     };
 
     cargarFavoritos();
   }, []);
-  //busqueda de restaurantes
-  const buscarRestaurantes = async () => {
-    if (!termino || !ubicacion) {
-      alert("Por favor, introduce tanto la comida como la ubicación");
+
+  const obtenerCoordenadasPorDireccion = async (direccion: string) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&limit=1`
+    );
+    const data = await response.json();
+    if (data.length > 0) {
+      const { lat, lon } = data[0];
+      setCoordenadas([parseFloat(lat), parseFloat(lon)]);
+    } else {
+      mostrarAlerta("No se pudo encontrar la ubicación.");
+    }
+  };
+
+  const handleUbicacionActual = () => {
+    if (!navigator.geolocation) {
+      mostrarAlerta("La geolocalización no es soportada por tu navegador.");
       return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoordenadas([latitude, longitude]);
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          const ciudad = data.address.city || data.address.town || data.address.village || "";
+          setUbicacion(ciudad);
+        } catch (error) {
+          console.error("Error al obtener la ciudad:", error);
+          mostrarAlerta("No se pudo detectar la ubicación.");
+        }
+      },
+      (error) => {
+        console.error("Error de geolocalización:", error);
+        mostrarAlerta("No se pudo acceder a tu ubicación.");
+      }
+    );
+  };
+
+  const buscarRestaurantes = async () => {
+    if (!termino || !ubicacion) {
+      mostrarAlerta("Por favor, introduce tanto la comida como la ubicación.");
+      return;
+    }
+
     try {
+      await obtenerCoordenadasPorDireccion(ubicacion);
+
       const response = await api.get("/api/restaurantes/buscar", {
         params: {
           intolerancia: intolerancia,
@@ -78,19 +129,20 @@ export default function Restaurantes() {
           comida: termino,
         },
       });
+
       setRestaurantes(response.data);
     } catch (error) {
       console.error("Error al buscar restaurantes:", error);
-      alert("No se pudieron encontrar restaurantes");
+      mostrarAlerta("No se pudieron encontrar restaurantes.");
     }
   };
-  //agrega el restaurante de los favoritos
+
   const toggleFavorito = async (restauranteId: number) => {
     try {
       const usuarioId = localStorage.getItem("usuarioId");
 
       if (!usuarioId) {
-        alert("No se encontró el ID del usuario.");
+        mostrarAlerta("No se encontró el ID del usuario.");
         return;
       }
 
@@ -108,13 +160,11 @@ export default function Restaurantes() {
             id: restauranteId,
           },
         };
-        //se agrega el favorito al modal de favoritos
         await api.post("/api/favoritos-restaurantes", favorito);
         setFavoritosIds((prev) => [...prev, restauranteId]);
       }
-    } catch (error) {
-      console.error("Error con los favoritos", error);
-      alert("Hubo un problema con los favoritos.");
+    } catch  {
+    //  console.error("Error con los favoritos", error);
     }
   };
 
@@ -140,6 +190,9 @@ export default function Restaurantes() {
             value={ubicacion}
             onChange={(e) => setUbicacion(e.target.value)}
           />
+          <button className="ubi-btn" onClick={handleUbicacionActual} title="Usar ubicación actual">
+            📍
+          </button>
           <button className="buscar-btn" onClick={buscarRestaurantes}>
             🔍
           </button>
@@ -151,9 +204,7 @@ export default function Restaurantes() {
             ) : (
               restaurantes.map((restaurante) => (
                 <RestauranteCard
-                  key={
-                    restaurante.id ?? `${restaurante.nombre}-${Math.random()}`
-                  }
+                  key={restaurante.id ?? `${restaurante.nombre}-${Math.random()}`}
                   id={restaurante.id}
                   nombre={restaurante.nombre}
                   direccion={restaurante.direccion}
@@ -166,9 +217,15 @@ export default function Restaurantes() {
               ))
             )}
           </div>
-          <Mapa />
+          <Mapa position={coordenadas} />
         </div>
       </div>
+
+      <ModalAlerta
+  open={openModal}
+  onClose={() => setOpenModal(false)}
+  mensaje={mensajeModal}
+/>
     </>
   );
 }

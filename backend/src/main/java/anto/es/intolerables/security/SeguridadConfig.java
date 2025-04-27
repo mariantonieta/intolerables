@@ -70,7 +70,8 @@
                                     "/api/intolerancias",
                                     "/api/intolerancias/seleccionar",
                                     "/api/recetas/buscar",
-                                    "/api/restaurantes/buscar"
+                                    "/api/restaurantes/buscar",
+                                    "api/favoritos-recetas/spoonacular"
 
 
                                     ).authenticated()

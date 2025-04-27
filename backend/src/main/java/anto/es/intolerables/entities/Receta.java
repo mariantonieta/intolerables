@@ -53,4 +53,5 @@
         @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         @JsonManagedReference("receta-pasos")
         private List<RecetaPasos> analyzedInstructions;
+
     }
