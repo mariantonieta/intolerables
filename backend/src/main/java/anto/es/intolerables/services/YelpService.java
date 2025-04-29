@@ -20,9 +20,16 @@ public class YelpService {
     private final RestauranteRepository restauranteRepository;
 
     private static final String YELP_API_URL = "https://api.yelp.com/v3/businesses/search";
+    private final RestTemplate restTemplate;
     //apiKey que esta en applications.properties
     @Value("${yelp.api.key}")
     private String yelpApiKey;
+
+//para poder realizar el test
+    public void setYelpApiKey(String yelpApiKey) {
+        this.yelpApiKey = yelpApiKey;
+    }
+
     //busca los restaurantes por los parametros
     //intolerancia (el mas importante)
     //ubicacion
@@ -34,9 +41,9 @@ public class YelpService {
 
     public List<Restaurante> buscarRestaurantes(String termino, String ubicacion, String comida) {
         // la url para que la busqueda sea mas personalizada
-        String url = String.format("%s?term=%s&location=%s&category=%s", YELP_API_URL, termino, ubicacion, comida);
+        String term = termino + " " + (comida != null ? comida : "");
+        String url = String.format("%s?term=%s&location=%s", YELP_API_URL, term.trim(), ubicacion);
 
-        RestTemplate restTemplate = new RestTemplate();
         //autorizacion con la apiKey
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + yelpApiKey);
@@ -75,7 +82,19 @@ public class YelpService {
                 return "vegan";
             case "vegetariano":
                 return "vegetarian";
+            case "lactosa":
+            case "sin lactosa":
+                return "dairy-free";
+            case "frutos secos":
+            case "sin frutos secos":
+                return "nut-free";
+            case "huevo":
+            case "sin huevo":
+                return "egg-free";
+            case "soja":
+            case "sin soja":
+                return "soy-free";
             default:
-                return "restaurants";   }
+                return "healthy";  }
     }
 }

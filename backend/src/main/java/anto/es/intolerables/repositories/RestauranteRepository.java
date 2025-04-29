@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Integer> {
     Optional<Restaurante> findByNombre(String nombre);
     Optional<Restaurante> findByNombreContainingIgnoreCase(String nombre);
+    boolean existsByNombreAndDireccion(String nombre, String direccion);
 
 }

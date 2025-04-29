@@ -14,19 +14,25 @@
     @Service
     @RequiredArgsConstructor
     public class SpooncularService {
-        private final RestTemplate restTemplate = new RestTemplate();
+        private final RestTemplate restTemplate;
         //apiKey de spooncular
         @Value("${spoonacular.api.key}")
         private String spooncularApiKey;
 
         private static final String BASE_URL = "https://api.spoonacular.com/recipes/complexSearch";
 
+
+        public void setSpooncularApiKey(String apiKey) {
+            this.spooncularApiKey = apiKey;
+        }
+
         public List<Map<String, Object>> buscarRecetasPorIntolerancia(String intolerancia, String query) {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
                     .queryParam("intolerances", intolerancia)
                     .queryParam("addRecipeInformation", "true")
                     .queryParam("number", 10)
-                    .queryParam("apiKey", spooncularApiKey);
+                    .queryParam("apiKey", spooncularApiKey)
+              .queryParam("language", "es");
 
             if (query != null && !query.trim().isEmpty()) {
                 builder.queryParam("query", query);

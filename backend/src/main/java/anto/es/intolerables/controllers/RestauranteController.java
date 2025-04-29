@@ -27,20 +27,29 @@ public class RestauranteController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
     @GetMapping("/buscar")
-    public List<Restaurante> buscarPorIntolerancia(
+    public ResponseEntity<?> buscarPorIntolerancia(
             @RequestParam String intolerancia,
             @RequestParam String ubicacion,
             @RequestParam String comida) {
-        List<Restaurante> restaurantes = yelpService.buscarPorIntolerancia(intolerancia, ubicacion, comida);
 
-        //gUARDA LOS RESULTADOS DE LA BUSQUEDA EN LA BBDD
-        for (Restaurante restaurante : restaurantes) {
-            restauranteRepository.save(restaurante);
+        try {
+            if (intolerancia.isBlank() || ubicacion.isBlank()) {
+                return ResponseEntity.badRequest().body("Intolerancia y ubicación son obligatorios");
+            }
+
+            List<Restaurante> restaurantes = yelpService.buscarPorIntolerancia(intolerancia, ubicacion, comida);
+
+            // Guarda los resultados en la BBDD, evitando duplicados
+            for (Restaurante restaurante : restaurantes) {
+                if (!restauranteRepository.existsByNombreAndDireccion(restaurante.getNombre(), restaurante.getDireccion())) {
+                    restauranteRepository.save(restaurante);
+                }
+            }
+
+            return ResponseEntity.ok(restaurantes);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error al buscar restaurantes: " + e.getMessage());
         }
-
-        return restaurantes;
-    }
-
-   }
+    }}
