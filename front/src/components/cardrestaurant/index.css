@@ -1,55 +1,43 @@
 .tarjeta {
   width: 260px;
-  background-color: #faebd7;
+  background-color: var(--color-1)!important;
   border-radius: 15px;
   text-align: center;
+ 
 }
 
 .tarjeta-titulo {
-  background-color: #d1451b;
-  color: white;
+  background-color: var(--color-2);
+  color: var(--color-6);
   font-weight: bold;
   padding: 10px;
   border-radius: 10px 10px 0 0;
   font-size: 16px;
+  letter-spacing: 0.2rem;
+  
 }
 
 .tarjeta-imagen {
   width: 100%;
   height: 160px;
   object-fit: cover;
-  border-radius: 10px;
-  margin-top: 10px;
+  border-radius: 5px;
 }
 
 .tarjeta-contenido {
   padding: 10px;
+  font-family: sans-serif;
 }
 
 .tarjeta-descripcion {
   font-size: 14px;
-  color: #555;
   margin-top: 5px;
 }
 
-.favorito {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
 
-.favorito:hover {
-  transform: scale(1.2);
-}
-
-.favorito.activo {
-  color: red;
-}
 .ver-mas-btn {
-  background-color: #d1451b;
-  color: white;
+  background-color: var(--color-2);
+  color: var(--color-6);
   border: none;
   padding: 8px 12px;
   border-radius: 8px;
@@ -60,7 +48,7 @@
 }
 
 .ver-mas-btn:hover {
-  background-color: #a9321a;
+  background-color: var(--color-5);
 }
 @keyframes fadeInUp {
   from {

@@ -1,4 +1,6 @@
   import "./index.css";
+  import { FaHeart, FaRegHeart } from 'react-icons/fa';
+
   //Card del restaurante para mostrar y luego con un map renderizarlas todas
 
   interface RestauranteCardProps {
@@ -44,12 +46,10 @@
             </button>
           )}
 
-          <button
-            className={`favorito ${isFavorito ? "activo" : ""}`}
-            onClick={onToggleFavorito}
-          >
-            {isFavorito ? "❤️" : "🤍"}
-          </button>
+    
+<button className="favorito-icon" onClick={onToggleFavorito}>
+  {isFavorito ? <FaHeart /> : <FaRegHeart />}
+</button>
         </div>
       </div>
     );

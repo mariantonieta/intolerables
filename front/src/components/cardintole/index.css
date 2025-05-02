@@ -94,6 +94,6 @@ margin-bottom: 20px;
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
-        background-color: var(--color-3);
-        color: var(--color-4);
+        background-color: var(--color-2);
+        color: var(--color-6);
     }

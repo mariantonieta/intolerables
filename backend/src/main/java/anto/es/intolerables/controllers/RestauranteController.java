@@ -14,10 +14,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/restaurantes")
+
 public class RestauranteController {
     private final YelpService yelpService;
     private final RestauranteRepository restauranteRepository;
     private final RestauranteService restauranteService;
+
 
     @GetMapping
     public ResponseEntity<List<Restaurante>> listarRestaurantes() {

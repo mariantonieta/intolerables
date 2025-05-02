@@ -15,8 +15,8 @@ const ModalAlerta: React.FC<ModalAlertaProps> = ({ open, onClose, mensaje }) => 
       <DialogTitle className="titulo">¡Error!</DialogTitle>
       <div className="modal-content">
         <p>{mensaje}</p>
-        <div className="modal-btns">
-          <Button onClick={onClose} variant="contained">
+        <div className="btns">
+          <Button onClick={onClose} variant="contained" className="btn-modal">
             OK
           </Button>
         </div>

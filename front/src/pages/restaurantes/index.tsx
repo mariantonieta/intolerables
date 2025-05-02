@@ -5,6 +5,9 @@ import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 import { useEffect, useState } from "react";
 import ModalAlerta from "../../components/modal-alerta";
+import { FaSearch } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
+
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -171,6 +174,7 @@ export default function Restaurantes() {
   return (
     <>
       <Navigation />
+     <div className="page">
       <div className="container">
         <h1>Encuentra tu safe place en Restaurante</h1>
         <div className="buscador-container">
@@ -190,12 +194,14 @@ export default function Restaurantes() {
             value={ubicacion}
             onChange={(e) => setUbicacion(e.target.value)}
           />
-          <button className="ubi-btn" onClick={handleUbicacionActual} title="Usar ubicación actual">
-            📍
-          </button>
-          <button className="buscar-btn" onClick={buscarRestaurantes}>
-            🔍
-          </button>
+     <button className="ubi-btn" onClick={handleUbicacionActual} title="Usar ubicación actual" aria-label="Ubicación actual">
+  <FaMapMarkerAlt size={18} />
+</button>
+
+        <button className="buscar-btn" onClick={buscarRestaurantes} aria-label="Buscar">
+      <FaSearch size={18} />
+    </button>
+    
         </div>
         <div className="mapa-container">
           <div className="contenido">
@@ -218,6 +224,7 @@ export default function Restaurantes() {
             )}
           </div>
           <Mapa position={coordenadas} />
+        </div>
         </div>
       </div>
 

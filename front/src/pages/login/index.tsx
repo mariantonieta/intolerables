@@ -65,6 +65,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <Navigation />
+      <div className="page">
       <div className="container">
         <div className="container-login">
           <div className="login-card">
@@ -102,6 +103,7 @@ const LoginForm: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );

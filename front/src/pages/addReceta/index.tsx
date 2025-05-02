@@ -4,7 +4,7 @@ import "./index.css";
 import api from "../../services/axiosConfig";
 import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
-
+import ModalAlerta from "../../components/modal-alerta";
 interface IngredienteForm {
   id: number | null;
   nombre: string;
@@ -31,7 +31,7 @@ interface NuevaReceta {
     descripcion: string;
   }[];
   intolerancias: string[];
-  publica?: boolean; // <-- NUEVO: hacemos la receta pública
+  publica?: boolean; 
 }
 
 export default function CrearReceta() {
@@ -45,6 +45,9 @@ export default function CrearReceta() {
   const [pasos, setPasos] = useState<string[]>([""]);
   const [calorias, setCalorias] = useState<number>(0);
   const [tipoReceta, setTipoReceta] = useState("");
+  const [modalError, setModalError] = useState(false);
+  const [mensajeError,setMensajeError] = useState("")
+
   const navigate = useNavigate();
 
   const handleImageUpload = async () => {
@@ -64,8 +67,9 @@ export default function CrearReceta() {
       try {
         imageUrl = await handleImageUpload();
       } catch (err) {
-        console.error("Error al subir la imagen", err);
-        alert("Error al subir la imagen");
+        setMensajeError(`Error al cargar subir la imagen ${err}`);
+        setModalError(true)
+      
         return;
       }
     }
@@ -89,7 +93,7 @@ export default function CrearReceta() {
         descripcion: paso,
       })),
       intolerancias: [],
-      publica: true, // <-- Le decimos explícitamente que la receta es pública
+      publica: true, 
     };
 
     try {
@@ -105,8 +109,7 @@ export default function CrearReceta() {
 
       console.log("Respuesta del backend:", response.data);
 
-      alert("Receta creada con éxito ✅");
-
+     
       // Limpiar los campos
       setTitle("");
       setImage("");
@@ -124,12 +127,14 @@ export default function CrearReceta() {
       } else {
         console.error("Error desconocido:", error);
       }
-      alert("❌ Ocurrió un error al crear la receta");
+      setMensajeError(`Error al crear la receta${error}`);
+      setModalError(true)
+    
     }
   };
 
   return (
-    <>
+    <div className="page">
       <Navigation />
       <div className="container">
         <div className="formulario-receta">
@@ -275,10 +280,15 @@ export default function CrearReceta() {
 
             <button className="add-btn" onClick={() => setPasos([...pasos, ""])}>➕ Agregar paso</button>
 
-            <button className="crear-btn" onClick={addReceta}>✅ Crear receta</button>
+            <button className="crear-btn" onClick={addReceta}>Crear receta</button>
           </div>
         </div>
       </div>
-    </>
+      <ModalAlerta
+      open={modalError}
+      onClose={() => setModalError(false)}
+      mensaje={mensajeError}
+      />
+    </div>
   );
 }

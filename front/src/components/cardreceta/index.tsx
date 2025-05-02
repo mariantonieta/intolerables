@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 import ModalReceta from "../modal-receta";
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 interface RecetaCardProps {
   id: number;
@@ -33,33 +34,31 @@ export default function RecetaCard({
 
   return (
     <>
-    <div className="tarjeta">
-      <div className="tarjeta-titulo">{nombre}</div>
-      <img className="tarjeta-imagen" src={imagen} alt={`Foto de ${nombre}`} />
+    <div className="recipe-card">
+  <div className="recipe-card-img">
+    <img src={imagen} alt={`Foto de ${nombre}`} />
+  </div>
 
-      <div className="tarjeta-contenido">
-        <p className="tarjeta-descripcion">
-          <strong>Tiempo:</strong> {tiempo} min
-        </p>
-        <p className="tarjeta-categoria">
-          <strong>Calorías:</strong> {calorias} Kcal
-        </p>
-        
+  <div className="recipe-card-content">
+    <h3>{nombre}</h3>
 
-        <button className="ver-mas-btn" onClick={openModal}>
-          Ver receta completa
-        </button>
-
-        <button
-          className={`favorito ${isFavorito ? "activo" : ""}`}
-          onClick={onToggleFavorito}
-        >
-          {isFavorito ? "❤️" : "🤍"}
-        </button>
-      </div>
-
+    <div className="recipe-info">
+      <span><span className="bold">Tiempo:</span> {tiempo} min</span>
+      <div className="divider" />
+      <span><span className="bold">Calorías:</span> {calorias} kcal</span>
     </div>
-    
+
+
+
+    <button className="recipe-btn" onClick={openModal}>
+      Ver receta completa
+    </button>
+
+    <button className="favorito-icon" onClick={onToggleFavorito}>
+  {isFavorito ? <FaHeart /> : <FaRegHeart />}
+</button>
+  </div>
+</div>
     <ModalReceta
     open={isOpen}
     onClose={() => setIsOpen(false)}

@@ -75,9 +75,9 @@ export default function Intolerancias() {
   };
 
   return (
-    <>
+    <div >
       <Navigation />
-
+<div className="page">
       <div className="container">
         <h1>Intolerancias</h1>
         <div className="card-container">
@@ -108,6 +108,6 @@ export default function Intolerancias() {
         onRecetasClick={handleRecetasClick}
         onRestaurantesClick={handleRestaurantesClick}
       />
-    </>
+    </div></div>
   );
 }

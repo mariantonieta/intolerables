@@ -5,6 +5,7 @@ import "./index.css";
 import api from "../../services/axiosConfig";
 import ModalFavoritos from "../../components/modal-favorito";
 import ModalAlerta from "../../components/modal-alerta";
+import { FaSearch } from "react-icons/fa";
 
 interface Receta {
   id: number;
@@ -166,6 +167,7 @@ export default function Recetas() {
   return (
     <>
       <Navigation />
+      <div className="page">
       <div className="container">
         <h1>Encuentra tu safe place en Receta</h1>
         <div className="buscador-container">
@@ -176,9 +178,10 @@ export default function Recetas() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
-          <button className="buscar-btn" onClick={buscarRecetas}>
-            🔍
-          </button>
+        <button className="buscar-btn" onClick={buscarRecetas} aria-label="Buscar">
+  <FaSearch size={18} />
+</button>
+
           
         </div>
 
@@ -212,6 +215,7 @@ export default function Recetas() {
             )}
           </div>
         </div>
+      </div>
       </div>
 
       <ModalFavoritos

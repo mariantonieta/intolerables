@@ -1,4 +1,5 @@
 import ModalBase from "../modal-sele";
+import "../modal-sele/index.css"
 //modal para saber si quieres registrarte o loguearte
 interface Props {
   open: boolean;

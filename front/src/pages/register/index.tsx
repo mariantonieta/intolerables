@@ -112,6 +112,7 @@ export default function Registro() {
   return (
     <>
       <Navigation />
+      <div className="page">
       <div className="container">
         <div className="container-login">
           <div className="login-card">
@@ -187,6 +188,7 @@ export default function Registro() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );

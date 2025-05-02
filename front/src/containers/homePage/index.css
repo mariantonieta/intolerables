@@ -1,5 +1,6 @@
 .home-page {
   overflow-x: hidden;
+
 }
 
 
@@ -20,14 +21,16 @@
 .center-text,
 .left-text,
 .right-text {
-  color: var(--color-4);
+  color: var(--color-2);
+  letter-spacing: 0.1em;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 .center-text {
   text-align: center;
   font-size: 3.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
+
 }
 .left-text,
 .right-text {
@@ -52,14 +55,15 @@
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  background-color: var(--color-6);
-  color: var(--color-1);
+  background-color: var(--color-2)!important;
   font-weight: bold;
   font-size: 20px;
   transition: all 0.3s ease;
+  color: var(--color-6);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
+  margin: 10px;
 }
 
 .btn:hover {

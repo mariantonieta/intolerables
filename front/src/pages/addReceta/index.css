@@ -19,7 +19,8 @@
 }
 
 .card-receta h2 {
-  color: #6a1b9a;
+  color: var(--color-2);
+letter-spacing: 2px;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -28,7 +29,7 @@
   width: 100%;
   padding: 12px;
   margin-bottom: 10px;
-  border: 2px solid #77259d;
+  border: 2px solid var(--color-2);
   border-radius: 10px;
   font-size: 16px;
   background-color: transparent;
@@ -37,7 +38,7 @@
 
 .card-receta input:focus {
   outline: none;
-  border-color: #8e24aa;
+  border-color: var(--color-6);
   box-shadow: 0 0 5px #e1bee7;
 }
 
@@ -48,8 +49,9 @@
 }
 
 .form-group label {
-  font-size: 14px;
-  color: #77259d;
+  font-family: sans-serif;
+  font-size: 16px;
+  color:var(--color-2);
   text-align: left; 
   margin-bottom: 5px;
 }
@@ -57,8 +59,8 @@
 /* Estilo para los botones */
 .card-receta .add-btn,
 .card-receta .crear-btn {
-  background: linear-gradient(135deg, #8e24aa, #ba68c8);
-  color: white;
+  background: var(--color-2);
+  color: var(--color-6);
   border: none;
   padding: 12px;
   border-radius: 12px;
@@ -66,13 +68,14 @@
   font-size: 16px;
   cursor: pointer;
   margin-top: 10px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: 0.3s ease, transform 0.2s ease;
   text-align: center;
 }
 
 .card-receta .add-btn:hover,
 .card-receta .crear-btn:hover {
-  background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+  background: var(--color-6);
+  color: var(--color-5);
   transform: translateY(-3px);
 }
 

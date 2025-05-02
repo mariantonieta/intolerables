@@ -26,8 +26,7 @@ export default function ModalFavoritos({
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
       <DialogContent>
         <div className="modal-content">
-          <button className="close-button" onClick={onClose}>✖</button>
-
+          
           <div className="modal-title-container">
             <Typography variant="h6" className="modal-title">Tus Favoritos</Typography>
           </div>

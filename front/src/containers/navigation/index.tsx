@@ -1,10 +1,12 @@
 import { useNavigate, NavLink } from "react-router-dom";
-
 import "./index.css";
 import { useEffect, useState } from "react";
 import ModalRoL from "../../components/modalRoL";
 import ModalFavoritos from "../../components/modal-favorito";
 import api from "../../services/axiosConfig";
+import { FaUnlockAlt,
+  FaSignOutAlt, FaHeart} from "react-icons/fa";
+
 
 type NavigationProps = React.ComponentProps<"div">;
 
@@ -100,23 +102,30 @@ export default function Navigation(props: NavigationProps) {
           </div>
         </div>
         <div className="nav-right">
-          {isLoggedIn() && (
-            <button onClick={() => {
-              handleOpenFavoritos();
-              setMenuOpen(false);
-            }} className="favorito-link">
-              ❤️ Favoritos
-            </button>
-          )}
-          
+        {isLoggedIn() && (
+  <button
+    onClick={() => {
+      handleOpenFavoritos();
+      setMenuOpen(false);
+    }}
+    className="favorito-link"
+    aria-label="Favoritos"
+  >
+    <FaHeart size={20} />
+  </button>
+)}
+
           {!isLoggedIn() ? (
-            <button onClick={() => setModalOpen(true)}>ÚNETE</button>
+            <button onClick={() => setModalOpen(true)}>
+              <FaUnlockAlt/>
+              </button>
           ) : (
             <button onClick={() => {
               localStorage.removeItem("jwtToken");
               navigate("/");
             }}>
-              CERRAR SESIÓN
+                <FaSignOutAlt/>
+              
             </button>
           )}
         </div>

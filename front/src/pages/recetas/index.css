@@ -19,6 +19,7 @@
    background-color: transparent !important;
     width: 80%;
     max-width: 600px;
+    color: var(--color-2)!important;
 }
 #receta {
   flex: 1;
@@ -49,17 +50,14 @@
     cursor: pointer;
 }
 
-.buscar-btn:hover {
-    background-color: #6d4c41;
-    border-radius: 20px;
-}
+
 
 .contenido {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px; /* Aumenta el espacio entre tarjetas */
-    margin-top: 40px; /* Da espacio respecto al buscador */
+    gap: 30px; 
+    margin-top: 40px;
 }
 
 .recipe-card {
@@ -102,12 +100,9 @@
   .buscador-container {
     animation: fadeInScale 0.5s ease-in-out;
   }
-  .buscar-btn {
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
+ 
   .buscar-btn:hover {
-    background-color: #6d4c41;
+    background-color: var(--color-6);
     border-radius: 20px;
     transform: scale(1.05);
   }

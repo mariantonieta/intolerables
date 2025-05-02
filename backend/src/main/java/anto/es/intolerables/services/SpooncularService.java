@@ -1,6 +1,8 @@
     package anto.es.intolerables.services;
     import lombok.RequiredArgsConstructor;
+    import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.beans.factory.annotation.Value;
+    import org.springframework.context.annotation.Bean;
     import org.springframework.stereotype.Service;
     import org.springframework.web.client.RestTemplate;
     import org.springframework.web.util.UriComponentsBuilder;
@@ -14,7 +16,7 @@
     @Service
     @RequiredArgsConstructor
     public class SpooncularService {
-        private final RestTemplate restTemplate;
+
         //apiKey de spooncular
         @Value("${spoonacular.api.key}")
         private String spooncularApiKey;
@@ -22,6 +24,7 @@
         private static final String BASE_URL = "https://api.spoonacular.com/recipes/complexSearch";
 
 
+     private final RestTemplate restTemplate;
         public void setSpooncularApiKey(String apiKey) {
             this.spooncularApiKey = apiKey;
         }

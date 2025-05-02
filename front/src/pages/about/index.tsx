@@ -1,39 +1,66 @@
 import { useEffect } from "react";
 import "./index.css";
 import { Naviagation } from "../../containers";
+import CardInfo from "../../components/card-info" // ajusta el path según tu estructura
+
+const cards = [
+  {
+    title: "HOLA",
+    content:
+      "¡¡¡¡¡¡¡Holaaaaa, INTOLERABLE!!!!!!!!:) oy Mariantonieta, y quiero darte la bienvenida a mi mundo."
+  },
+  {
+    title: "MI HISTORIA",
+    content:
+      "Este proyecto nació de una vivencia muy personal: Ser celíaca y enfrentarme a diario a las limitaciones en la cocina..."
+  },
+  {
+    title: "PROPÓSITO",
+    content:
+      "Aquí te ofrezco un espacio donde podrás encotrar restaurantes o recetas pensadas para diversas necesidades dietéticas..."
+  },
+  {
+    title: "MOTIVACIÓN",
+    content: "Quiero recordarte que aunque sea algo frustrante tenner una INTOLERANCIA ALIMENTARIA, eso te hace únic@."
+  },
+  {
+    title: "¿PARA QUE SIRVE ESTA PÁGINA?",
+    content: "Aquí podrás encontrar tanto la receta o el restaurante que buscas, la busqueda es diferente porque te asegura que al llegar al sitio es un lugar alto para tu intolerancia."
+  },
+
+];
 
 export default function About() {
   useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target); 
+          
+        }
+      });
+    }, { threshold: 0.1 });
+  
     const elements = document.querySelectorAll(".fade-in");
-    elements.forEach((el, index) => {
-      setTimeout(() => {
-        el.classList.add("visible");
-      }, 300 * (index + 1));
-    });
+    elements.forEach(el => observer.observe(el));
+  
+    return () => observer.disconnect(); 
   }, []);
 
   return (
-    <div className="about-page">
-      <Naviagation />
+    <div>
+    <Naviagation />
+    <div className="page">
       <div className="container">
-        <h1 className="center-text fade-in">Sobre Mí</h1>
-
-        <div className="about-content fade-in">
-          <div className="about-text">
-          <p>¡Hola! Soy Mariantonieta, y quiero darte la bienvenida a mi espacio.</p>
-<p>Este proyecto nació de una vivencia muy personal: ser celíaca y enfrentarme a diario a las limitaciones en la cocina. Esta realidad me impulsó a crear un lugar donde las intolerancias alimentarias no sean un obstáculo para disfrutar de una buena comida.</p>
-<p>Aquí te ofrezco recetas pensadas para diversas necesidades dietéticas, con la celiaquía como punto de partida. Mi ilusión es que encuentres inspiración, explores nuevos sabores y compruebes que cocinar sin gluten (y otras restricciones) puede ser fácil y gratificante.</p>
-<p>Mi mayor deseo es que este sea tu rincón seguro para comer rico y disfrutar sin preocupaciones. ¡Bienvenido/a!</p>
-                    </div>
-
-          <div className="about-image">
-          </div>
+        <h1 className="fade-in">Sobre Mí</h1>
+        <div className="card-grid">
+          {cards.map((card, index) => (
+            <CardInfo key={index} title={card.title} content={card.content} />
+          ))}
         </div>
-
-        <div className="btn-container fade-in">
-          <button className="btn pulse">Descubre recetas</button>
         </div>
       </div>
-    </div>
-  );
+
+  </div>);
 }

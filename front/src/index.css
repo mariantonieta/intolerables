@@ -1,10 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
 :root {
- --color-1: #FCE5C5;
+  /*de fondo*/
+ --color-1: #A7D1AB;
+ /*letras*/
  --color-2: #2E1A47;
- --color-3: #6CD34E;
- --color-4: #F0532B;
- --color-5: #FFAA33;
- --color-6: #9E90D2;
+  /*letras*/
+ --color-3: #F2E8CF;
+
+
+ --color-5:  #d72638;
+  /*links*/
+ --color-6: #FFEB3B;
  --font-size: inherit;
 }
 html,
@@ -17,7 +23,7 @@ body {
   font-size: var(--font-size);
   background: var(--color-1); 
   color: var(--color-2);
-
+font-family: 'Luckiest Guy';
 
 }
 a{

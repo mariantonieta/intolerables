@@ -27,9 +27,7 @@ const ModalReceta: React.FC<ModalRecetaProps> = ({
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
       <DialogContent>
           <div className="modal-content">
-            <button className="close-button" onClick={onClose}>
-              ✖
-            </button>
+           
             <div className="modal-header">
               <img src={image} alt={title} className="modal-image" />
               <div className="modal-info">
