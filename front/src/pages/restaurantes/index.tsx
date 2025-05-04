@@ -33,10 +33,12 @@ export default function Restaurantes() {
   const [coordenadas, setCoordenadas] = useState<[number, number]>([40.4168, -3.7038]);
   const [openModal, setOpenModal] = useState(false);
   const [mensajeModal, setMensajeModal] = useState("");
+  const [usuarioUbicacion, setUsuarioUbicacion] = useState<string | null>(null); // Ubicación del usuario
+
   const mostrarAlerta = (mensaje: string) => {
     setMensajeModal(mensaje); 
     setOpenModal(true); 
-   };
+  };
   
   useEffect(() => {
     const intoleranciaGuardada = localStorage.getItem("intoleranciaSeleccionada");
@@ -63,15 +65,50 @@ export default function Restaurantes() {
           (fav) => fav.restaurante?.id
         );
         setFavoritosIds(ids);
-      } catch  {
+      } catch {
         //console.error("Error al cargar favoritos:", error);
-        } finally {
+      } finally {
         setIsLoading(false);
       }
     };
 
     cargarFavoritos();
   }, []);
+
+  useEffect(() => {
+    const obtenerUbicacionUsuario = async () => {
+      const token = localStorage.getItem("jwtToken");
+      const usuarioId = localStorage.getItem("usuarioId"); 
+        if (token && usuarioId) {
+        try {
+          // Llamamos al endpoint para obtener los datos del usuario
+          const response = await api.get(`/api/auth/usuario/${usuarioId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          // Si la ciudad está disponible, la asignamos al estado de ubicación
+          const ciudadUsuario = response.data.ciudadUsuario;
+          if (ciudadUsuario) {
+            setUsuarioUbicacion(ciudadUsuario);
+            setUbicacion(ciudadUsuario); // Pre-poblar el campo de ubicación con la ciudad
+          }
+        } catch (error) {
+          console.error("Error al obtener la ubicación del usuario:", error);
+        }
+      }
+    };
+  
+    obtenerUbicacionUsuario();
+  }, []);
+
+  // Asegúrate de que la ubicación esté actualizada y no se vacíe por accidente
+  useEffect(() => {
+    if (usuarioUbicacion && !ubicacion) {
+      setUbicacion(usuarioUbicacion); // Si ya tienes la ubicación del usuario, pre-poblarla.
+    }
+  }, [usuarioUbicacion, ubicacion]);
 
   const obtenerCoordenadasPorDireccion = async (direccion: string) => {
     const response = await fetch(
@@ -166,73 +203,77 @@ export default function Restaurantes() {
         await api.post("/api/favoritos-restaurantes", favorito);
         setFavoritosIds((prev) => [...prev, restauranteId]);
       }
-    } catch  {
-    //  console.error("Error con los favoritos", error);
+    } catch {
+      // console.error("Error con los favoritos", error);
     }
   };
 
   return (
     <>
       <Navigation />
-     <div className="page">
-      <div className="container">
-        <h1>Encuentra tu safe place en Restaurante</h1>
-        <div className="buscador-container">
-          <input
-            type="text"
-            name="comida"
-            id="comida"
-            placeholder="¿Qué te apetece comer hoy?"
-            value={termino}
-            onChange={(e) => setTermino(e.target.value)}
-          />
-          <input
-            type="text"
-            name="ubicacion"
-            id="ubicacion"
-            placeholder="Ubicación"
-            value={ubicacion}
-            onChange={(e) => setUbicacion(e.target.value)}
-          />
-     <button className="ubi-btn" onClick={handleUbicacionActual} title="Usar ubicación actual" aria-label="Ubicación actual">
-  <FaMapMarkerAlt size={18} />
-</button>
+      <div className="page">
+        <div className="container">
+          <h1>Encuentra tu safe place en Restaurante</h1>
+          <div className="buscador-container">
+            <input
+              type="text"
+              name="comida"
+              id="comida"
+              placeholder="¿Qué te apetece comer hoy?"
+              value={termino}
+              onChange={(e) => setTermino(e.target.value)}
+            />
+            <input
+              type="text"
+              name="ubicacion"
+              id="ubicacion"
+              placeholder="Ubicación"
+              value={ubicacion}
+              onChange={(e) => setUbicacion(e.target.value)}
+            />
+            <button
+              className="ubi-btn"
+              onClick={handleUbicacionActual}
+              title="Usar ubicación actual"
+              aria-label="Ubicación actual"
+            >
+              <FaMapMarkerAlt size={18} />
+            </button>
 
-        <button className="buscar-btn" onClick={buscarRestaurantes} aria-label="Buscar">
-      <FaSearch size={18} />
-    </button>
-    
-        </div>
-        <div className="mapa-container">
-          <div className="contenido">
-            {isLoading ? (
-              <p>Cargando favoritos...</p>
-            ) : (
-              restaurantes.map((restaurante) => (
-                <RestauranteCard
-                  key={restaurante.id ?? `${restaurante.nombre}-${Math.random()}`}
-                  id={restaurante.id}
-                  nombre={restaurante.nombre}
-                  direccion={restaurante.direccion}
-                  categoria={restaurante.categoria}
-                  url={restaurante.url}
-                  imagen={restaurante.imagen}
-                  isFavorito={favoritosIds.includes(restaurante.id)}
-                  onToggleFavorito={() => toggleFavorito(restaurante.id)}
-                />
-              ))
-            )}
+            <button className="buscar-btn" onClick={buscarRestaurantes} aria-label="Buscar">
+              <FaSearch size={18} />
+            </button>
           </div>
-          <Mapa position={coordenadas} />
-        </div>
+          <div className="mapa-container">
+            <div className="contenido">
+              {isLoading ? (
+                <p>Cargando favoritos...</p>
+              ) : (
+                restaurantes.map((restaurante) => (
+                  <RestauranteCard
+                    key={restaurante.id ?? `${restaurante.nombre}-${Math.random()}`}
+                    id={restaurante.id}
+                    nombre={restaurante.nombre}
+                    direccion={restaurante.direccion}
+                    categoria={restaurante.categoria}
+                    url={restaurante.url}
+                    imagen={restaurante.imagen}
+                    isFavorito={favoritosIds.includes(restaurante.id)}
+                    onToggleFavorito={() => toggleFavorito(restaurante.id)}
+                  />
+                ))
+              )}
+            </div>
+            <Mapa position={coordenadas} />
+          </div>
         </div>
       </div>
 
       <ModalAlerta
-  open={openModal}
-  onClose={() => setOpenModal(false)}
-  mensaje={mensajeModal}
-/>
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        mensaje={mensajeModal}
+      />
     </>
   );
 }

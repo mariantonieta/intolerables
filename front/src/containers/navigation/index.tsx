@@ -1,17 +1,15 @@
 import { useNavigate, NavLink } from "react-router-dom";
 import "./index.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalRoL from "../../components/modalRoL";
 import ModalFavoritos from "../../components/modal-favorito";
 import api from "../../services/axiosConfig";
-import { FaUnlockAlt,
-  FaSignOutAlt, FaHeart} from "react-icons/fa";
-
+import { FaUnlockAlt, FaSignOutAlt, FaHeart } from "react-icons/fa";
 
 type NavigationProps = React.ComponentProps<"div">;
 
 interface FavoritoRecetaDTO {
-  id: number; 
+  id: number;
   nombreReceta: string;
   fecha: string | null;
 }
@@ -27,9 +25,20 @@ export default function Navigation(props: NavigationProps) {
   const [favoritosOpen, setFavoritosOpen] = useState(false);
   const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]);
   const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]);
+
+  const [navRightTop, setNavRightTop] = useState(0); 
+  const navCenterRef = useRef<HTMLDivElement>(null); 
+  const navbarMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const isLoggedIn = () => !!localStorage.getItem("jwtToken");
+
+  useEffect(() => {
+    if (menuOpen && navbarMenuRef.current) {
+      const menuHeight = navbarMenuRef.current.offsetHeight;
+      setNavRightTop(menuHeight + 85);  
+     }
+  }, [menuOpen]); 
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", menuOpen);
@@ -88,11 +97,11 @@ export default function Navigation(props: NavigationProps) {
           <span></span>
         </div>
 
-        <div className={`nav-center ${menuOpen ? "open" : ""}`}>
-          <div className="navbar-menu">
+        <div className={`nav-center ${menuOpen ? "open" : ""}`} ref={navCenterRef}>
+          <div className="navbar-menu" ref={navbarMenuRef}>
             <NavLink to="/" onClick={() => setMenuOpen(false)}>HOME</NavLink>
             <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>INTOLERANCIAS</NavLink>
-            <NavLink to="/about"  onClick={() => setMenuOpen(false)}>SOBRE MI</NavLink> 
+            <NavLink to="/about" onClick={() => setMenuOpen(false)}>SOBRE MI</NavLink> 
             {isLoggedIn() && (
               <>
                 <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>AÑADIR RECETA</NavLink>
@@ -101,31 +110,31 @@ export default function Navigation(props: NavigationProps) {
             )}
           </div>
         </div>
-        <div className="nav-right">
-        {isLoggedIn() && (
-  <button
-    onClick={() => {
-      handleOpenFavoritos();
-      setMenuOpen(false);
-    }}
-    className="favorito-link"
-    aria-label="Favoritos"
-  >
-    <FaHeart size={20} />
-  </button>
-)}
+
+        <div className="nav-right" style={{ top: `${navRightTop + 10}px` }}> 
+          {isLoggedIn() && (
+            <button
+              onClick={() => {
+                handleOpenFavoritos();
+                setMenuOpen(false);
+              }}
+              className="favorito-link"
+              aria-label="Favoritos"
+            >
+              <FaHeart size={20} />
+            </button>
+          )}
 
           {!isLoggedIn() ? (
             <button onClick={() => setModalOpen(true)}>
-              <FaUnlockAlt/>
-              </button>
+              <FaUnlockAlt />
+            </button>
           ) : (
             <button onClick={() => {
               localStorage.removeItem("jwtToken");
               navigate("/");
             }}>
-                <FaSignOutAlt/>
-              
+              <FaSignOutAlt />
             </button>
           )}
         </div>

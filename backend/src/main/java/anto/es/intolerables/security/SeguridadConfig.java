@@ -71,7 +71,8 @@
                                     "/api/intolerancias/seleccionar",
                                     "/api/recetas/buscar",
                                     "/api/restaurantes/buscar",
-                                    "api/favoritos-recetas/spoonacular"
+                                    "api/favoritos-recetas/spoonacular",
+                                    "/api/auth/usuario/"
 
 
                                     ).authenticated()

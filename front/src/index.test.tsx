@@ -15,13 +15,10 @@ test('renderizo la pagina home', async () => {
   fireEvent.click(aboutLink);
   const intolerancias = screen.getByText(/intolerancias/i); 
   fireEvent.click(intolerancias);
-  const unete = screen.getByText(/únete/i); 
-  fireEvent.click(unete);
   await waitFor(() => {
     expect(screen.getByText(/sobre mi/i)).toBeInTheDocument();  
     expect(screen.getByText(/intolerancias/i)).toBeInTheDocument();  
     
-    expect(screen.getByText(/únete/i)).toBeInTheDocument();  
     
   });
 });
