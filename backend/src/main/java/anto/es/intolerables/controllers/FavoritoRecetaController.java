@@ -33,21 +33,20 @@ public class FavoritoRecetaController {
 
 
     @GetMapping
+    public ResponseEntity<List<FavoritoRecetaDTO>> getFavoritos() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String nombreUsuario = authentication.getName();
 
-        public ResponseEntity<List<FavoritoRecetaDTO>> getFavoritos() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String nombreUsuario = authentication.getName();
+        Usuario usuario = usuarioService.findByNombre(nombreUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            Usuario usuario = usuarioService.findByNombre(nombreUsuario)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<FavoritoReceta> favoritos = favoritoRepo.findByUsuario(usuario);
+        List<FavoritoRecetaDTO> dtoList = favoritos.stream()
+                .map(FavoritoRecetaDTO::new)
+                .toList();
 
-            List<FavoritoReceta> favoritos = favoritoRepo.findByUsuario(usuario);
-            List<FavoritoRecetaDTO> dtoList = favoritos.stream()
-                    .map(FavoritoRecetaDTO::new)
-                    .toList();
-
-            return ResponseEntity.ok(dtoList);}
-
+        return ResponseEntity.ok(dtoList);
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> crearFavorito(@Valid @RequestBody FavoritoReceta favorito) {
@@ -65,7 +64,6 @@ public class FavoritoRecetaController {
             if (favorito.getReceta().getId() == null) {
                 favorito.getReceta().setId(generarNuevoId());
             }
-
 
             Receta receta = recetaRepository.findById(favorito.getReceta().getId())
                     .orElseGet(() -> {
@@ -90,6 +88,7 @@ public class FavoritoRecetaController {
     private Integer generarNuevoId() {
         return Math.abs((int) System.currentTimeMillis());
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarFavorito(@PathVariable Integer id) {
         if (favoritoRecetaService.findById(id).isPresent()) {
@@ -99,6 +98,7 @@ public class FavoritoRecetaController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping("/spoonacular")
     @Transactional
     public ResponseEntity<?> crearFavoritoDesdeSpoonacular(@RequestBody Map<String, Object> datosReceta) {
@@ -109,27 +109,24 @@ public class FavoritoRecetaController {
             Usuario usuario = usuarioService.findByNombre(nombreUsuario)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+
             Receta receta = recetaService.convertirDesdeSpoonacular(datosReceta);
 
-            Receta recetaGuardada = recetaRepository.findByTitulo(receta.getTitulo())
-                    .orElseGet(() -> recetaService.crearReceta(receta));
+            Receta recetaGuardada = recetaRepository.findByTitle(receta.getTitle())
+                    .orElseGet(() -> recetaRepository.save(receta)); // Guardar la receta si no existe
 
             FavoritoReceta favorito = new FavoritoReceta();
             favorito.setUsuario(usuario);
             favorito.setReceta(recetaGuardada);
-
             FavoritoReceta favoritoGuardado = favoritoRecetaService.save(favorito);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "id", favoritoGuardado.getId(),
                     "mensaje", "Receta de Spoonacular guardada como favorita correctamente"
             ));
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
         }
     }
-
-
 }

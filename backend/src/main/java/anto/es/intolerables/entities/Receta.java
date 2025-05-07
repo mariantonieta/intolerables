@@ -17,41 +17,25 @@
         @Column(name = "id_receta")
         private Integer id;
 
-        @Column(name="titulo_receta")
-        private String titulo;
+        @Column(name = "title")
+        private String title;
 
-        @Column(name="imagen_receta")
-        private String imagen;
+        @Column(name = "summary")
+        private String summary;
 
-        @Column(name="fecha_creacion_receta")
-        private LocalDate fechaCreacionReceta;
+        @Column(name = "calories")
+        private Integer calories;
 
-        @Column(name="duracion_receta")
-        private Integer duracionReceta;
+        @Column(name = "ready_in_minutes")
+        private Integer readyInMinutes;
 
-        @Column(name="calorias_receta")
-        private Integer calorias;
-        //evita errores o datos vacios
-        @PrePersist
-        public void prePersist() {
-            if (this.calorias == null) {
-                this.calorias = 0;
-            }
-        }
+        @Column(name = "image")
+        private String image;
 
-        @Column(name="tipo_receta")
-        private String tipoReceta;
+        @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+        private List<PasoPreparacion> pasosPreparacion;
 
-        @OneToMany(mappedBy = "receta", fetch = FetchType.EAGER)
-        @JsonManagedReference("receta-ingrediente")
-        private List<RecetaIngrediente> ingredientes;
-
-        @OneToMany(mappedBy = "receta", fetch = FetchType.EAGER)
-        @JsonManagedReference("receta-intolerancias")
-         private List<RecetaIntolerancia> intolerancias;
-
-        @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-        @JsonManagedReference("receta-pasos")
-        private List<RecetaPasos> analyzedInstructions;
-
+        @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+        private List<Ingrediente> ingredientes;
     }
+

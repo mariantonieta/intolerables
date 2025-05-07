@@ -69,7 +69,7 @@ public class FavoritoRestauranteController { private final FavoritoRestauranteSe
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("id", f.getId()));
         } catch (Exception e) {
-            e.printStackTrace(); // esto lo puedes quitar en producción, pero útil en local
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }
     }

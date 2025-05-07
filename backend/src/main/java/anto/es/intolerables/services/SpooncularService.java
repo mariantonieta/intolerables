@@ -54,7 +54,7 @@ public class SpooncularService {
         for (Map<String, Object> item : results) {
             int recetaId = (int) item.get("id");
             String detalleUrl = "https://api.spoonacular.com/recipes/" + recetaId + "/information?includeNutrition=false&apiKey=" + spooncularApiKey;
-            Map detalle = item;
+            Map detalle = restTemplate.getForObject(detalleUrl, Map.class);
 
             Map<String, Object> recetaMap = new HashMap<>();
             recetaMap.put("title", traducirTextoLibreTranslate((String) item.get("title")));

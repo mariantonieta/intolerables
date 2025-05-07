@@ -9,17 +9,20 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name="ingredientes")
+@Table(name="ingrediente")
 public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_ingredientes")
+    @Column(name = "id_ingrediente")
     private Integer id;
 
-    @Column(name="nombre_ingrediente")
+    @Column(name = "nombre")
     private String nombre;
 
-    @OneToMany(mappedBy = "ingrediente")
-    private List<RecetaIngrediente> recetas;
+    @Column(name = "cantidad", nullable = false)
+    private String cantidad;
 
+    @ManyToOne
+    @JoinColumn(name = "id_receta")
+    private Receta receta;
 }

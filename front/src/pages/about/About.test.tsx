@@ -37,7 +37,7 @@ vi.mock("../../components/card-info", () => ({
 it("renders all the cards", () => {
     render(<About />);
     
-    expect(screen.getAllByText(/HOLA/i)).toHaveLength(2); // Asegurarte de que haya solo uno
+    expect(screen.getAllByText(/HOLA/i)).toHaveLength(2); 
     expect(screen.getByText(/MI HISTORIA/i)).toBeInTheDocument();
     expect(screen.getByText(/PROPÓSITO/i)).toBeInTheDocument();
     expect(screen.getByText(/MOTIVACIÓN/i)).toBeInTheDocument();

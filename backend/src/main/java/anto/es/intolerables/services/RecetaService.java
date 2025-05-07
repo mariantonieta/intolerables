@@ -1,116 +1,156 @@
 package anto.es.intolerables.services;
 
+import anto.es.intolerables.dto.*;
 import anto.es.intolerables.entities.*;
 import anto.es.intolerables.repositories.*;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@RequiredArgsConstructor
 @Service
 public class RecetaService {
-    private final RecetaRepository recetaRepositorio;
-    private final IngredienteRepository ingredienteRepositorio;
-    private final RecetaIngredienteRepository recetaIngredienteRepository;
-    private final RecetaPasosRepository recetaPasosRepositorio;
 
-    // Obtiene las recetas incluyendo las intolerancias
+    private final RecetaRepository recetaRepository;
+    private final IngredienteRepository ingredienteRepository;
+
+    public RecetaService(RecetaRepository recetaRepository, IngredienteRepository ingredienteRepository) {
+        this.recetaRepository = recetaRepository;
+        this.ingredienteRepository = ingredienteRepository;
+    }
+
     @Transactional
-    public List<Receta> obtenerTodasLasRecetas() {
-        List<Receta> recetas = recetaRepositorio.findAll();
-        recetas.forEach(receta -> Hibernate.initialize(receta.getIntolerancias()));
-        return recetas;
+    public RecetaDTO crearReceta(RecetaDTO recetaDTO) {
+        Receta receta = new Receta();
+        receta.setTitle(recetaDTO.getTitle());
+        receta.setSummary(recetaDTO.getSummary());
+        receta.setCalories(recetaDTO.getCalories());
+        receta.setReadyInMinutes(recetaDTO.getReadyInMinutes());
+        receta.setImage(recetaDTO.getImage());
+
+        List<PasoPreparacion> pasos = recetaDTO.getPasosPreparacion() != null ? recetaDTO.getPasosPreparacion().stream()
+                .map(dto -> {
+                    PasoPreparacion paso = new PasoPreparacion();
+                    paso.setDescripcion(dto.getDescripcion());
+                    paso.setReceta(receta);
+                    return paso;
+                })
+                .collect(Collectors.toList()) : new ArrayList<>();
+
+        receta.setPasosPreparacion(pasos);
+
+        List<Ingrediente> ingredientes = recetaDTO.getRecetaIngredientes() != null ? recetaDTO.getRecetaIngredientes().stream()
+                .map(dto -> {
+                    Ingrediente ingrediente = new Ingrediente();
+                    ingrediente.setNombre(dto.getNombre());
+                    ingrediente.setCantidad(dto.getCantidad());
+                    ingrediente.setReceta(receta);
+
+                    return ingrediente;
+                })
+                .collect(Collectors.toList()) : new ArrayList<>();
+
+        receta.setIngredientes(ingredientes);
+
+        Receta recetaGuardada = recetaRepository.save(receta);
+
+        return convertirADTO(recetaGuardada);
     }
-
-    public Receta crearReceta(Receta receta) {
-        receta.setFechaCreacionReceta(LocalDate.now());
-        Receta recetaGuardada = recetaRepositorio.save(receta);
-
-        guardarIngredientes(recetaGuardada);
-        guardarPasos(recetaGuardada);
-
-        return recetaGuardada;
+    @Transactional
+    public List<RecetaDTO> obtenerTodasLasRecetas() {
+        return recetaRepository.findAll().stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
     }
+    private RecetaDTO convertirADTO(Receta receta) {
 
-    private void guardarIngredientes(Receta recetaGuardada) {
-        List<RecetaIngrediente> ingredientes = recetaGuardada.getIngredientes();
+        List<PasoPreparacionDTO> pasos = receta.getPasosPreparacion() != null
+                ? receta.getPasosPreparacion().stream()
+                .map(p -> new PasoPreparacionDTO(p.getDescripcion()))
+                .collect(Collectors.toList())
+                : new ArrayList<>();
 
-        if (ingredientes == null || ingredientes.isEmpty()) return;
+        List<IngredienteDTO> ingredientes = receta.getIngredientes() != null
+                ? receta.getIngredientes().stream()
+                .map(i -> new IngredienteDTO(i.getId(), i.getNombre(), i.getCantidad()))
+                .collect(Collectors.toList())
+                : new ArrayList<>();
 
-        for (RecetaIngrediente recetaIngrediente : ingredientes) {
-            Ingrediente ingredienteOriginal = recetaIngrediente.getIngrediente();
-
-            if (ingredienteOriginal != null && ingredienteOriginal.getNombre() != null) {
-
-                Ingrediente ingrediente = ingredienteRepositorio
-                        .findByNombre(ingredienteOriginal.getNombre())
-                        .orElseGet(() -> guardarNuevoIngrediente(ingredienteOriginal.getNombre()));
-
-                recetaIngrediente.setIngrediente(ingrediente);
-                recetaIngrediente.setReceta(recetaGuardada);
-                recetaIngredienteRepository.save(recetaIngrediente);
-            } else {
-                System.out.println("RecetaIngrediente sin ingrediente");
-            }
-        }
-    }
-
-    private Ingrediente guardarNuevoIngrediente(String nombreIngrediente) {
-        Ingrediente nuevo = new Ingrediente();
-        nuevo.setNombre(nombreIngrediente);
-        return ingredienteRepositorio.save(nuevo);
-    }
-
-    private void guardarPasos(Receta recetaGuardada) {
-        List<RecetaPasos> pasos = recetaGuardada.getAnalyzedInstructions();
-
-        if (pasos == null || pasos.isEmpty()) return;
-
-        for (RecetaPasos paso : pasos) {
-            paso.setReceta(recetaGuardada);
-            recetaPasosRepositorio.save(paso);
-        }
+        RecetaDTO dto = new RecetaDTO();
+        dto.setId(receta.getId());
+        dto.setTitle(receta.getTitle());
+        dto.setSummary(receta.getSummary());
+        dto.setCalories(receta.getCalories());
+        dto.setReadyInMinutes(receta.getReadyInMinutes());
+        dto.setImage(receta.getImage());
+        dto.setPasosPreparacion(pasos);
+        dto.setRecetaIngredientes(ingredientes);
+        return dto;
     }
 
     public Receta convertirDesdeSpoonacular(Map<String, Object> datosReceta) {
         Receta receta = new Receta();
-        receta.setTitulo((String) datosReceta.get("title"));
-        receta.setImagen((String) datosReceta.get("image"));
-        receta.setDuracionReceta((Integer) datosReceta.get("readyInMinutes"));
-        receta.setCalorias((Integer) datosReceta.get("calories"));
+        receta.setTitle((String) datosReceta.get("title"));
+        receta.setImage((String) datosReceta.get("image"));
+        receta.setReadyInMinutes((Integer) datosReceta.get("readyInMinutes"));
+        receta.setCalories((Integer) datosReceta.getOrDefault("calories", 0));
 
         List<Map<String, Object>> ingredientesApi = (List<Map<String, Object>>) datosReceta.get("extendedIngredients");
-        List<RecetaIngrediente> ingredientes = ingredientesApi.stream()
+        List<Ingrediente> ingredientes = ingredientesApi.stream()
                 .map(ingredienteMap -> {
-                    RecetaIngrediente recetaIngrediente = new RecetaIngrediente();
                     String nombreIngrediente = (String) ingredienteMap.get("name");
-                    Ingrediente ingrediente = ingredienteRepositorio.findByNombre(nombreIngrediente)
-                            .orElseGet(() -> guardarNuevoIngrediente(nombreIngrediente));
-                    recetaIngrediente.setIngrediente(ingrediente);
-                    return recetaIngrediente;
+                    Object rawCantidad = ingredienteMap.get("amount");
+                    String unidad = (String) ingredienteMap.get("unit");
+                    String cantidadStr;
+
+                    if (rawCantidad instanceof Integer) {
+                        cantidadStr = ((Integer) rawCantidad) + " " + unidad;
+                    } else if (rawCantidad instanceof Double) {
+                        cantidadStr = String.format("%.2f %s", (Double) rawCantidad, unidad);
+                    } else {
+                        cantidadStr = "Cantidad desconocida";
+                    }
+                    Ingrediente ingrediente = new Ingrediente();
+                    ingrediente.setNombre(nombreIngrediente);
+                    ingrediente.setCantidad(cantidadStr.trim());
+                    ingrediente.setReceta(receta);
+                    return ingrediente;
                 })
                 .collect(Collectors.toList());
-
         receta.setIngredientes(ingredientes);
 
 
         List<Map<String, Object>> instruccionesApi = (List<Map<String, Object>>) datosReceta.get("analyzedInstructions");
-        List<RecetaPasos> pasos = instruccionesApi.stream()
-                .map(instruccionMap -> {
-                    RecetaPasos paso = new RecetaPasos();
-                    paso.setDescripcion((String) instruccionMap.get("step"));
-                    return paso;
-                })
-                .collect(Collectors.toList());
 
-        receta.setAnalyzedInstructions(pasos);
+
+        List<PasoPreparacion> pasos = new ArrayList<>();
+        if (instruccionesApi != null) {
+            pasos = instruccionesApi.stream()
+                    .flatMap(instruccion -> {
+                        List<Map<String, Object>> steps = (List<Map<String, Object>>) instruccion.get("steps");
+
+
+                        if (steps != null) {
+                            return steps.stream().map(pasoMap -> {
+                                PasoPreparacion paso = new PasoPreparacion();
+                                paso.setDescripcion((String) pasoMap.get("step"));
+                                paso.setReceta(receta);
+                                return paso;
+                            });
+                        } else {
+                            return Stream.empty();
+                        }
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        receta.setPasosPreparacion(pasos);
 
         return receta;
     }
+
 }

@@ -1,9 +1,9 @@
 package anto.es.intolerables.repositories;
 
+import anto.es.intolerables.entities.Ingrediente;
 import anto.es.intolerables.entities.Receta;
-import anto.es.intolerables.entities.RecetaIngrediente;
 import anto.es.intolerables.entities.RecetaIntolerancia;
-import anto.es.intolerables.entities.RecetaPasos;
+import anto.es.intolerables.entities.PasoPreparacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,32 +19,29 @@ class RecetaRepositoryTest {
     @Test
     void findByTitulo() {
         Receta receta = new Receta();
-        receta.setTitulo("Tortilla de Patatas");
-        receta.setImagen("tortilla.jpg");
-        receta.setFechaCreacionReceta(LocalDate.of(2025, 4, 30));
-        receta.setDuracionReceta(60);
-        receta.setCalorias(300);
-        receta.setTipoReceta("Sin gluten");
+        receta.setTitle("Tortilla de Patatas");
+        receta.setImage("tortilla.jpg");
+        receta.setReadyInMinutes(60);
+        receta.setCalories(300);
+        receta.setSummary("Sin gluten");
 
-        RecetaIngrediente ri = new RecetaIngrediente();
+        Ingrediente ri = new Ingrediente();
+        ri.setNombre("Cebolla");
         ri.setCantidad("1 unidades");
         ri.setReceta(receta);
-        RecetaPasos paso = new RecetaPasos();
+        PasoPreparacion paso = new PasoPreparacion();
         paso.setDescripcion("Batir los huevos");
         paso.setReceta(receta);
-        RecetaIntolerancia intolerancia = new RecetaIntolerancia();
-        intolerancia.setCantidadIntolerancia("Alta");
-        intolerancia.setReceta(receta);
         receta.setIngredientes(List.of(ri));
-        receta.setAnalyzedInstructions(List.of(paso));
-        receta.setIntolerancias(List.of(intolerancia));
+        receta.setPasosPreparacion(List.of(paso));
+
         recetaRepository.save(receta);
-        Optional<Receta> encontrada = recetaRepository.findByTitulo("Tortilla de Patatas");
+        Optional<Receta> encontrada = recetaRepository.findByTitle("Tortilla de Patatas");
         assertThat(encontrada).isPresent();
-        assertThat(encontrada.get().getTitulo()).isEqualTo("Tortilla de Patatas");
+        assertThat(encontrada.get().getTitle()).isEqualTo("Tortilla de Patatas");
         assertThat(encontrada.get().getIngredientes()).hasSize(1);
-        assertThat(encontrada.get().getAnalyzedInstructions()).hasSize(1);
-        assertThat(encontrada.get().getIntolerancias()).hasSize(1);
+        assertThat(encontrada.get().getPasosPreparacion()).hasSize(1);
+
 
     }
 

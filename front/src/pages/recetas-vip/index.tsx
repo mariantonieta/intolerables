@@ -3,20 +3,21 @@ import RecetaCard from "../../components/cardreceta";
 import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 import ModalAlerta from "../../components/modal-alerta";
+
 import "../recetas/index.css";
 
 interface Receta {
   id: number;
-  titulo: string;
-  imagen: string;
-  duracionReceta: number;
-  calorias?: number;
-  analyzedInstructions?: { descripcion: string }[];
-  ingredientes?: {
+  title: string;
+  image: string;
+  readyInMiuntes: number;
+  calories?: number;
+  summary: string;
+  pasosPreparacion?: { descripcion: string }[];
+  recetaIngredientes?: {
     cantidad: number;
-    unidad: string;
-    ingrediente: { nombre: string } | null;
-  }[];
+    nombre: string;
+    }[];
 }
 
 export default function RecetasComunidad() {
@@ -32,11 +33,17 @@ export default function RecetasComunidad() {
     const obtenerRecetas = async () => {
       setIsLoading(true);
       try {
-        const res = await api.get("/api/recetas");
+        const token = localStorage.getItem("jwtToken"); // Obtén el token
+      const res = await api.get("/api/recetas/todas", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("Recetas obtenidas:", res.data); 
         setRecetas(res.data as Receta[]);
       } catch (err) {
         setMensajeError(`Error al cargar recetas: ${err}`);
-        setModalError(true); 
+        setModalError(true);
       } finally {
         setIsLoading(false);
       }
@@ -45,8 +52,12 @@ export default function RecetasComunidad() {
     obtenerRecetas();
   }, []);
 
-  const recetasFiltradas = recetas.filter((receta) =>
-    receta.titulo.toLowerCase().includes(busqueda.toLowerCase())  );
+  const recetasFiltradas = busqueda.trim() === ""
+  ? recetas
+  : recetas.filter((receta) =>
+      receta.title?.toLowerCase()?.includes(busqueda.toLowerCase())
+    );
+console.log(recetasFiltradas)
 
   const toggleFavorito = async (id: number) => {
     const token = localStorage.getItem("jwtToken");
@@ -54,7 +65,7 @@ export default function RecetasComunidad() {
 
     if (!token || !usuarioId) {
       setMensajeError("Debes iniciar sesión para usar favoritos.");
-      setModalError(true); 
+      setModalError(true);
       return;
     }
 
@@ -84,7 +95,7 @@ export default function RecetasComunidad() {
       }
     } catch (error) {
       setMensajeError(`Error al actualizar favorito: ${error}`);
-      setModalError(true); 
+      setModalError(true);
     }
   };
 
@@ -99,9 +110,10 @@ export default function RecetasComunidad() {
             placeholder="Buscar receta de la comunidad..."
             id="receta"
             value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)} 
-            />
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
         </div>
+
         <div className="contenido">
           {isLoading ? (
             <p>Cargando recetas...</p>
@@ -110,25 +122,26 @@ export default function RecetasComunidad() {
               <RecetaCard
                 key={receta.id}
                 id={receta.id}
-                nombre={receta.titulo}
-                imagen={receta.imagen}
-                tiempo={receta.duracionReceta}
-                calorias={receta.calorias || 100}
-                rating={5}
+                nombre={receta.title}
+                imagen={receta.image}
+                tiempo={receta.readyInMiuntes}
+                calorias={receta.calories || 100}
+                rating={5} // Puedes ajustar esto si el rating es necesario
                 ingredientes={
-                  receta.ingredientes?.length
-                    ? receta.ingredientes.map(
-                        (i) =>
-                          i.ingrediente
-                            ? `${i.cantidad} ${i.unidad} ${i.ingrediente.nombre}`
-                            : "Ingrediente desconocido"
-                      )
-                    : ["Sin ingredientes"]
+                  receta.recetaIngredientes && receta.recetaIngredientes.length > 0
+                    ? receta.recetaIngredientes.map((i) => ({
+                        cantidad: `${i.cantidad}`.trim(),
+                        nombre: i.nombre ?? "Ingrediente desconocido",
+                      }))
+                    : [{ cantidad: "0", nombre: "Sin ingredientes" }]
                 }
                 preparacion={
-                  receta.analyzedInstructions?.length
-                    ? receta.analyzedInstructions.map((p) => p.descripcion)
-                    : ["Sin pasos disponibles"]
+                  receta.pasosPreparacion?.length
+                    ? receta.pasosPreparacion.map((p) => ({
+                        numeroPaso: 1, // Aquí puedes establecer el número de paso si lo tienes
+                        descripcion: p.descripcion,
+                      }))
+                    : [{ numeroPaso: 1, descripcion: "Sin pasos disponibles" }]
                 }
                 isFavorito={favoritosIds.includes(receta.id)}
                 onToggleFavorito={() => toggleFavorito(receta.id)}

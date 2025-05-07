@@ -1,6 +1,5 @@
 package anto.es.intolerables.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,16 +7,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "receta_pasos")
-public class RecetaPasos {
+@Table(name = "paso_preparacion")
+public class PasoPreparacion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_paso")
     private Integer id;
 
+    @Column(name = "descripcion")
     private String descripcion;
 
     @ManyToOne
     @JoinColumn(name = "id_receta")
-    @JsonBackReference("receta-pasos")
     private Receta receta;
 }

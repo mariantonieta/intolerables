@@ -1,104 +1,93 @@
 package anto.es.intolerables.services;
 
-import anto.es.intolerables.entities.Ingrediente;
-import anto.es.intolerables.entities.Receta;
-import anto.es.intolerables.entities.RecetaIngrediente;
-import anto.es.intolerables.repositories.IngredienteRepository;
-import anto.es.intolerables.repositories.RecetaIngredienteRepository;
-import anto.es.intolerables.repositories.RecetaPasosRepository;
-import anto.es.intolerables.repositories.RecetaRepository;
+import anto.es.intolerables.dto.*;
+import anto.es.intolerables.entities.*;
+import anto.es.intolerables.repositories.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.*;
 
-@ExtendWith(MockitoExtension.class)
-class RecetaServiceTest {
+public class RecetaServiceTest {
 
-    @Mock private RecetaRepository recetaRepositorio;
-    @Mock private IngredienteRepository ingredienteRepositorio;
-    @Mock private RecetaIngredienteRepository recetaIngredienteRepository;
-    @Mock private RecetaPasosRepository recetaPasosRepositorio;
+    private MockMvc mockMvc;
+
+    @Mock
+    private RecetaRepository recetaRepository;
+
+    @Mock
+    private IngredienteRepository ingredienteRepository;
+
     @InjectMocks
     private RecetaService recetaService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testObtenerTodasLasRecetas() {
-        Receta receta = new Receta();
-        receta.setIntolerancias(new ArrayList<>());
-        when(recetaRepositorio.findAll()).thenReturn(List.of(receta));
+    public void testCrearReceta() {
 
-        List<Receta> recetas = recetaService.obtenerTodasLasRecetas();
-
-        assertEquals(1, recetas.size());
-        verify(recetaRepositorio).findAll();
-    }
-
-
-    @Test
-    void crearReceta() {
-        Ingrediente ingrediente = new Ingrediente();
-        ingrediente.setNombre("Tomate");
-
-        RecetaIngrediente recetaIngrediente = new RecetaIngrediente();
-        recetaIngrediente.setIngrediente(ingrediente);
+        RecetaDTO recetaDTO = new RecetaDTO();
+        recetaDTO.setTitle("Pasta sin gluten");
+        recetaDTO.setSummary("Una receta deliciosa");
+        recetaDTO.setCalories(200);
+        recetaDTO.setReadyInMinutes(30);
+        recetaDTO.setImage("image_url");
+        recetaDTO.setPasosPreparacion(Arrays.asList(new PasoPreparacionDTO("Cocer la pasta")));
+        recetaDTO.setRecetaIngredientes(Arrays.asList(new IngredienteDTO(1, "Pasta", "200g")));
 
         Receta receta = new Receta();
-        receta.setIngredientes(List.of(recetaIngrediente));
-        receta.setAnalyzedInstructions(new ArrayList<>());
+        receta.setTitle("Pasta sin gluten");
+        receta.setSummary("Una receta deliciosa");
+        receta.setCalories(200);
+        receta.setReadyInMinutes(30);
+        receta.setImage("image_url");
+        receta.setPasosPreparacion(new ArrayList<>());
+        receta.setIngredientes(new ArrayList<>());
 
-        when(recetaRepositorio.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(ingredienteRepositorio.findByNombre("Tomate")).thenReturn(Optional.of(ingrediente));
+        when(recetaRepository.save(any(Receta.class))).thenReturn(receta);
 
-        Receta resultado = recetaService.crearReceta(receta);
+        RecetaDTO recetaGuardada = recetaService.crearReceta(recetaDTO);
 
-        assertNotNull(resultado.getFechaCreacionReceta());
-        verify(recetaRepositorio).save(any());
-        verify(recetaIngredienteRepository).save(any());
+        assertNotNull(recetaGuardada);
+        assertEquals("Pasta sin gluten", recetaGuardada.getTitle());
+        assertEquals(200, recetaGuardada.getCalories());
+        assertEquals(30, recetaGuardada.getReadyInMinutes());
+        verify(recetaRepository, times(1)).save(any(Receta.class));
     }
 
+
+
     @Test
-    void convertirDesdeSpoonacular() {
-        Map<String, Object> datos = Map.of(
-                "title", "Ensalada",
-                "image", "url_imagen",
-                "readyInMinutes", 10,
+    public void testConvertirDesdeSpoonacular() {
+
+        Map<String, Object> datosReceta = Map.of(
+                "title", "Pasta sin gluten",
+                "image", "image_url",
+                "readyInMinutes", 30,
                 "calories", 200,
                 "extendedIngredients", List.of(
-                        Map.of("name", "Lechuga")
+                        Map.of("name", "Pasta", "amount", 200, "unit", "g")
                 ),
                 "analyzedInstructions", List.of(
-                        Map.of("step", "Cortar la lechuga")
-                )
+                        Map.of("steps", List.of(Map.of("step", "Cocer la pasta"))))
         );
 
-        Ingrediente ingrediente = new Ingrediente();
-        ingrediente.setNombre("Lechuga");
+        Receta receta = recetaService.convertirDesdeSpoonacular(datosReceta);
 
-        when(ingredienteRepositorio.findByNombre("Lechuga")).thenReturn(Optional.of(ingrediente));
 
-        Receta receta = recetaService.convertirDesdeSpoonacular(datos);
-
-        assertEquals("Ensalada", receta.getTitulo());
-        assertEquals(1, receta.getIngredientes().size());
-        assertEquals("Lechuga", receta.getIngredientes().get(0).getIngrediente().getNombre());
-        assertEquals("Cortar la lechuga", receta.getAnalyzedInstructions().get(0).getDescripcion());
-
+        assertNotNull(receta);
+        assertEquals("Pasta sin gluten", receta.getTitle());
+        assertEquals(200, receta.getCalories());
+        assertEquals(30, receta.getReadyInMinutes());
+        assertFalse(receta.getIngredientes().isEmpty());
+        assertFalse(receta.getPasosPreparacion().isEmpty());
     }
 }

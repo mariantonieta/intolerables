@@ -91,7 +91,9 @@ export default function Navigation(props: NavigationProps) {
           <img src="/svg/logo.svg" alt="Logo" className="logo" />
         </div>
 
-        <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
+        <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -118,6 +120,7 @@ export default function Navigation(props: NavigationProps) {
                 handleOpenFavoritos();
                 setMenuOpen(false);
               }}
+              type="button" 
               className="favorito-link"
               aria-label="Favoritos"
             >
@@ -126,14 +129,15 @@ export default function Navigation(props: NavigationProps) {
           )}
 
           {!isLoggedIn() ? (
-            <button onClick={() => setModalOpen(true)}>
+            <button onClick={() => setModalOpen(true)} aria-label="Abrir login" type="button" >
               <FaUnlockAlt />
             </button>
           ) : (
             <button onClick={() => {
               localStorage.removeItem("jwtToken");
-              navigate("/");
-            }}>
+              navigate("/"); 
+            }} aria-label="Cerrar sesión"
+            type="button" >
               <FaSignOutAlt />
             </button>
           )}

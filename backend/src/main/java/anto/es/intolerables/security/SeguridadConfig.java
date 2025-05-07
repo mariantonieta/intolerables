@@ -65,8 +65,8 @@
 
                                     "/api/favoritos-restaurantes",
                                     "/api/favoritos-recetas",
-                                    "/api/recetas/crear",
                                     "/api/recetas",
+                                    "/api/recetas/todas",
                                     "/api/intolerancias",
                                     "/api/intolerancias/seleccionar",
                                     "/api/recetas/buscar",

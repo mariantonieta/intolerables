@@ -6,32 +6,8 @@ import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
 import ModalAlerta from "../../components/modal-alerta";
 interface IngredienteForm {
-  id: number | null;
   nombre: string;
-  cantidad: number;
-  unidad: string;
-}
-
-interface NuevaReceta {
-  titulo: string;
-  imagen: string;
-  duracionReceta: number;
-  calorias: number;
-  tipoReceta: string;
-  ingredientes: {
-    cantidad: number;
-    unidad: string;
-    ingrediente: {
-      id: number | null;
-      nombre: string;
-    };
-  }[];
-  analyzedInstructions: {
-    numeroPaso: number;
-    descripcion: string;
-  }[];
-  intolerancias: string[];
-  publica?: boolean; 
+  cantidad: string;
 }
 
 export default function CrearReceta() {
@@ -40,13 +16,13 @@ export default function CrearReceta() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [readyInMinutes, setReadyInMinutes] = useState<number>(0);
   const [ingredients, setIngredients] = useState<IngredienteForm[]>([
-    { id: null, nombre: "", cantidad: 0, unidad: "" },
+    { nombre: "", cantidad:"" },
   ]);
   const [pasos, setPasos] = useState<string[]>([""]);
   const [calorias, setCalorias] = useState<number>(0);
   const [tipoReceta, setTipoReceta] = useState("");
   const [modalError, setModalError] = useState(false);
-  const [mensajeError,setMensajeError] = useState("")
+  const [mensajeError, setMensajeError] = useState("");
 
   const navigate = useNavigate();
 
@@ -67,69 +43,57 @@ export default function CrearReceta() {
       try {
         imageUrl = await handleImageUpload();
       } catch (err) {
-        setMensajeError(`Error al cargar subir la imagen ${err}`);
-        setModalError(true)
-      
+        setMensajeError(`Error al subir la imagen: ${err}`);
+        setModalError(true);
         return;
       }
     }
 
-    const nuevaReceta: NuevaReceta = {
-      titulo: title,
-      imagen: imageUrl,
-      duracionReceta: readyInMinutes,
-      calorias: calorias,
-      tipoReceta: tipoReceta,
-      ingredientes: ingredients.map((ing) => ({
-        cantidad: ing.cantidad,
-        unidad: ing.unidad,
-        ingrediente: {
-          id: ing.id,
-          nombre: ing.nombre,
-        },
+    const nuevaReceta = {
+      title,
+      image: imageUrl,
+      readyInMinutes,
+      calories: calorias,
+      summary: tipoReceta,
+      recetaIngredientes: ingredients.map((ing, index) => ({
+        id: index + 1, 
+        nombre: ing.nombre,
+        cantidad: ing.cantidad, 
       })),
-      analyzedInstructions: pasos.map((paso, index) => ({
-        numeroPaso: index + 1,
-        descripcion: paso,
+      pasosPreparacion: pasos.map((descripcion) => ({
+        descripcion,
       })),
-      intolerancias: [],
-      publica: true, 
     };
 
     try {
       const token = localStorage.getItem("jwtToken");
-      console.log("Token almacenado:", token);
-      console.log("Receta que se va a crear:", nuevaReceta);
-
-      const response = await api.post("/api/recetas/crear", nuevaReceta, {
+      const response = await api.post("/api/recetas", nuevaReceta, {
+        
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("Respuesta del backend:", response.data);
+      console.log(response)
 
      
-      // Limpiar los campos
       setTitle("");
       setImage("");
       setImageFile(null);
       setReadyInMinutes(0);
-      setIngredients([{ id: null, nombre: "", cantidad: 0, unidad: "" }]);
+      setIngredients([{ nombre: "", cantidad:""}]);
       setPasos([""]);
       setCalorias(0);
       setTipoReceta("");
 
-      navigate("/recetasVip"); // Redirigir
+      navigate("/recetasVip");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error de Axios:", error.response?.data || error.message);
       } else {
         console.error("Error desconocido:", error);
       }
-      setMensajeError(`Error al crear la receta${error}`);
-      setModalError(true)
-    
+      setMensajeError(`Error al crear la receta: ${error}`);
+      setModalError(true);
     }
   };
 
@@ -146,7 +110,6 @@ export default function CrearReceta() {
               <input
                 type="text"
                 id="titulo"
-                placeholder="Título de la receta"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -157,7 +120,6 @@ export default function CrearReceta() {
               <input
                 type="text"
                 id="imagen"
-                placeholder="URL de la imagen (opcional)"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               />
@@ -174,41 +136,27 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="readyInMinutes">Tiempo de preparación (min)</label>
+              <label>Tiempo de preparación (min)</label>
               <input
                 type="number"
-                id="readyInMinutes"
-                placeholder="Tiempo de preparación (min)"
                 value={readyInMinutes}
-                onChange={(e) =>
-                  setReadyInMinutes(
-                    e.target.value === "" ? 0 : parseInt(e.target.value)
-                  )
-                }
+                onChange={(e) => setReadyInMinutes(parseInt(e.target.value))}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="calorias">Calorías</label>
+              <label>Calorías</label>
               <input
                 type="number"
-                id="calorias"
-                placeholder="Calorías"
                 value={calorias}
-                onChange={(e) =>
-                  setCalorias(
-                    e.target.value === "" ? 0 : parseInt(e.target.value)
-                  )
-                }
+                onChange={(e) => setCalorias(parseInt(e.target.value))}
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="tipoReceta">Tipo de receta</label>
+              <label>Tipo de receta</label>
               <input
                 type="text"
-                id="tipoReceta"
-                placeholder="Tipo de receta"
                 value={tipoReceta}
                 onChange={(e) => setTipoReceta(e.target.value)}
               />
@@ -217,10 +165,9 @@ export default function CrearReceta() {
             <h4>Ingredientes</h4>
             {ingredients.map((ing, idx) => (
               <div key={idx} className="form-group">
-                <label>Nombre</label>
                 <input
                   type="text"
-                  placeholder="Nombre"
+                  placeholder="Nombre del ingrediente"
                   value={ing.nombre}
                   onChange={(e) => {
                     const copia = [...ingredients];
@@ -228,39 +175,23 @@ export default function CrearReceta() {
                     setIngredients(copia);
                   }}
                 />
-
-                <label>Cantidad</label>
                 <input
-                  type="number"
-                  placeholder="Cantidad"
-                  value={ing.cantidad}
-                  onChange={(e) => {
-                    const copia = [...ingredients];
-                    copia[idx].cantidad = parseFloat(e.target.value);
-                    setIngredients(copia);
-                  }}
-                />
-
-                <label>Unidad</label>
-                <input
-                  type="text"
-                  placeholder="Unidad"
-                  value={ing.unidad}
-                  onChange={(e) => {
-                    const copia = [...ingredients];
-                    copia[idx].unidad = e.target.value;
-                    setIngredients(copia);
-                  }}
-                />
+      type="text"
+      placeholder="Cantidad (ej. 200g, 2 tazas)"
+      value={ing.cantidad}
+      onChange={(e) => {
+        const copia = [...ingredients];
+        copia[idx].cantidad = e.target.value;
+        setIngredients(copia);
+      }}
+    />
               </div>
             ))}
 
-            <button className="add-btn" onClick={() =>
-              setIngredients([
-                ...ingredients,
-                { id: null, nombre: "", cantidad: 0, unidad: "" },
-              ])
-            }>
+            <button
+              className="add-btn"
+              onClick={() => setIngredients([...ingredients, { nombre: "", cantidad:"" }])}
+            >
               ➕ Agregar ingrediente
             </button>
 
@@ -278,16 +209,23 @@ export default function CrearReceta() {
               />
             ))}
 
-            <button className="add-btn" onClick={() => setPasos([...pasos, ""])}>➕ Agregar paso</button>
+            <button
+              className="add-btn"
+              onClick={() => setPasos([...pasos, ""])}
+            >
+              ➕ Agregar paso
+            </button>
 
-            <button className="crear-btn" onClick={addReceta}>Crear receta</button>
+            <button className="crear-btn" onClick={addReceta}>
+              Crear receta
+            </button>
           </div>
         </div>
       </div>
       <ModalAlerta
-      open={modalError}
-      onClose={() => setModalError(false)}
-      mensaje={mensajeError}
+        open={modalError}
+        onClose={() => setModalError(false)}
+        mensaje={mensajeError}
       />
     </div>
   );

@@ -14,7 +14,7 @@ public class FavoritoRecetaDTO {
 
     public FavoritoRecetaDTO(FavoritoReceta favorito) {
         this.id = favorito.getId();
-        this.nombreReceta = favorito.getReceta().getTitulo();
+        this.nombreReceta = favorito.getReceta().getTitle();
         this.fecha = favorito.getFecha();
     }
 }

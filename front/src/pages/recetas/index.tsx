@@ -78,19 +78,21 @@ export default function Recetas() {
       setModalError(true); 
       return;
     }
-
+  
     try {
       const res = await api.get(`/api/recetas/buscar`, {
         params: { intolerancia, query: busqueda },
       });
-     // console.log(res.data.results);
-      setRecetas(res.data.results);
+  
+      // 👇 Solución: Asegúrate de acceder al array correcto
+      const resultados = Array.isArray(res.data.results) ? res.data.results : [];
+      setRecetas(resultados);
     } catch (error) {
       setMensajeError(`Error no se pudieron encontrar las recetas ${error}`) 
       setModalError(true);
     }
   };
-
+  
   const guardarRecetaFavoritaDesdeSpoonacular = async (receta: Receta) => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -200,13 +202,16 @@ export default function Recetas() {
                   calorias={receta.calories || 100}
                   rating={4}
                   ingredientes={
-                    receta.extendedIngredients?.map((i) => i.original) || [
-                      "No hay ingredientes disponibles",
-                    ]
+                    receta.extendedIngredients?.map((i) => ({
+                      cantidad: "", // puedes extraer cantidad si tienes esa info
+                      nombre: i.original
+                    })) || []
                   }
                   preparacion={
-                    receta.analyzedInstructions?.[0]?.steps.map((s) => s.step) ||
-                    ["Sin pasos disponibles"]
+                    receta.analyzedInstructions?.[0]?.steps.map((s, index) => ({
+                      numeroPaso: index + 1,
+                      descripcion: s.step
+                    })) || []
                   }
                   isFavorito={favoritos.includes(receta.id)}
                   onToggleFavorito={() => toggleFavorito(receta.id)}

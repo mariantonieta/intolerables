@@ -2,22 +2,16 @@ package anto.es.intolerables.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 public class SpooncularServiceTest {
 
     @Mock
@@ -26,68 +20,75 @@ public class SpooncularServiceTest {
     @InjectMocks
     private SpooncularService spooncularService;
 
-    private static final String SPOONACULAR_API_KEY = "a".repeat(128);
-
     @BeforeEach
     public void setUp() {
-        spooncularService.setSpooncularApiKey(SPOONACULAR_API_KEY);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void testBuscarRecetasPorIntolerancia() {
-        String intolerancia = "gluten";
-        String query = "pasta";
 
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("id", 123);
-        item1.put("title", "Pasta sin gluten");
-        item1.put("image", "https://image.url");
-        item1.put("readyInMinutes", 30);
-        item1.put("summary", "A delicious gluten-free pasta recipe with 300 calories.");
-
+        Map<String, Object> mockedResponse = new HashMap<>();
         List<Map<String, Object>> results = new ArrayList<>();
-        results.add(item1);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("results", results);
-        when(restTemplate.getForObject(Mockito.anyString(), Mockito.eq(Map.class))).thenReturn(response);
-        Map<String, Object> detalle = new HashMap<>();
-        detalle.put("extendedIngredients", Arrays.asList(Map.of("original", "gluten-free pasta")));
-        detalle.put("analyzedInstructions", Arrays.asList(
-                Map.of("steps", Arrays.asList(Map.of("number", 1, "step", "Boil the pasta")))
+
+        Map<String, Object> receta = new HashMap<>();
+        receta.put("id", 1);
+        receta.put("title", "Pasta sin gluten");
+        receta.put("image", "image_url");
+        receta.put("readyInMinutes", 30);
+        receta.put("summary", "This is a gluten-free pasta recipe with 200 calories.");
+
+        results.add(receta);
+
+        mockedResponse.put("results", results);
+
+        when(restTemplate.getForObject(anyString(), eq(Map.class)))
+                .thenReturn(mockedResponse);
+
+        Map<String, Object> recetaDetalle = new HashMap<>();
+        recetaDetalle.put("extendedIngredients", Arrays.asList(
+                Map.of("original", "200g pasta")
         ));
+        recetaDetalle.put("analyzedInstructions", Collections.singletonList(
+                Map.of("steps", List.of(Map.of("step", "Cocer la pasta")))
+        ));
+        when(restTemplate.getForObject(anyString(), eq(Map.class)))
+                .thenReturn(recetaDetalle);
 
-        when(restTemplate.getForObject(Mockito.contains("recipes/123/information"), Mockito.eq(Map.class))).thenReturn(detalle);
+        List<Map<String, Object>> recetas = spooncularService.buscarRecetasPorIntolerancia("gluten", "pasta");
 
-        List<Map<String, Object>> recetas = spooncularService.buscarRecetasPorIntolerancia(intolerancia, query);
-
+        verify(restTemplate, times(2)).getForObject(anyString(), eq(Map.class));
         assertNotNull(recetas);
         assertEquals(1, recetas.size());
-        Map<String, Object> receta = recetas.get(0);
-        assertEquals("Pasta sin gluten", receta.get("title"));
-        assertEquals("https://image.url", receta.get("image"));
-        assertEquals(30, receta.get("readyInMinutes"));
-        assertEquals(300, receta.get("calories"));
+        assertEquals("Pasta sin gluten", recetas.get(0).get("title"));
+        assertEquals("image_url", recetas.get(0).get("image"));
+        assertEquals(30, recetas.get(0).get("readyInMinutes"));
+        assertEquals(200, recetas.get(0).get("calories"));
 
-        List<Map<String, String>> ingredientes = (List<Map<String, String>>) receta.get("extendedIngredients");
-        assertEquals("gluten-free pasta", ingredientes.get(0).get("original"));
 
-        List<Map<String, Object>> instrucciones = (List<Map<String, Object>>) receta.get("analyzedInstructions");
-        assertNotNull(instrucciones);
-        assertFalse(instrucciones.isEmpty());
-        assertTrue(instrucciones.get(0).containsKey("steps"));
+        List<Map<String, Object>> analyzedInstructions = (List<Map<String, Object>>) recetas.get(0).get("analyzedInstructions");
+        assertNotNull(analyzedInstructions);
+        assertFalse(analyzedInstructions.isEmpty());
+
+
+        List<Map<String, Object>> steps = (List<Map<String, Object>>) analyzedInstructions.get(0).get("steps");
+        assertNotNull(steps);
+        assertEquals(1, steps.size());
+        assertEquals("Cocer la pasta", steps.get(0).get("step"));
     }
+
     @Test
     public void testTraducirTextoLibreTranslate() {
-        Map<String, String> translatedResponse = new HashMap<>();
-        translatedResponse.put("translatedText", "Pasta sin gluten");
+        Map<String, String> mockedTranslationResponse = new HashMap<>();
+        mockedTranslationResponse.put("translatedText", "Traducción al español");
 
+        when(restTemplate.postForObject(anyString(), any(), eq(Map.class)))
+                .thenReturn(mockedTranslationResponse);
 
-        when(restTemplate.postForObject(Mockito.anyString(), Mockito.any(HttpEntity.class), Mockito.eq(Map.class)))
-                .thenReturn(translatedResponse);
+        String translatedText = spooncularService.traducirTextoLibreTranslate("Test translation");
 
-        String result = spooncularService.traducirTextoLibreTranslate("Gluten-free pasta");
-
-        assertEquals("Pasta sin gluten", result);
+        assertNotNull(translatedText);
+        assertEquals("Traducción al español", translatedText);
     }
 }

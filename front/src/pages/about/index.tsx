@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./index.css";
 import { Naviagation } from "../../containers";
-import CardInfo from "../../components/card-info" // ajusta el path según tu estructura
+import CardInfo from "../../components/card-info" 
 
 const cards = [
   {
