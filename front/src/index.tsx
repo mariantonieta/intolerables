@@ -13,13 +13,15 @@ import {
   Registro,
   AboutUs 
 } from "./pages";
+import Layout from "./components/Layout";
 
 //Rutas
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+         <Route path="/" element={<Layout />}>
+        <Route index path="/" element={<Home />} />
         <Route path="/intolerancias" element={<Intolerancias />} />
         <Route path="/restaurantes" element={<Restaurantes />} />
         <Route path="/recetas" element={<Recetas />} />
@@ -28,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/addReceta" element={<CrearReceta />} />
         <Route path="/recetasVip" element={<RecetasComunidad />} />
         <Route path="/about" element={<AboutUs />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>

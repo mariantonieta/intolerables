@@ -1,13 +1,11 @@
 import "./index.css";
 import RestauranteCard from "../../components/cardrestaurant";
 import Mapa from "../../components/map";
-import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 import { useEffect, useState } from "react";
 import ModalAlerta from "../../components/modal-alerta";
 import { FaSearch } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
-
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -30,18 +28,22 @@ export default function Restaurantes() {
   const [intolerancia, setIntolerancia] = useState("");
   const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [coordenadas, setCoordenadas] = useState<[number, number]>([40.4168, -3.7038]);
+  const [coordenadas, setCoordenadas] = useState<[number, number]>([
+    40.4168, -3.7038,
+  ]);
   const [openModal, setOpenModal] = useState(false);
   const [mensajeModal, setMensajeModal] = useState("");
   const [usuarioUbicacion, setUsuarioUbicacion] = useState<string | null>(null); // Ubicación del usuario
 
   const mostrarAlerta = (mensaje: string) => {
-    setMensajeModal(mensaje); 
-    setOpenModal(true); 
+    setMensajeModal(mensaje);
+    setOpenModal(true);
   };
-  
+
   useEffect(() => {
-    const intoleranciaGuardada = localStorage.getItem("intoleranciaSeleccionada");
+    const intoleranciaGuardada = localStorage.getItem(
+      "intoleranciaSeleccionada"
+    );
     if (intoleranciaGuardada) {
       setIntolerancia(intoleranciaGuardada);
     }
@@ -78,8 +80,8 @@ export default function Restaurantes() {
   useEffect(() => {
     const obtenerUbicacionUsuario = async () => {
       const token = localStorage.getItem("jwtToken");
-      const usuarioId = localStorage.getItem("usuarioId"); 
-        if (token && usuarioId) {
+      const usuarioId = localStorage.getItem("usuarioId");
+      if (token && usuarioId) {
         try {
           // Llamamos al endpoint para obtener los datos del usuario
           const response = await api.get(`/api/auth/usuario/${usuarioId}`, {
@@ -87,7 +89,7 @@ export default function Restaurantes() {
               Authorization: `Bearer ${token}`,
             },
           });
-  
+
           // Si la ciudad está disponible, la asignamos al estado de ubicación
           const ciudadUsuario = response.data.ciudadUsuario;
           if (ciudadUsuario) {
@@ -99,7 +101,7 @@ export default function Restaurantes() {
         }
       }
     };
-  
+
     obtenerUbicacionUsuario();
   }, []);
 
@@ -112,7 +114,9 @@ export default function Restaurantes() {
 
   const obtenerCoordenadasPorDireccion = async (direccion: string) => {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=json&limit=1`
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+        direccion
+      )}&format=json&limit=1`
     );
     const data = await response.json();
     if (data.length > 0) {
@@ -139,7 +143,11 @@ export default function Restaurantes() {
             `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
           );
           const data = await response.json();
-          const ciudad = data.address.city || data.address.town || data.address.village || "";
+          const ciudad =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            "";
           setUbicacion(ciudad);
         } catch (error) {
           console.error("Error al obtener la ciudad:", error);
@@ -210,7 +218,6 @@ export default function Restaurantes() {
 
   return (
     <>
-      <Navigation />
       <div className="page">
         <div className="container">
           <h1>Encuentra tu safe place en Restaurante</h1>
@@ -240,7 +247,11 @@ export default function Restaurantes() {
               <FaMapMarkerAlt size={18} />
             </button>
 
-            <button className="buscar-btn" onClick={buscarRestaurantes} aria-label="Buscar">
+            <button
+              className="buscar-btn"
+              onClick={buscarRestaurantes}
+              aria-label="Buscar"
+            >
               <FaSearch size={18} />
             </button>
           </div>
@@ -251,7 +262,9 @@ export default function Restaurantes() {
               ) : (
                 restaurantes.map((restaurante) => (
                   <RestauranteCard
-                    key={restaurante.id ?? `${restaurante.nombre}-${Math.random()}`}
+                    key={
+                      restaurante.id ?? `${restaurante.nombre}-${Math.random()}`
+                    }
                     id={restaurante.id}
                     nombre={restaurante.nombre}
                     direccion={restaurante.direccion}

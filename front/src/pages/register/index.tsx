@@ -1,6 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import "../login/index.css";
-import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
 import api from "../../services/axiosConfig";
 
@@ -111,84 +110,85 @@ export default function Registro() {
 
   return (
     <>
-      <Navigation />
       <div className="page">
-      <div className="container">
-        <div className="container-login">
-          <div className="login-card">
-            <h2>Registro de Usuario</h2>
-            <form onSubmit={handleSubmit}>
-              <label>Nombre:</label>
-              <input
-                type="text"
-                name="nombre"
-                placeholder="Introduce tu nombre"
-                value={form.nombre}
-                onChange={handleChange}
-                className={errors.nombre ? "input-error" : ""}
-              />
-              {renderError("nombre")}
+        <div className="container">
+          <div className="container-login">
+            <div className="login-card">
+              <h2>Registro de Usuario</h2>
+              <form onSubmit={handleSubmit}>
+                <label>Nombre:</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  placeholder="Introduce tu nombre"
+                  value={form.nombre}
+                  onChange={handleChange}
+                  className={errors.nombre ? "input-error" : ""}
+                />
+                {renderError("nombre")}
 
-              <label>Contraseña:</label>
-              <input
-                type="password"
-                name="contrasena"
-                placeholder="Introduce una contraseña"
-                value={form.contrasena}
-                onChange={handleChange}
-                className={errors.contrasena ? "input-error" : ""}
-              />
-              {renderError("contrasena")}
+                <label>Contraseña:</label>
+                <input
+                  type="password"
+                  name="contrasena"
+                  placeholder="Introduce una contraseña"
+                  value={form.contrasena}
+                  onChange={handleChange}
+                  className={errors.contrasena ? "input-error" : ""}
+                />
+                {renderError("contrasena")}
 
-              <label>Confirmar Contraseña:</label>
-              <input
-                type="password"
-                name="contrasenaConfirm"
-                placeholder="Confirma tu contraseña"
-                value={form.contrasenaConfirm}
-                onChange={handleChange}
-                className={errors.contrasenaConfirm ? "input-error" : ""}
-              />
-              {renderError("contrasenaConfirm")}
+                <label>Confirmar Contraseña:</label>
+                <input
+                  type="password"
+                  name="contrasenaConfirm"
+                  placeholder="Confirma tu contraseña"
+                  value={form.contrasenaConfirm}
+                  onChange={handleChange}
+                  className={errors.contrasenaConfirm ? "input-error" : ""}
+                />
+                {renderError("contrasenaConfirm")}
 
-              <label>País:</label>
-              <input
-                type="text"
-                name="paisUsuario"
-                placeholder="¿De qué país eres?"
-                value={form.paisUsuario}
-                onChange={handleChange}
-                className={errors.paisUsuario ? "input-error" : ""}
-              />
-              {renderError("paisUsuario")}
+                <label>País:</label>
+                <input
+                  type="text"
+                  name="paisUsuario"
+                  placeholder="¿De qué país eres?"
+                  value={form.paisUsuario}
+                  onChange={handleChange}
+                  className={errors.paisUsuario ? "input-error" : ""}
+                />
+                {renderError("paisUsuario")}
 
-              <label>Ciudad:</label>
-              <input
-                type="text"
-                name="ciudad"
-                placeholder="¿Cuál es tu ciudad?"
-                value={form.ciudad}
-                onChange={handleChange}
-                className={errors.ciudad ? "input-error" : ""}
-              />
-              {renderError("ciudad")}
+                <label>Ciudad:</label>
+                <input
+                  type="text"
+                  name="ciudad"
+                  placeholder="¿Cuál es tu ciudad?"
+                  value={form.ciudad}
+                  onChange={handleChange}
+                  className={errors.ciudad ? "input-error" : ""}
+                />
+                {renderError("ciudad")}
 
-              <button type="submit">Registrarse</button>
-            </form>
+                <button type="submit">Registrarse</button>
+              </form>
 
-            {mensaje && (
-              <div className={mensaje.includes("éxito") ? "success" : "error"}>
-                {mensaje}
+              {mensaje && (
+                <div
+                  className={mensaje.includes("éxito") ? "success" : "error"}
+                >
+                  {mensaje}
+                </div>
+              )}
+
+              <div className="bottom-links">
+                <span>¿Ya tienes una cuenta? </span>
+                <a href="/login">Log in</a>
               </div>
-            )}
-
-            <div className="bottom-links">
-              <span>¿Ya tienes una cuenta? </span>
-              <a href="/login">Log in</a>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );

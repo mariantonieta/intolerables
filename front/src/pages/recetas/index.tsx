@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import RecetaCard from "../../components/cardreceta";
-import Navigation from "../../containers/navigation";
 import "./index.css";
 import api from "../../services/axiosConfig";
 import ModalFavoritos from "../../components/modal-favorito";
@@ -34,7 +33,7 @@ export default function Recetas() {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [modalError, setModalError] = useState(false);
-  const [mensajeError,setMensajeError] = useState("")
+  const [mensajeError, setMensajeError] = useState("");
 
   useEffect(() => {
     const cargarFavoritos = async () => {
@@ -50,9 +49,14 @@ export default function Recetas() {
         });
 
         const data = res.data as FavoritoReceta[];
-        const ids = data.map((fav) => fav.receta?.id).filter((id): id is number => id !== undefined);
+        const ids = data
+          .map((fav) => fav.receta?.id)
+          .filter((id): id is number => id !== undefined);
         const formateados = data
-          .filter((fav): fav is { receta: { id: number; title: string } } => fav.receta !== undefined)
+          .filter(
+            (fav): fav is { receta: { id: number; title: string } } =>
+              fav.receta !== undefined
+          )
           .map((fav) => ({
             id: fav.receta.id,
             nombreReceta: fav.receta.title,
@@ -61,8 +65,8 @@ export default function Recetas() {
         setFavoritos(ids);
         setFavoritosRecetasModal(formateados);
       } catch (error) {
-      setMensajeError(`Error al cargar en favoritos ${error}`) 
-      setModalError(true)
+        setMensajeError(`Error al cargar en favoritos ${error}`);
+        setModalError(true);
       } finally {
         setIsLoading(false);
       }
@@ -75,24 +79,26 @@ export default function Recetas() {
     const intolerancia = localStorage.getItem("intoleranciaSeleccionada");
     if (!intolerancia || !busqueda) {
       setMensajeError("Por favor, escribe la receta que quieres buscar.");
-      setModalError(true); 
+      setModalError(true);
       return;
     }
-  
+
     try {
       const res = await api.get(`/api/recetas/buscar`, {
         params: { intolerancia, query: busqueda },
       });
-  
+
       // 👇 Solución: Asegúrate de acceder al array correcto
-      const resultados = Array.isArray(res.data.results) ? res.data.results : [];
+      const resultados = Array.isArray(res.data.results)
+        ? res.data.results
+        : [];
       setRecetas(resultados);
     } catch (error) {
-      setMensajeError(`Error no se pudieron encontrar las recetas ${error}`) 
+      setMensajeError(`Error no se pudieron encontrar las recetas ${error}`);
       setModalError(true);
     }
   };
-  
+
   const guardarRecetaFavoritaDesdeSpoonacular = async (receta: Receta) => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -106,31 +112,32 @@ export default function Recetas() {
         image: receta.image,
         readyInMinutes: receta.readyInMinutes,
         calories: receta.calories || 0,
-        extendedIngredients: receta.extendedIngredients?.map((i) => ({
-          name: i.original,
-        })) || [],
+        extendedIngredients:
+          receta.extendedIngredients?.map((i) => ({
+            name: i.original,
+          })) || [],
         analyzedInstructions:
           receta.analyzedInstructions?.[0]?.steps.map((s) => ({
             step: s.step,
           })) || [],
       };
 
-       await api.post("/api/favoritos-recetas/spoonacular", payload, {
+      await api.post("/api/favoritos-recetas/spoonacular", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-    //  console.log("Receta guardada como favorita:", res.data);
-    
+      //  console.log("Receta guardada como favorita:", res.data);
+
       setFavoritos((prev) => [...prev, receta.id]);
       setFavoritosRecetasModal((prev) => [
         ...prev,
         { id: receta.id, nombreReceta: receta.title },
       ]);
     } catch (error) {
-      setMensajeError(`Error al actualizar en favoritos ${error}`) 
-      setModalError(true); 
+      setMensajeError(`Error al actualizar en favoritos ${error}`);
+      setModalError(true);
     }
   };
 
@@ -141,7 +148,7 @@ export default function Recetas() {
     if (!token || !usuarioId) {
       setMensajeError("Debes iniciar sesión para guardar favoritos.");
       setModalError(true);
-      return
+      return;
     }
 
     const receta = recetas.find((r) => r.id === id);
@@ -155,72 +162,73 @@ export default function Recetas() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFavoritos((prev) => prev.filter((fid) => fid !== id));
-        setFavoritosRecetasModal((prev) =>
-          prev.filter((fav) => fav.id !== id)
-        );
+        setFavoritosRecetasModal((prev) => prev.filter((fav) => fav.id !== id));
       } else {
         await guardarRecetaFavoritaDesdeSpoonacular(receta);
       }
     } catch (error) {
-      setMensajeError(`Error al actualizar en favoritos ${error}`) 
-     }
+      setMensajeError(`Error al actualizar en favoritos ${error}`);
+    }
   };
 
   return (
     <>
-      <Navigation />
       <div className="page">
-      <div className="container">
-        <h1>Encuentra tu safe place en Receta</h1>
-        <div className="buscador-container">
-          <input
-            type="text"
-            id="receta"
-            placeholder="¿Qué te apetece comer hoy?"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
-        <button className="buscar-btn" onClick={buscarRecetas} aria-label="Buscar">
-  <FaSearch size={18} />
-</button>
+        <div className="container">
+          <h1>Encuentra tu safe place en Receta</h1>
+          <div className="buscador-container">
+            <input
+              type="text"
+              id="receta"
+              placeholder="¿Qué te apetece comer hoy?"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+            <button
+              className="buscar-btn"
+              onClick={buscarRecetas}
+              aria-label="Buscar"
+            >
+              <FaSearch size={18} />
+            </button>
+          </div>
 
-          
-        </div>
-
-        <div className="mapa-container">
-          <div className="contenido">
-            {isLoading ? (
-              <p>Cargando favoritos...</p>
-            ) : (
-              recetas.map((receta) => (
-                <RecetaCard
-                  key={receta.id}
-                  id={receta.id}
-                  nombre={receta.title}
-                  imagen={receta.image}
-                  tiempo={receta.readyInMinutes}
-                  calorias={receta.calories || 100}
-                  rating={4}
-                  ingredientes={
-                    receta.extendedIngredients?.map((i) => ({
-                      cantidad: "", // puedes extraer cantidad si tienes esa info
-                      nombre: i.original
-                    })) || []
-                  }
-                  preparacion={
-                    receta.analyzedInstructions?.[0]?.steps.map((s, index) => ({
-                      numeroPaso: index + 1,
-                      descripcion: s.step
-                    })) || []
-                  }
-                  isFavorito={favoritos.includes(receta.id)}
-                  onToggleFavorito={() => toggleFavorito(receta.id)}
-                />
-              ))
-            )}
+          <div className="mapa-container">
+            <div className="contenido">
+              {isLoading ? (
+                <p>Cargando favoritos...</p>
+              ) : (
+                recetas.map((receta) => (
+                  <RecetaCard
+                    key={receta.id}
+                    id={receta.id}
+                    nombre={receta.title}
+                    imagen={receta.image}
+                    tiempo={receta.readyInMinutes}
+                    calorias={receta.calories || 100}
+                    rating={4}
+                    ingredientes={
+                      receta.extendedIngredients?.map((i) => ({
+                        cantidad: "", // puedes extraer cantidad si tienes esa info
+                        nombre: i.original,
+                      })) || []
+                    }
+                    preparacion={
+                      receta.analyzedInstructions?.[0]?.steps.map(
+                        (s, index) => ({
+                          numeroPaso: index + 1,
+                          descripcion: s.step,
+                        })
+                      ) || []
+                    }
+                    isFavorito={favoritos.includes(receta.id)}
+                    onToggleFavorito={() => toggleFavorito(receta.id)}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       <ModalFavoritos
@@ -230,9 +238,9 @@ export default function Recetas() {
         favoritosRestaurantes={[]}
       />
       <ModalAlerta
-      open={modalError}
-      onClose={() => setModalError(false)}
-      mensaje={mensajeError}
+        open={modalError}
+        onClose={() => setModalError(false)}
+        mensaje={mensajeError}
       />
     </>
   );

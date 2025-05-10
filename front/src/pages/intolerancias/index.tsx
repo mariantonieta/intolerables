@@ -1,5 +1,4 @@
 import IntoleranciaCard from "../../components/cardintole/IntolerancaCard";
-import Navigation from "../../containers/navigation";
 import "./index.css";
 import { useEffect, useState } from "react";
 import Modal from "../../components/modal";
@@ -20,7 +19,8 @@ export default function Intolerancias() {
   const [intolerancias, setIntolerancias] = useState<Intolerancia[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalElegirOpen, setModalElegirOpen] = useState(false);
-  const [intoleSeleccionada, setIntoleSeleccionada] = useState<Intolerancia | null>(null);
+  const [intoleSeleccionada, setIntoleSeleccionada] =
+    useState<Intolerancia | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +80,9 @@ export default function Intolerancias() {
         );
         console.log("Intolerancia guardada en el servidor:", response.status);
       } else {
-        console.log("Usuario no autenticado, intolerancia guardada solo en localStorage.");
+        console.log(
+          "Usuario no autenticado, intolerancia guardada solo en localStorage."
+        );
       }
     } catch (error) {
       console.error("Error al guardar la intolerancia:", error);
@@ -89,7 +91,6 @@ export default function Intolerancias() {
 
   return (
     <div>
-      <Navigation />
       <div className="page">
         <div className="container">
           <h1>Intolerancias</h1>

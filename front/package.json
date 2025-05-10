@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:homePage": "vitest run src/pages/restaurantes/Restaurante.test.tsx"
+    "test:homePage": "vitest run src/pages/recetas/Recetas.test.tsx"
 
   },
   "dependencies": {

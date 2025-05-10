@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import "./index.css";
 import api from "../../services/axiosConfig";
-import Navigation from "../../containers/navigation";
 import { useNavigate } from "react-router";
 import ModalAlerta from "../../components/modal-alerta";
 interface IngredienteForm {
@@ -16,7 +15,7 @@ export default function CrearReceta() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [readyInMinutes, setReadyInMinutes] = useState<number>(0);
   const [ingredients, setIngredients] = useState<IngredienteForm[]>([
-    { nombre: "", cantidad:"" },
+    { nombre: "", cantidad: "" },
   ]);
   const [pasos, setPasos] = useState<string[]>([""]);
   const [calorias, setCalorias] = useState<number>(0);
@@ -56,9 +55,9 @@ export default function CrearReceta() {
       calories: calorias,
       summary: tipoReceta,
       recetaIngredientes: ingredients.map((ing, index) => ({
-        id: index + 1, 
+        id: index + 1,
         nombre: ing.nombre,
-        cantidad: ing.cantidad, 
+        cantidad: ing.cantidad,
       })),
       pasosPreparacion: pasos.map((descripcion) => ({
         descripcion,
@@ -68,19 +67,17 @@ export default function CrearReceta() {
     try {
       const token = localStorage.getItem("jwtToken");
       const response = await api.post("/api/recetas", nuevaReceta, {
-        
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response)
+      console.log(response);
 
-     
       setTitle("");
       setImage("");
       setImageFile(null);
       setReadyInMinutes(0);
-      setIngredients([{ nombre: "", cantidad:""}]);
+      setIngredients([{ nombre: "", cantidad: "" }]);
       setPasos([""]);
       setCalorias(0);
       setTipoReceta("");
@@ -99,7 +96,7 @@ export default function CrearReceta() {
 
   return (
     <div className="page">
-      <Navigation />
+    
       <div className="container">
         <div className="formulario-receta">
           <div className="card-receta">
@@ -176,21 +173,23 @@ export default function CrearReceta() {
                   }}
                 />
                 <input
-      type="text"
-      placeholder="Cantidad (ej. 200g, 2 tazas)"
-      value={ing.cantidad}
-      onChange={(e) => {
-        const copia = [...ingredients];
-        copia[idx].cantidad = e.target.value;
-        setIngredients(copia);
-      }}
-    />
+                  type="text"
+                  placeholder="Cantidad (ej. 200g, 2 tazas)"
+                  value={ing.cantidad}
+                  onChange={(e) => {
+                    const copia = [...ingredients];
+                    copia[idx].cantidad = e.target.value;
+                    setIngredients(copia);
+                  }}
+                />
               </div>
             ))}
 
             <button
               className="add-btn"
-              onClick={() => setIngredients([...ingredients, { nombre: "", cantidad:"" }])}
+              onClick={() =>
+                setIngredients([...ingredients, { nombre: "", cantidad: "" }])
+              }
             >
               ➕ Agregar ingrediente
             </button>

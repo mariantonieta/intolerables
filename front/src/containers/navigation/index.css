@@ -112,22 +112,15 @@ nav {
 .navbar-menu a.active::after {
   width: 100%;
 }
-
 .nav-right {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  z-index: 101;
-  position: fixed;
-  left: 0;
-  width: 100%;
-  justify-content: center;
-  padding: 1.5rem 0;
-  background-color: var(--color-1);
-  display: none; 
-    z-index: 99;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  transition: top 0.3s ease; 
+  position: static;
+  justify-content: flex-end;
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  top: auto;
+  width: auto;
 }
 
 .nav-right.show {

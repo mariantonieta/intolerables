@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import RecetaCard from "../../components/cardreceta";
-import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 import ModalAlerta from "../../components/modal-alerta";
-
 import "../recetas/index.css";
 
 interface Receta {
@@ -17,7 +15,7 @@ interface Receta {
   recetaIngredientes?: {
     cantidad: number;
     nombre: string;
-    }[];
+  }[];
 }
 
 export default function RecetasComunidad() {
@@ -34,12 +32,12 @@ export default function RecetasComunidad() {
       setIsLoading(true);
       try {
         const token = localStorage.getItem("jwtToken"); // Obtén el token
-      const res = await api.get("/api/recetas/todas", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      console.log("Recetas obtenidas:", res.data); 
+        const res = await api.get("/api/recetas/todas", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Recetas obtenidas:", res.data);
         setRecetas(res.data as Receta[]);
       } catch (err) {
         setMensajeError(`Error al cargar recetas: ${err}`);
@@ -52,12 +50,13 @@ export default function RecetasComunidad() {
     obtenerRecetas();
   }, []);
 
-  const recetasFiltradas = busqueda.trim() === ""
-  ? recetas
-  : recetas.filter((receta) =>
-      receta.title?.toLowerCase()?.includes(busqueda.toLowerCase())
-    );
-console.log(recetasFiltradas)
+  const recetasFiltradas =
+    busqueda.trim() === ""
+      ? recetas
+      : recetas.filter((receta) =>
+          receta.title?.toLowerCase()?.includes(busqueda.toLowerCase())
+        );
+  console.log(recetasFiltradas);
 
   const toggleFavorito = async (id: number) => {
     const token = localStorage.getItem("jwtToken");
@@ -101,7 +100,6 @@ console.log(recetasFiltradas)
 
   return (
     <>
-      <Navigation />
       <div className="container">
         <h1>Encuentra tu safe place en Recetas de la Comunidad</h1>
         <div className="buscador-container">
@@ -128,7 +126,8 @@ console.log(recetasFiltradas)
                 calorias={receta.calories || 100}
                 rating={5} // Puedes ajustar esto si el rating es necesario
                 ingredientes={
-                  receta.recetaIngredientes && receta.recetaIngredientes.length > 0
+                  receta.recetaIngredientes &&
+                  receta.recetaIngredientes.length > 0
                     ? receta.recetaIngredientes.map((i) => ({
                         cantidad: `${i.cantidad}`.trim(),
                         nombre: i.nombre ?? "Ingrediente desconocido",

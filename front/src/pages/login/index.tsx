@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import "./index.css";
-import Navigation from "../../containers/navigation";
 import api from "../../services/axiosConfig";
 //datos tipados con TS que se enviara al backend
 interface LoginRequest {
@@ -64,46 +63,47 @@ const LoginForm: React.FC = () => {
 
   return (
     <>
-      <Navigation />
       <div className="page">
-      <div className="container">
-        <div className="container-login">
-          <div className="login-card">
-            <h2>Hola, Bienvenid@ again.</h2>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label>Nombre:</label>
-                <input
-                  type="text"
-                  placeholder="Introduce tu nombre"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label>Contraseña:</label>
-                <input
-                  type="password"
-                  placeholder="Introduce tu contraseña"
-                  value={contrasena}
-                  onChange={(e) => setContrasena(e.target.value)}
-                  required
-                />
-              </div>
-              <button type="submit">Iniciar sesión</button>
-            </form>
+        <div className="container">
+          <div className="container-login">
+            <div className="login-card">
+              <h2>Hola, Bienvenid@ again.</h2>
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label>Nombre:</label>
+                  <input
+                    type="text"
+                    placeholder="Introduce tu nombre"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Contraseña:</label>
+                  <input
+                    type="password"
+                    placeholder="Introduce tu contraseña"
+                    value={contrasena}
+                    onChange={(e) => setContrasena(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit">Iniciar sesión</button>
+              </form>
 
-            {successMessage && <div className="success">{successMessage}</div>}
-            {error && <div className="error">{error}</div>}
-            <div className="bottom-links">
-              <a href="#">Forgot password?</a>
-              <span> | </span>
-              <a href="/register">Sign up</a>
+              {successMessage && (
+                <div className="success">{successMessage}</div>
+              )}
+              {error && <div className="error">{error}</div>}
+              <div className="bottom-links">
+                <a href="#">Forgot password?</a>
+                <span> | </span>
+                <a href="/register">Sign up</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </>
   );

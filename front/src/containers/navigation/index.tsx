@@ -23,11 +23,15 @@ export default function Navigation(props: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [favoritosOpen, setFavoritosOpen] = useState(false);
-  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]);
-  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]);
+  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>(
+    []
+  );
+  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<
+    FavoritoRestauranteDTO[]
+  >([]);
 
-  const [navRightTop, setNavRightTop] = useState(0); 
-  const navCenterRef = useRef<HTMLDivElement>(null); 
+  const [navRightTop, setNavRightTop] = useState(0);
+  const navCenterRef = useRef<HTMLDivElement>(null);
   const navbarMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -36,9 +40,9 @@ export default function Navigation(props: NavigationProps) {
   useEffect(() => {
     if (menuOpen && navbarMenuRef.current) {
       const menuHeight = navbarMenuRef.current.offsetHeight;
-      setNavRightTop(menuHeight + 85);  
-     }
-  }, [menuOpen]); 
+      setNavRightTop(menuHeight + 85);
+    }
+  }, [menuOpen]);
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", menuOpen);
@@ -91,36 +95,52 @@ export default function Navigation(props: NavigationProps) {
           <img src="/svg/logo.svg" alt="Logo" className="logo" />
         </div>
 
-        <div className={`menu-toggle ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}
-        aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+        <div
+          className={`menu-toggle ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
         >
           <span></span>
           <span></span>
           <span></span>
         </div>
 
-        <div className={`nav-center ${menuOpen ? "open" : ""}`} ref={navCenterRef}>
+        <div
+          className={`nav-center ${menuOpen ? "open" : ""}`}
+          ref={navCenterRef}
+        >
           <div className="navbar-menu" ref={navbarMenuRef}>
-            <NavLink to="/" onClick={() => setMenuOpen(false)}>HOME</NavLink>
-            <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>INTOLERANCIAS</NavLink>
-            <NavLink to="/about" onClick={() => setMenuOpen(false)}>SOBRE MI</NavLink> 
+            <NavLink to="/" onClick={() => setMenuOpen(false)}>
+              HOME
+            </NavLink>
+            <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>
+              INTOLERANCIAS
+            </NavLink>
+            <NavLink to="/about" onClick={() => setMenuOpen(false)}>
+              SOBRE MI
+            </NavLink>
+
             {isLoggedIn() && (
               <>
-                <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>AÑADIR RECETA</NavLink>
-                <NavLink to="/recetasVip" onClick={() => setMenuOpen(false)}>RECETAS VIP</NavLink>
+                <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>
+                  AÑADIR RECETA
+                </NavLink>
+                <NavLink to="/recetasVip" onClick={() => setMenuOpen(false)}>
+                  RECETAS VIP
+                </NavLink>
               </>
             )}
           </div>
         </div>
 
-        <div className="nav-right" style={{ top: `${navRightTop + 10}px` }}> 
+        <div className="nav-right" style={{ top: `${navRightTop + 10}px` }}>
           {isLoggedIn() && (
             <button
               onClick={() => {
                 handleOpenFavoritos();
                 setMenuOpen(false);
               }}
-              type="button" 
+              type="button"
               className="favorito-link"
               aria-label="Favoritos"
             >
@@ -129,15 +149,26 @@ export default function Navigation(props: NavigationProps) {
           )}
 
           {!isLoggedIn() ? (
-            <button onClick={() => setModalOpen(true)} aria-label="Abrir login" type="button" >
+            <button
+              onClick={() => {
+                setModalOpen(true);
+                setMenuOpen(false);
+              }}
+              aria-label="Abrir login"
+              type="button"
+            >
               <FaUnlockAlt />
             </button>
           ) : (
-            <button onClick={() => {
-              localStorage.removeItem("jwtToken");
-              navigate("/"); 
-            }} aria-label="Cerrar sesión"
-            type="button" >
+            <button
+              onClick={() => {
+                localStorage.removeItem("jwtToken");
+                setMenuOpen(false);
+                navigate("/");
+              }}
+              aria-label="Cerrar sesión"
+              type="button"
+            >
               <FaSignOutAlt />
             </button>
           )}
