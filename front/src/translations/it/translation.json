@@ -1,0 +1,140 @@
+{
+    "find": "TROVA",
+    "restaurant_or_recipe": "IL RISTORANTE O LA RICETTA",
+    "satisfy_craving": "PER SODDISFARE LA TUA VOGLIA",
+    "healthy_stomach": "Stomaco sano, stomaco felice",
+    "start_now": "Inizia ora",
+        "home": "HOME",
+        "intolerances": "INTOLLERANZE",
+        "about": "CHI SONO",
+        "add_recipe": "AGGIUNGI RICETTA",
+        "vip_recipes": "RICETTE VIP",
+       "rights_reserved": "Tutti i diritti riservati.",
+    "privacy_policy_pdf": "Informativa sulla Privacy PDF",
+    "intolerances_title": "INTOLLERANZE",
+      "chat_title": "Chat sulle Intolleranze",
+    "placeholder": "Fai la tua domanda...",
+    "send": "Invia",
+    "no_answer": "Mi dispiace, non ho ancora una risposta precisa 😢",
+    "more_info": "Più info",
+    "iam": "Sono",
+        "calories_recipe": "Calorie:",
+    "time_recipe":"Tempo:",
+    "see_recipe": "Vedi la ricetta",
+        "address_restaurant": "Indirizzo:",
+    "category_restaurant": "Categoria",
+    "see_more_yelp": "Vedi di più su YELP",
+        "not_alone":"Non sei solo!",
+    "close": "Chiudi",
+        "favorites":"I tuoi preferiti",
+    "recipe": "Ricette",
+    "not_favorites":"Non hai ancora ricette preferite salvate.",
+    "restaurant": "Ristoranti",
+    "not_restaurant": "Non hai ancora ristoranti preferite salvate.",
+     "ingredients": "Ingredienti:",
+    "preparation": "Preparazione",
+    "what_would_see":"Cosa ti piacerebbe vedere?",
+     "seeRecipes": "Vedi Ricette",
+  "seeRestaurants": "Vedi Ristoranti",
+  
+  "loginOrRegister": "Sei già registrato o vuoi registrarti?",
+  "login": "Accedi",
+  "register": "Registrati",
+  
+  "welcome": "Ciao, bentornatə.",
+  "nameLabel": "Nome:",
+  "namePlaceholder": "Inserisci il tuo nome",
+  "passwordLabel": "Password:",
+  "passwordPlaceholder": "Inserisci la tua password",
+  "submit": "Accedi",
+  "errorConnection": "Errore di connessione al server",
+  "forgotPassword": "Hai dimenticato la password?",
+  "signUp": "Registrati",
+
+  "registerTitle": "Unisciti a noi",
+  "passwordConfirm": "Conferma la Password",
+  "countryLabel": "Città",
+  "countryPlaceholder": "Da quale paese vieni?",
+  "cityLabel": "Città",
+  "cityPlaceHolder": "Qual è la tua città?",
+  "anyAccount": "Hai già un account?",
+  "errorRegister": "Errore nella registrazione dell'utente. Riprova.",
+  "errorMessages": "Per favore, correggi gli errori prima di inviare.",
+  "errorCity": "La città deve avere più di due caratteri.",
+  "errorCountry": "Il paese deve avere più di due caratteri.",
+  "errorPasswordConfirm": "Le password non coincidono.",
+  "errorPassword": "Deve contenere una lettera maiuscola, due numeri e un carattere speciale.",
+  "errorName": "Il nome deve avere più di due caratteri.",
+  "errorLocation": "Impossibile trovare la posizione",
+
+"errorGeo": "La geolocalizzazione non è supportata dal tuo browser",
+
+"errorSearch": "Per favore, inserisci sia il cibo che la posizione.",
+
+"errorRestaurantes": "Impossibile trovare ristoranti.",
+
+"errorId": "ID utente non trovato.",
+
+"findRestaurant": "Trova il tuo posto sicuro al ristorante",
+
+"searchRestaurant": "Cosa ti piacerebbe mangiare oggi?",
+
+"location": "Posizione",
+
+  
+  "createRecipe": "Crea una nuova ricetta 🍽️",
+  "titleRecipe": "Titolo della ricetta",
+  "imageUrl": "URL dell'immagine (opzionale)",
+  "uploadImage": "Carica un'immagine",
+  "prepTime": "Tempo di preparazione (min)",
+  "recipeType": "Tipo di ricetta",
+  "ingredientName": "Nome dell'ingrediente",
+  "ingredientAmount": "Quantità (es. 200g, 2 tazze)",
+  "addIngredient": "➕ Aggiungi ingrediente",
+  "steps": "Passaggi",
+  "stepPlaceholder": "Passaggio",
+  "addStep": "➕ Aggiungi passaggio",
+  "submitRecipe": "Crea ricetta",
+     "tituloPrincipal": "Trova il tuo posto sicuro su Receta",
+  "placeholderBusqueda": "Cosa ti piacerebbe mangiare oggi?",
+  "cargandoFavoritos": "Caricamento preferiti...",
+  "errorBusquedaVacia": "Per favore, scrivi la ricetta che vuoi cercare.",
+  "errorNoAutenticado": "Devi accedere per salvare i preferiti.",
+  "errorCargarFavoritos": "Errore durante il caricamento dei preferiti",
+  "errorBuscarRecetas": "Errore: impossibile trovare le ricette",
+  "errorActualizarFavoritos": "Errore durante l'aggiornamento dei preferiti",
+  "titleCommunity": "Trova il tuo posto sicuro nelle Ricette della Comunità",
+"noEncontradas": "Caricamento ricette...",
+"cargandoRecetas": "Caricamento ricette...",
+"ingredienteDesconocido": "Ingredient sconosciuto",
+"sinIngredientes": "Nessun ingrediente",
+"sinPasosDisponibles": "Nessun passaggio disponibile",
+
+
+    "about_section": {
+      "heading": "Chi Sono",
+      "cards": {
+        "hola": {
+          "title": "CIAO",
+          "content": "Ciaoooo, INTOLLERABILE! :) Sono Mariantonieta, e voglio darti il benvenuto nel mio mondo."
+        },
+        "historia": {
+          "title": "LA MIA STORIA",
+          "content": "Questo progetto è nato da un'esperienza molto personale: essere celiaca e affrontare quotidianamente le limitazioni in cucina..."
+        },
+        "proposito": {
+          "title": "SCOPO",
+          "content": "Qui ti offro uno spazio dove puoi trovare ristoranti o ricette pensati per diverse esigenze alimentari..."
+        },
+        "motivacion": {
+          "title": "MOTIVAZIONE",
+          "content": "Voglio ricordarti che anche se può essere frustrante avere un'INTOLLERANZA ALIMENTARE, questo ti rende unic@."
+        },
+        "utilidad": {
+          "title": "A COSA SERVE QUESTA PAGINA?",
+          "content": "Qui puoi trovare sia la ricetta che il ristorante che cerchi. La ricerca è diversa perché ti garantisce che una volta arrivato, sarà un posto sicuro per la tua intolleranza."
+        }
+      }
+    }
+    }
+    

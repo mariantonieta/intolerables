@@ -5,6 +5,7 @@ import api from "../../services/axiosConfig";
 import ModalFavoritos from "../../components/modal-favorito";
 import ModalAlerta from "../../components/modal-alerta";
 import { FaSearch } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 interface Receta {
   id: number;
@@ -34,7 +35,7 @@ export default function Recetas() {
   const [isLoading, setIsLoading] = useState(false);
   const [modalError, setModalError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
-
+  const { t } = useTranslation();
   useEffect(() => {
     const cargarFavoritos = async () => {
       const token = localStorage.getItem("jwtToken");
@@ -65,7 +66,8 @@ export default function Recetas() {
         setFavoritos(ids);
         setFavoritosRecetasModal(formateados);
       } catch (error) {
-        setMensajeError(`Error al cargar en favoritos ${error}`);
+        setMensajeError(`${t("errorCargarFavoritos")} ${error}`);
+
         setModalError(true);
       } finally {
         setIsLoading(false);
@@ -78,7 +80,8 @@ export default function Recetas() {
   const buscarRecetas = async () => {
     const intolerancia = localStorage.getItem("intoleranciaSeleccionada");
     if (!intolerancia || !busqueda) {
-      setMensajeError("Por favor, escribe la receta que quieres buscar.");
+      setMensajeError(t("errorBusquedaVacia"));
+
       setModalError(true);
       return;
     }
@@ -94,7 +97,8 @@ export default function Recetas() {
         : [];
       setRecetas(resultados);
     } catch (error) {
-      setMensajeError(`Error no se pudieron encontrar las recetas ${error}`);
+      setMensajeError(`${t("errorBuscarRecetas")} ${error}`);
+
       setModalError(true);
     }
   };
@@ -102,7 +106,8 @@ export default function Recetas() {
   const guardarRecetaFavoritaDesdeSpoonacular = async (receta: Receta) => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
-      setMensajeError("Debes iniciar sesión para guardar favoritos.");
+      setMensajeError(t("errorNoAutenticado"));
+
       setModalError(true);
     }
 
@@ -136,7 +141,7 @@ export default function Recetas() {
         { id: receta.id, nombreReceta: receta.title },
       ]);
     } catch (error) {
-      setMensajeError(`Error al actualizar en favoritos ${error}`);
+      setMensajeError(`${t("errorActualizarFavoritos")} ${error}`);
       setModalError(true);
     }
   };
@@ -146,7 +151,8 @@ export default function Recetas() {
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!token || !usuarioId) {
-      setMensajeError("Debes iniciar sesión para guardar favoritos.");
+      setMensajeError(t("errorNoAutenticado"));
+
       setModalError(true);
       return;
     }
@@ -167,7 +173,7 @@ export default function Recetas() {
         await guardarRecetaFavoritaDesdeSpoonacular(receta);
       }
     } catch (error) {
-      setMensajeError(`Error al actualizar en favoritos ${error}`);
+      setMensajeError(`${t("errorActualizarFavoritos")} ${error}`);
     }
   };
 
@@ -175,12 +181,12 @@ export default function Recetas() {
     <>
       <div className="page">
         <div className="container">
-          <h1>Encuentra tu safe place en Receta</h1>
+          <h1>{t("tituloPrincipal")}</h1>
           <div className="buscador-container">
             <input
               type="text"
               id="receta"
-              placeholder="¿Qué te apetece comer hoy?"
+              placeholder={t("placeholderBusqueda")}
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
@@ -196,7 +202,7 @@ export default function Recetas() {
           <div className="mapa-container">
             <div className="contenido">
               {isLoading ? (
-                <p>Cargando favoritos...</p>
+                <p>{t("cargandoFavoritos")}</p>
               ) : (
                 recetas.map((receta) => (
                   <RecetaCard
@@ -209,7 +215,7 @@ export default function Recetas() {
                     rating={4}
                     ingredientes={
                       receta.extendedIngredients?.map((i) => ({
-                        cantidad: "", // puedes extraer cantidad si tienes esa info
+                        cantidad: "",
                         nombre: i.original,
                       })) || []
                     }

@@ -3,6 +3,7 @@ import RecetaCard from "../../components/cardreceta";
 import api from "../../services/axiosConfig";
 import ModalAlerta from "../../components/modal-alerta";
 import "../recetas/index.css";
+import { useTranslation } from "react-i18next";
 
 interface Receta {
   id: number;
@@ -25,6 +26,7 @@ export default function RecetasComunidad() {
   const [isLoading, setIsLoading] = useState(false);
   const [modalError, setModalError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
+  const {t} = useTranslation()
 
   // Función para cargar recetas
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function RecetasComunidad() {
     const usuarioId = localStorage.getItem("usuarioId");
 
     if (!token || !usuarioId) {
-      setMensajeError("Debes iniciar sesión para usar favoritos.");
+      setMensajeError(t("errorNoAutenticado"));
       setModalError(true);
       return;
     }
@@ -93,19 +95,20 @@ export default function RecetasComunidad() {
         setFavoritosIds((prev) => [...prev, id]);
       }
     } catch (error) {
-      setMensajeError(`Error al actualizar favorito: ${error}`);
+      setMensajeError(`${t("errorActualizarFavoritos")} ${error}`);
       setModalError(true);
     }
   };
 
   return (
     <>
+    <div className="page">
       <div className="container">
-        <h1>Encuentra tu safe place en Recetas de la Comunidad</h1>
+        <h1>{t("titleCommunity")}</h1>
         <div className="buscador-container">
           <input
             type="text"
-            placeholder="Buscar receta de la comunidad..."
+            placeholder={t("placeholderBusqueda")}
             id="receta"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
@@ -114,7 +117,7 @@ export default function RecetasComunidad() {
 
         <div className="contenido">
           {isLoading ? (
-            <p>Cargando recetas...</p>
+            <p>{t("cargandoRecetas")}</p>
           ) : recetasFiltradas.length > 0 ? (
             recetasFiltradas.map((receta) => (
               <RecetaCard
@@ -124,30 +127,30 @@ export default function RecetasComunidad() {
                 imagen={receta.image}
                 tiempo={receta.readyInMiuntes}
                 calorias={receta.calories || 100}
-                rating={5} // Puedes ajustar esto si el rating es necesario
+                rating={5} 
                 ingredientes={
                   receta.recetaIngredientes &&
                   receta.recetaIngredientes.length > 0
                     ? receta.recetaIngredientes.map((i) => ({
                         cantidad: `${i.cantidad}`.trim(),
-                        nombre: i.nombre ?? "Ingrediente desconocido",
+                        nombre: i.nombre ?? t("ingredienteDesconocido"),
                       }))
-                    : [{ cantidad: "0", nombre: "Sin ingredientes" }]
+                    : [{ cantidad: "0", nombre: t("sinIngredientes")  }]
                 }
                 preparacion={
                   receta.pasosPreparacion?.length
                     ? receta.pasosPreparacion.map((p) => ({
-                        numeroPaso: 1, // Aquí puedes establecer el número de paso si lo tienes
+                        numeroPaso: 1, 
                         descripcion: p.descripcion,
                       }))
-                    : [{ numeroPaso: 1, descripcion: "Sin pasos disponibles" }]
+                    : [{ numeroPaso: 1, descripcion:  t("sinPasosDisponibles")  }]
                 }
                 isFavorito={favoritosIds.includes(receta.id)}
                 onToggleFavorito={() => toggleFavorito(receta.id)}
               />
             ))
           ) : (
-            <p>No se encontraron recetas.</p>
+            <p>{t("noEncontradas")}</p>
           )}
         </div>
       </div>
@@ -157,6 +160,7 @@ export default function RecetasComunidad() {
         onClose={() => setModalError(false)}
         mensaje={mensajeError}
       />
+    </div>
     </>
   );
 }

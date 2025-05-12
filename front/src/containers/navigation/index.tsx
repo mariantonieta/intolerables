@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import ModalRoL from "../../components/modalRoL";
 import ModalFavoritos from "../../components/modal-favorito";
 import api from "../../services/axiosConfig";
-import { FaUnlockAlt, FaSignOutAlt, FaHeart } from "react-icons/fa";
-
+import { FaUnlockAlt, FaSignOutAlt, FaHeart, FaGlobe } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 type NavigationProps = React.ComponentProps<"div">;
 
 interface FavoritoRecetaDTO {
@@ -34,7 +34,7 @@ export default function Navigation(props: NavigationProps) {
   const navCenterRef = useRef<HTMLDivElement>(null);
   const navbarMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
+  const { i18n } = useTranslation(); 
   const isLoggedIn = () => !!localStorage.getItem("jwtToken");
 
   useEffect(() => {
@@ -87,7 +87,10 @@ export default function Navigation(props: NavigationProps) {
       console.error("Error al cargar los favoritos", error);
     }
   };
-
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+   };
+const {t} = useTranslation();
   return (
     <nav {...props}>
       <div className="nav-container">
@@ -111,23 +114,22 @@ export default function Navigation(props: NavigationProps) {
         >
           <div className="navbar-menu" ref={navbarMenuRef}>
             <NavLink to="/" onClick={() => setMenuOpen(false)}>
-              HOME
+              {t('home')}
             </NavLink>
             <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>
-              INTOLERANCIAS
+             {t('intolerances')}
             </NavLink>
             <NavLink to="/about" onClick={() => setMenuOpen(false)}>
-              SOBRE MI
+            {t('about')}
             </NavLink>
 
             {isLoggedIn() && (
               <>
                 <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>
-                  AÑADIR RECETA
+                {t('add_recipe')}
                 </NavLink>
                 <NavLink to="/recetasVip" onClick={() => setMenuOpen(false)}>
-                  RECETAS VIP
-                </NavLink>
+                     {t('vip_recipes')}    </NavLink>
               </>
             )}
           </div>
@@ -172,6 +174,16 @@ export default function Navigation(props: NavigationProps) {
               <FaSignOutAlt />
             </button>
           )}
+               <button
+            onClick={() => {
+              const newLanguage = i18n.language === 'es' ? 'en' : i18n.language === 'en' ? 'it' : 'es';
+              changeLanguage(newLanguage);
+            }}
+           aria-label="Cambiar idioma"
+            type="button"
+          >
+            <FaGlobe size={20} />
+          </button>
         </div>
       </div>
 

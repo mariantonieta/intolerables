@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import "./index.css";
 interface IntoleranciaCardProps {
   nombre: string;
@@ -14,6 +15,7 @@ export default function IntoleranciaCard({
   buttonSaberMas,
   buttonSoy,
 }: IntoleranciaCardProps) {
+  const {t} = useTranslation()
   return (
     <div className="card-intole">
       <div className="card-container">
@@ -25,10 +27,10 @@ export default function IntoleranciaCard({
       </div>
       <div className="btns">
         <button className="btn-soy" onClick={buttonSaberMas}>
-          SABER MÁS
+          {t("more_info")}
         </button>
         <button className="btn-mas" onClick={buttonSoy}>
-          SOY
+        {t("iam")}
         </button>
       </div>
     </div>

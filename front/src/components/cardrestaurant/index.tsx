@@ -1,4 +1,5 @@
-  import "./index.css";
+  import { useTranslation } from "react-i18next";
+import "./index.css";
   import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
   //Card del restaurante para mostrar y luego con un map renderizarlas todas
@@ -28,21 +29,21 @@
         window.open(url, "_blank");
       }
     };
-
+const {t} = useTranslation()
     return (
       <div className="tarjeta">
         <div className="tarjeta-titulo">{nombre}</div>
         <img className="tarjeta-imagen" src={imagen} alt={`Foto de ${nombre}`} />
         <div className="tarjeta-contenido">
           <p className="tarjeta-descripcion">
-            <strong>Dirección:</strong> {direccion}
+            <strong>{t("address_restaurant")}</strong> {direccion}
           </p>
           <p className="tarjeta-categoria">
-            <strong>Categoría:</strong> {categoria}
+            <strong>{t("category_restaurant")}</strong> {categoria}
           </p>
           {url && (
             <button className="ver-mas-btn" onClick={handleVerMas}>
-              Ver más en Yelp
+              {t("see_more_yelp")}
             </button>
           )}
 

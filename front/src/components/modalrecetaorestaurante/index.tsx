@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import ModalBase from "../modal-sele";
 //modal para ir a receta o restaurnates
 interface Props {
@@ -7,15 +8,17 @@ interface Props {
   onRestaurantesClick: () => void;
 }
 
+
 export default function ModalElegirRoR({ open, onClose, onRecetasClick, onRestaurantesClick }: Props) {
+   const { t } = useTranslation();
   return (
     <ModalBase
       open={open}
       onClose={onClose}
-      title="¿Qué te gustaría ver?"
+      title={t("what_would_see")}
       actions={[
-        { label: "Ver Recetas", onClick: onRecetasClick },
-        { label: "Ver Restaurantes", onClick: onRestaurantesClick }
+        { label: t("seeRecipes"), onClick: onRecetasClick },
+        { label: t("seeRestaurants"), onClick: onRestaurantesClick }
       ]}
     />
   );

@@ -1,0 +1,139 @@
+{
+    "find": "FIND",
+    "restaurant_or_recipe": "THE RESTAURANT OR RECIPE",
+    "satisfy_craving": "TO SATISFY YOUR CRAVING",
+    "healthy_stomach": "Healthy stomach, happy stomach",
+    "start_now": "Start now",
+      "home": "HOME",
+      "intolerances": "INTOLERANCES",
+      "about": "ABOUT ME",
+      "add_recipe": "ADD RECIPE",
+      "vip_recipes": "VIP RECIPES",
+      "rights_reserved": "All rights reserved.",
+    "privacy_policy_pdf": "Privacy Policy PDF",
+    "intolerances_title": "Intolerances",
+     "chat_title": "Intolerance Chat",
+    "placeholder": "Ask your question...",
+    "send": "Send",
+    "no_answer": "Sorry, I don't have a precise answer for that yet 😢",
+    "more_info": "More info",
+    "iam": "I'm",
+    "calories_recipe": "Calories:",
+    "time_recipe":"Time:",
+    "see_recipe": "See recipe",
+  "createRecipe": "Create new recipe 🍽️",
+  "titleRecipe": "Recipe title",
+  "imageUrl": "Image URL (optional)",
+  "uploadImage": "Upload an image",
+  "prepTime": "Preparation time (min)",
+  "recipeType": "Recipe type",
+  "ingredientName": "Ingredient name",
+  "ingredientAmount": "Amount (e.g., 200g, 2 cups)",
+  "addIngredient": "➕ Add ingredient",
+  "steps": "Steps",
+  "stepPlaceholder": "Step",
+  "addStep": "➕ Add step",
+  "submitRecipe": "Create recipe",
+    "tituloPrincipal": "Find your safe place in Receta",
+  "placeholderBusqueda": "What do you feel like eating today?",
+  "cargandoFavoritos": "Loading favorites...",
+  "errorBusquedaVacia": "Please enter the recipe you want to search for.",
+  "errorNoAutenticado": "You must be logged in to save favorites.",
+  "errorCargarFavoritos": "Error loading favorites",
+  "errorBuscarRecetas": "Error: could not find the recipes",
+  "errorActualizarFavoritos": "Error updating favorites",
+  "titleCommunity": "Find your safe place in Community Recipes",
+"noEncontradas": "No recipes found.",
+"cargandoRecetas": "Loading recipes...",
+"ingredienteDesconocido": "Unknown ingredient",
+"sinIngredientes": "No ingredients",
+"sinPasosDisponibles": "No steps available",
+    "address_restaurant": "Address:",
+    "category_restaurant": "Category:",
+    "see_more_yelp": "See more in YELP",
+    "not_alone":"You're not alone!",
+    "close": "Close",
+    "favorites":"Your favorites",
+    "recipe": "Recipes",
+    "not_favorites":"You don't have any favorite recipes saved yet.",
+    "restaurant": "Restaurants",
+    "not_restaurant": "You don't have any favorite restaurants saved yet.",
+     "ingredients": "Ingredients:",
+    "preparation": "Preparation",
+    "what_would_see": "What would you like to see?",
+    "seeRecipes":"See Recipes",
+  "seeRestaurants": "See Restaurants",
+  "loginOrRegister": "Are you already a user or do you want to register?",
+  "login": "Login",
+  "register": "Register",
+  
+  "registerTitle": "Join us",
+  "passwordConfirm": "Confirm Password",
+  "countryLabel": "City",
+  "countryPlaceholder": "Which country are you from?",
+  "cityLabel": "City",
+  "cityPlaceHolder": "What is your city?",
+  "anyAccount": "Already have an account?",
+  "errorRegister": "Error registering user. Please try again.",
+  "errorMessages": "Please fix the errors before submitting.",
+  "errorCity": "City must be more than two characters.",
+  "errorCountry": "Country must be more than two characters.",
+  "errorPasswordConfirm": "Passwords do not match.",
+  "errorPassword": "It must contain one uppercase letter, two numbers, and one special character.",
+  "errorName": "Name must be more than two characters.",
+
+ 
+  "errorLocation": "Could not find location",
+
+"errorGeo": "Geolocation is not supported by your browser",
+
+"errorSearch": "Please enter both food and location.",
+
+"errorRestaurantes": "Could not find restaurants.",
+
+"errorId": "User ID not found.",
+
+"findRestaurant": "Find your safe place in Restaurant",
+
+"searchRestaurant": "What would you like to eat today?",
+
+"location": "Location",
+  
+  "welcome": "Hello, welcome back.",
+  "nameLabel": "Name:",
+  "namePlaceholder": "Enter your name",
+  "passwordLabel": "Password:",
+  "passwordPlaceholder": "Enter your password",
+  "submit": "Log in",
+  "errorConnection": "Error connecting to the server",
+  "forgotPassword": "Forgot your password?",
+  "signUp": "Sign up",
+
+        "about_section": {
+      "heading": "About Me",
+      "cards": {
+        "hola": {
+          "title": "HELLO",
+          "content": "Helloooooo, INTOLERABLE! :) I'm Mariantonieta, and I want to welcome you to my world."
+        },
+        "historia": {
+          "title": "MY STORY",
+          "content": "This project was born from a very personal experience: being celiac and facing daily limitations in the kitchen..."
+        },
+        "proposito": {
+          "title": "PURPOSE",
+          "content": "Here I offer you a space where you can find restaurants or recipes designed for various dietary needs..."
+        },
+        "motivacion": {
+          "title": "MOTIVATION",
+          "content": "I want to remind you that although having a FOOD INTOLERANCE can be frustrating, it makes you unique."
+        },
+        "utilidad": {
+          "title": "WHAT IS THIS PAGE FOR?",
+          "content": "Here you can find both the recipe or the restaurant you're looking for. The search is different because it ensures that when you arrive, it's a safe place for your intolerance."
+        }
+      }
+    }
+    
+
+    }

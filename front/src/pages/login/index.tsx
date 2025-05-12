@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import "./index.css";
 import api from "../../services/axiosConfig";
+import { useTranslation } from "react-i18next";
 //datos tipados con TS que se enviara al backend
 interface LoginRequest {
   nombre: string;
@@ -16,6 +17,7 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const navigate = useNavigate();
+  const {t} = useTranslation()
   //manejo del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +45,7 @@ const LoginForm: React.FC = () => {
       if (axios.isAxiosError(error) && error.response?.data) {
         setError(error.response.data.error);
       } else {
-        setError("Error al conectar con el servidor");
+        setError(t("errorConnection"));
       }
       setSuccessMessage("");
     }
@@ -67,29 +69,29 @@ const LoginForm: React.FC = () => {
         <div className="container">
           <div className="container-login">
             <div className="login-card">
-              <h2>Hola, Bienvenid@ again.</h2>
+              <h2>{t("welcome")}</h2>
               <form onSubmit={handleSubmit}>
                 <div>
-                  <label>Nombre:</label>
+                  <label>{t("nameLabel")}</label>
                   <input
                     type="text"
-                    placeholder="Introduce tu nombre"
+                    placeholder= {t("namePlaceholder")}
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     required
                   />
                 </div>
                 <div>
-                  <label>Contraseña:</label>
+                  <label>{t("passwordLabel")}</label>
                   <input
                     type="password"
-                    placeholder="Introduce tu contraseña"
+                    placeholder={t("passwordPlaceholder")}
                     value={contrasena}
                     onChange={(e) => setContrasena(e.target.value)}
                     required
                   />
                 </div>
-                <button type="submit">Iniciar sesión</button>
+                <button type="submit">{t("submit")}</button>
               </form>
 
               {successMessage && (
@@ -97,9 +99,9 @@ const LoginForm: React.FC = () => {
               )}
               {error && <div className="error">{error}</div>}
               <div className="bottom-links">
-                <a href="#">Forgot password?</a>
+                <a href="#">{t("forgotPassword")}</a>
                 <span> | </span>
-                <a href="/register">Sign up</a>
+                <a href="/register">{t("signUp")}</a>
               </div>
             </div>
           </div>

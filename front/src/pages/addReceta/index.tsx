@@ -4,6 +4,7 @@ import "./index.css";
 import api from "../../services/axiosConfig";
 import { useNavigate } from "react-router";
 import ModalAlerta from "../../components/modal-alerta";
+import { useTranslation } from "react-i18next";
 interface IngredienteForm {
   nombre: string;
   cantidad: string;
@@ -93,6 +94,7 @@ export default function CrearReceta() {
       setModalError(true);
     }
   };
+const { t } = useTranslation();
 
   return (
     <div className="page">
@@ -100,10 +102,10 @@ export default function CrearReceta() {
       <div className="container">
         <div className="formulario-receta">
           <div className="card-receta">
-            <h2>Crear nueva receta 🍽️</h2>
+            <h2>{t("createRecipe")}</h2>
 
             <div className="form-group">
-              <label htmlFor="titulo">Título de la receta</label>
+              <label htmlFor="titulo">{t("titleRecipe")}</label>
               <input
                 type="text"
                 id="titulo"
@@ -113,7 +115,7 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="imagen">URL de la imagen (opcional)</label>
+              <label htmlFor="imagen">{t("imageUrl")}</label>
               <input
                 type="text"
                 id="imagen"
@@ -123,7 +125,7 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="imageFile">Subir una imagen</label>
+              <label htmlFor="imageFile">{t("uploadImage")}</label>
               <input
                 type="file"
                 id="imageFile"
@@ -133,7 +135,7 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label>Tiempo de preparación (min)</label>
+              <label>{t("prepTime")}</label>
               <input
                 type="number"
                 value={readyInMinutes}
@@ -142,7 +144,7 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label>Calorías</label>
+              <label>{t("calories_recipe")}</label>
               <input
                 type="number"
                 value={calorias}
@@ -151,7 +153,7 @@ export default function CrearReceta() {
             </div>
 
             <div className="form-group">
-              <label>Tipo de receta</label>
+              <label>{t("recipeType")}</label>
               <input
                 type="text"
                 value={tipoReceta}
@@ -159,12 +161,12 @@ export default function CrearReceta() {
               />
             </div>
 
-            <h4>Ingredientes</h4>
+            <h4>{t("ingredients")}</h4>
             {ingredients.map((ing, idx) => (
               <div key={idx} className="form-group">
                 <input
                   type="text"
-                  placeholder="Nombre del ingrediente"
+                  placeholder={t("ingredientName")}
                   value={ing.nombre}
                   onChange={(e) => {
                     const copia = [...ingredients];
@@ -174,7 +176,7 @@ export default function CrearReceta() {
                 />
                 <input
                   type="text"
-                  placeholder="Cantidad (ej. 200g, 2 tazas)"
+                  placeholder={t("ingredientAmount")}
                   value={ing.cantidad}
                   onChange={(e) => {
                     const copia = [...ingredients];
@@ -191,15 +193,15 @@ export default function CrearReceta() {
                 setIngredients([...ingredients, { nombre: "", cantidad: "" }])
               }
             >
-              ➕ Agregar ingrediente
+              {t("addIngredient")}
             </button>
 
-            <h4>Pasos</h4>
+            <h4>{t("steps")}</h4>
             {pasos.map((paso, index) => (
               <input
                 key={index}
                 value={paso}
-                placeholder={`Paso ${index + 1}`}
+                placeholder={`${t("stepPlaceholder")} ${index + 1}`}
                 onChange={(e) => {
                   const copia = [...pasos];
                   copia[index] = e.target.value;
@@ -212,11 +214,11 @@ export default function CrearReceta() {
               className="add-btn"
               onClick={() => setPasos([...pasos, ""])}
             >
-              ➕ Agregar paso
+            {t("addStep")}
             </button>
 
             <button className="crear-btn" onClick={addReceta}>
-              Crear receta
+          {t("submitRecipe")}
             </button>
           </div>
         </div>

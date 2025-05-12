@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./index.css";
 import ModalReceta from "../modal-receta";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useTranslation } from "react-i18next";
 
 interface Ingrediente {
 cantidad: string;
@@ -37,7 +38,7 @@ export default function RecetaCard({
   onToggleFavorito,
 }: RecetaCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const {t} = useTranslation()
   const openModal = () => {
     setIsOpen(true);
   };
@@ -60,13 +61,13 @@ export default function RecetaCard({
           <h3>{nombre}</h3>
 
           <div className="recipe-info">
-            <span><span className="bold">Tiempo:</span> {tiempo} min</span>
+            <span><span className="bold">{t("time_recipe")}</span> {tiempo}min</span>
             <div className="divider" />
-            <span><span className="bold">Calorías:</span> {calorias} kcal</span>
+            <span><span className="bold">{t("calories_recipe")}</span> {calorias} kcal</span>
           </div>
 
           <button className="recipe-btn" onClick={openModal}>
-            Ver receta completa
+        {t("see_recipe")}
           </button>
 
           <button className="favorito-icon" onClick={onToggleFavorito}>

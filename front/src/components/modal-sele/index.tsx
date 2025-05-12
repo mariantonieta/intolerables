@@ -2,6 +2,7 @@
   import { Dialog, DialogTitle, Button } from "@mui/material";
   import "./index.css";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
   //modal base para reutilizarlo
   interface ModalBaseProps {
     open: boolean;
@@ -21,6 +22,7 @@ import { useEffect, useRef } from "react";
       btnsRef.current.classList.remove("animate");
     }
   }, [open]);
+  const {t} = useTranslation()
     return (
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       
@@ -43,7 +45,7 @@ import { useEffect, useRef } from "react";
               {action.label}
             </Button>
           ))}
-          <Button className="btn-modal"onClick={onClose}>Cerrar</Button>
+          <Button className="btn-modal"onClick={onClose}>{t("close")}</Button>
         </div>
       </Dialog>
     );

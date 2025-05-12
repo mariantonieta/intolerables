@@ -5,6 +5,7 @@ import Modal from "../../components/modal";
 import { useNavigate } from "react-router-dom";
 import ModalElegirRoR from "../../components/modalrecetaorestaurante";
 import api from "../../services/axiosConfig";
+import { useTranslation } from "react-i18next";
 
 // Datos Tipados que se reciben desde el backend
 interface Intolerancia {
@@ -88,12 +89,12 @@ export default function Intolerancias() {
       console.error("Error al guardar la intolerancia:", error);
     }
   };
-
+const {t} = useTranslation()
   return (
     <div>
       <div className="page">
         <div className="container">
-          <h1>Intolerancias</h1>
+          <h1>{t("intolerances_title")}</h1>
           <div className="card-container">
             {intolerancias.map((intolerancia, index) => (
               <IntoleranciaCard

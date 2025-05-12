@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent, Button, Typography } from "@mui/material";
 import './index.css';
+import { useTranslation } from "react-i18next";
 
 interface ModalRecetaProps {
   open: boolean;
@@ -23,6 +24,7 @@ const ModalReceta: React.FC<ModalRecetaProps> = ({
   ingredientes,
   preparacion,
 }) => {
+  const {t} = useTranslation()
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
       <DialogContent>
@@ -42,7 +44,7 @@ const ModalReceta: React.FC<ModalRecetaProps> = ({
 
             <div className="modal-details">
               <div className="column">
-                <Typography variant="h6" className="section-title">Ingredientes</Typography>
+                <Typography variant="h6" className="section-title">{t("ingredients")}</Typography>
                 <ul>
                   {ingredientes.map((item, index) => (
                     <li key={index}>{item}</li>
@@ -51,7 +53,7 @@ const ModalReceta: React.FC<ModalRecetaProps> = ({
               </div>
 
               <div className="column">
-                <Typography variant="h6" className="section-title">Preparación</Typography>
+                <Typography variant="h6" className="section-title">{t("preparation")}</Typography>
                 <ul>
                   {preparacion.map((item, index) => (
                     <li key={index}>{item}</li>

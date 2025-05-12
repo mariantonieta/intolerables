@@ -1,36 +1,35 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import "./index.css";
 import CardInfo from "../../components/card-info";
 
-const cards = [
-  {
-    title: "HOLA",
-    content:
-      "¡¡¡¡¡¡¡Holaaaaa, INTOLERABLE!!!!!!!!:) oy Mariantonieta, y quiero darte la bienvenida a mi mundo.",
-  },
-  {
-    title: "MI HISTORIA",
-    content:
-      "Este proyecto nació de una vivencia muy personal: Ser celíaca y enfrentarme a diario a las limitaciones en la cocina...",
-  },
-  {
-    title: "PROPÓSITO",
-    content:
-      "Aquí te ofrezco un espacio donde podrás encotrar restaurantes o recetas pensadas para diversas necesidades dietéticas...",
-  },
-  {
-    title: "MOTIVACIÓN",
-    content:
-      "Quiero recordarte que aunque sea algo frustrante tenner una INTOLERANCIA ALIMENTARIA, eso te hace únic@.",
-  },
-  {
-    title: "¿PARA QUE SIRVE ESTA PÁGINA?",
-    content:
-      "Aquí podrás encontrar tanto la receta o el restaurante que buscas, la busqueda es diferente porque te asegura que al llegar al sitio es un lugar alto para tu intolerancia.",
-  },
-];
-
 export default function About() {
+  // Llamamos a useTranslation dentro del componente
+  const { t } = useTranslation();
+
+  const cards = [
+    {
+      title: t("about_section.cards.hola.title"),
+      content: t("about_section.cards.hola.content"),
+    },
+    {
+      title: t("about_section.cards.historia.title"),
+      content: t("about_section.cards.historia.content"),
+    },
+    {
+      title: t("about_section.cards.proposito.title"),
+      content: t("about_section.cards.proposito.content"),
+    },
+    {
+      title: t("about_section.cards.motivacion.title"),
+      content: t("about_section.cards.motivacion.content"),
+    },
+    {
+      title: t("about_section.cards.utilidad.title"),
+      content: t("about_section.cards.utilidad.content"),
+    },
+  ];
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -55,7 +54,7 @@ export default function About() {
       <div>
         <div className="page">
           <div className="container">
-            <h1 className="fade-in">Sobre Mí</h1>
+            <h1 className="fade-in">{t("about_section.heading")}</h1>
             <div className="card-grid">
               {cards.map((card, index) => (
                 <CardInfo

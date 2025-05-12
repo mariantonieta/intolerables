@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import ModalAlerta from "../../components/modal-alerta";
 import { FaSearch } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -34,7 +35,7 @@ export default function Restaurantes() {
   const [openModal, setOpenModal] = useState(false);
   const [mensajeModal, setMensajeModal] = useState("");
   const [usuarioUbicacion, setUsuarioUbicacion] = useState<string | null>(null); // Ubicación del usuario
-
+  const {t}  = useTranslation()
   const mostrarAlerta = (mensaje: string) => {
     setMensajeModal(mensaje);
     setOpenModal(true);
@@ -123,13 +124,13 @@ export default function Restaurantes() {
       const { lat, lon } = data[0];
       setCoordenadas([parseFloat(lat), parseFloat(lon)]);
     } else {
-      mostrarAlerta("No se pudo encontrar la ubicación.");
+      mostrarAlerta(t("errorLocation"));
     }
   };
 
   const handleUbicacionActual = () => {
     if (!navigator.geolocation) {
-      mostrarAlerta("La geolocalización no es soportada por tu navegador.");
+      mostrarAlerta(t("errorGeo"));
       return;
     }
 
@@ -151,19 +152,19 @@ export default function Restaurantes() {
           setUbicacion(ciudad);
         } catch (error) {
           console.error("Error al obtener la ciudad:", error);
-          mostrarAlerta("No se pudo detectar la ubicación.");
+          mostrarAlerta(t("errorLocation"));
         }
       },
       (error) => {
         console.error("Error de geolocalización:", error);
-        mostrarAlerta("No se pudo acceder a tu ubicación.");
+        mostrarAlerta(t("errorLocation"));
       }
     );
   };
 
   const buscarRestaurantes = async () => {
     if (!termino || !ubicacion) {
-      mostrarAlerta("Por favor, introduce tanto la comida como la ubicación.");
+      mostrarAlerta(t("errorSearch"));
       return;
     }
 
@@ -181,7 +182,7 @@ export default function Restaurantes() {
       setRestaurantes(response.data);
     } catch (error) {
       console.error("Error al buscar restaurantes:", error);
-      mostrarAlerta("No se pudieron encontrar restaurantes.");
+      mostrarAlerta(t("errorRestaurantes"));
     }
   };
 
@@ -190,7 +191,7 @@ export default function Restaurantes() {
       const usuarioId = localStorage.getItem("usuarioId");
 
       if (!usuarioId) {
-        mostrarAlerta("No se encontró el ID del usuario.");
+        mostrarAlerta(t("errorId"));
         return;
       }
 
@@ -220,13 +221,13 @@ export default function Restaurantes() {
     <>
       <div className="page">
         <div className="container">
-          <h1>Encuentra tu safe place en Restaurante</h1>
+          <h1>{t("findRestaurant")}</h1>
           <div className="buscador-container">
             <input
               type="text"
               name="comida"
               id="comida"
-              placeholder="¿Qué te apetece comer hoy?"
+              placeholder={t("searchRestaurant")}
               value={termino}
               onChange={(e) => setTermino(e.target.value)}
             />
@@ -234,7 +235,7 @@ export default function Restaurantes() {
               type="text"
               name="ubicacion"
               id="ubicacion"
-              placeholder="Ubicación"
+              placeholder={t("location")}
               value={ubicacion}
               onChange={(e) => setUbicacion(e.target.value)}
             />
@@ -258,7 +259,7 @@ export default function Restaurantes() {
           <div className="mapa-container">
             <div className="contenido">
               {isLoading ? (
-                <p>Cargando favoritos...</p>
+                <p>{t("cargandoFavoritos")}</p>
               ) : (
                 restaurantes.map((restaurante) => (
                   <RestauranteCard

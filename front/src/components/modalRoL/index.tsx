@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import ModalBase from "../modal-sele";
 import "../modal-sele/index.css"
 //modal para saber si quieres registrarte o loguearte
@@ -14,18 +15,20 @@ export default function ModalRoL({
   onLoginClick,
   onRegisterClick,
 }: Props) {
+  const { t } = useTranslation();
   return (
+
     <ModalBase
       open={open}
       onClose={onClose}
-      title="¿Ya eres usuario o quieres registrarte?"
+      title={t("loginOrRegister")}
       actions={[
         {
-          label: "Iniciar Sesión",
+          label: t("login"),
           onClick: onLoginClick,
           variant: "contained",
         },
-        { label: "Registrarse", onClick: onRegisterClick },
+        { label: t("register"), onClick: onRegisterClick },
       ]}
     />
   );

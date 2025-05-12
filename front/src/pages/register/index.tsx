@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import "../login/index.css";
 import { useNavigate } from "react-router";
 import api from "../../services/axiosConfig";
+import { useTranslation } from "react-i18next";
 
 // Tipado en TS para enviar los datos al backend
 interface UsuarioForm {
@@ -56,33 +57,33 @@ export default function Registro() {
     };
 
     if (form.nombre.trim().length <= 2) {
-      newErrors.nombre = "El nombre debe tener más de dos caracteres.";
+      newErrors.nombre = t("errorName")
     }
 
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-.]).*$/;
     if (!passwordRegex.test(form.contrasena)) {
-      newErrors.contrasena =
-        "Debe tener una mayúscula, dos números y un carácter especial.";
+      newErrors.contrasena = t("errorPassword")
+    
     }
 
     if (form.contrasena !== form.contrasenaConfirm) {
-      newErrors.contrasenaConfirm = "Las contraseñas no coinciden.";
+      newErrors.contrasenaConfirm = t("errorPasswordConfirm")
     }
 
     if (form.paisUsuario.trim().length <= 2) {
-      newErrors.paisUsuario = "El país debe tener más de dos caracteres.";
+      newErrors.paisUsuario = t("errorCountry")
     }
 
     if (form.ciudad.trim().length <= 2) {
-      newErrors.ciudad = "La ciudad debe tener más de dos caracteres.";
+      newErrors.ciudad = t("errorCity")
     }
 
     // Si hay errores, se muestran
     const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (hasErrors) {
       setErrors(newErrors);
-      setMensaje("Por favor, corrige los errores antes de enviar.");
+      setMensaje(t("errorMessages"));
       return;
     }
 
@@ -100,78 +101,78 @@ export default function Registro() {
       });
     } catch (err) {
       console.error("Error al registrar:", err);
-      setMensaje("Hubo un error al registrar el usuario.");
+      setMensaje(t("errorRegister"));
     }
   };
 
   // Mostrar error por cada campo
   const renderError = (campo: ErrorKeys) =>
     errors[campo] ? <div className="error">{errors[campo]}</div> : null;
-
+const {t} = useTranslation()
   return (
     <>
       <div className="page">
         <div className="container">
           <div className="container-login">
             <div className="login-card">
-              <h2>Registro de Usuario</h2>
+              <h2>{t("registerTitle")}</h2>
               <form onSubmit={handleSubmit}>
-                <label>Nombre:</label>
+                <label>{t("nameLabel")}</label>
                 <input
                   type="text"
                   name="nombre"
-                  placeholder="Introduce tu nombre"
+                  placeholder={t("namePlaceholder")}
                   value={form.nombre}
                   onChange={handleChange}
                   className={errors.nombre ? "input-error" : ""}
                 />
                 {renderError("nombre")}
 
-                <label>Contraseña:</label>
+                <label>{t("passwordLabel")}</label>
                 <input
                   type="password"
                   name="contrasena"
-                  placeholder="Introduce una contraseña"
+                  placeholder={t("passwordPlaceholder")}
                   value={form.contrasena}
                   onChange={handleChange}
                   className={errors.contrasena ? "input-error" : ""}
                 />
                 {renderError("contrasena")}
 
-                <label>Confirmar Contraseña:</label>
+                <label>{t("passwordConfirm")}</label>
                 <input
                   type="password"
                   name="contrasenaConfirm"
-                  placeholder="Confirma tu contraseña"
+                  placeholder={t("passwordConfirm")}
                   value={form.contrasenaConfirm}
                   onChange={handleChange}
                   className={errors.contrasenaConfirm ? "input-error" : ""}
                 />
                 {renderError("contrasenaConfirm")}
 
-                <label>País:</label>
+                <label>{t("countryLabel")}</label>
                 <input
                   type="text"
                   name="paisUsuario"
-                  placeholder="¿De qué país eres?"
+                  placeholder={t("countryPlaceholder")}
                   value={form.paisUsuario}
                   onChange={handleChange}
                   className={errors.paisUsuario ? "input-error" : ""}
                 />
                 {renderError("paisUsuario")}
 
-                <label>Ciudad:</label>
+                <label>{t("cityLabel")}</label>
                 <input
                   type="text"
                   name="ciudad"
-                  placeholder="¿Cuál es tu ciudad?"
+                  placeholder={t("cityPlaceholder")}
                   value={form.ciudad}
                   onChange={handleChange}
                   className={errors.ciudad ? "input-error" : ""}
                 />
                 {renderError("ciudad")}
 
-                <button type="submit">Registrarse</button>
+                <button type="submit">{t("register")}</button>
               </form>
 
               {mensaje && (
@@ -183,8 +184,8 @@ export default function Registro() {
               )}
 
               <div className="bottom-links">
-                <span>¿Ya tienes una cuenta? </span>
-                <a href="/login">Log in</a>
+                <span>{t("anyAccount")}</span>
+                <a href="/login">{t("login")}</a>
               </div>
             </div>
           </div>

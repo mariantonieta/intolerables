@@ -9,7 +9,6 @@ interface ModalAlertaProps {
 
 const ModalAlerta: React.FC<ModalAlertaProps> = ({ open, onClose, mensaje }) => {
   if (!open) return null;
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle className="titulo">¡Error!</DialogTitle>

@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, Typography, Button } from "@mui/material";
 import "../modal-receta/index.css"
+import { useTranslation } from "react-i18next";
 type FavoritoRecetaDTO = {
   id: number;
   nombreReceta: string;
@@ -22,20 +23,21 @@ export default function ModalFavoritos({
   favoritosRecetas,
   favoritosRestaurantes,
 }: ModalFavoritosProps) {
+  const {t} = useTranslation()
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg" PaperProps={{ className: "modal-animado" }}>
       <DialogContent>
         <div className="modal-content">
           
           <div className="modal-title-container">
-            <Typography variant="h6" className="modal-title">Tus Favoritos</Typography>
+            <Typography variant="h6" className="modal-title">{t("favorites")}</Typography>
           </div>
 
           <div className="modal-details">
             <div className="column">
-              <Typography variant="h6" className="section-title">Recetas</Typography>
+              <Typography variant="h6" className="section-title">{t("recipe")}</Typography>
               {favoritosRecetas.length === 0 ? (
-                <p className="texto">Aún no tienes recetas favoritas guardadas.</p>
+                <p className="texto">{t("not_favorites")}</p>
               ) : (
                 <ul>
                   {favoritosRecetas.map((fav) => (
@@ -48,9 +50,9 @@ export default function ModalFavoritos({
             </div>
 
             <div className="column">
-              <Typography variant="h6" className="section-title">Restaurantes</Typography>
+              <Typography variant="h6" className="section-title">{t("restaurant")}</Typography>
               {favoritosRestaurantes.length === 0 ? (
-                <p className="texto">Aún no tienes restaurantes favoritos guardados.</p>
+                <p className="texto">{t("not_restaurant")}</p>
               ) : (
                 <ul>
                   {favoritosRestaurantes.map((fav) => (
