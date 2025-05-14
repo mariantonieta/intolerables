@@ -23,16 +23,18 @@ public class SpooncularService {
 
     private final RestTemplate restTemplate;
 
+    private final TraduccionService traduccionService;
+
     @Autowired
-    public SpooncularService(RestTemplate restTemplate) {
+    public SpooncularService(RestTemplate restTemplate, TraduccionService traduccionService) {
         this.restTemplate = restTemplate;
+        this.traduccionService = traduccionService;
     }
 
     public void setSpooncularApiKey(String apiKey) {
         this.spooncularApiKey = apiKey;
     }
-
-    public List<Map<String, Object>> buscarRecetasPorIntolerancia(String intolerancia, String query) {
+    public List<Map<String, Object>> buscarRecetasPorIntolerancia(String intolerancia, String query, String idiomaDestino) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BASE_URL)
                 .queryParam("intolerances", intolerancia)
                 .queryParam("addRecipeInformation", "true")
@@ -57,27 +59,32 @@ public class SpooncularService {
             Map detalle = restTemplate.getForObject(detalleUrl, Map.class);
 
             Map<String, Object> recetaMap = new HashMap<>();
-            recetaMap.put("title", traducirTextoLibreTranslate((String) item.get("title")));
+
+            // Traducir título (origen: en, destino: idiomaDestino)
+            recetaMap.put("title", traduccionService.traducirTextoLibreTranslate((String) item.get("title"), "en", idiomaDestino));
             recetaMap.put("image", item.get("image"));
             recetaMap.put("readyInMinutes", item.getOrDefault("readyInMinutes", 0));
             recetaMap.put("calories", extraerCaloriasDesdeSummary((String) item.get("summary")));
-//traducir al español
-            String summary = (String) item.get("summary");
-            recetaMap.put("summary", traducirTextoLibreTranslate(summary));
 
+            // Traducir resumen (origen: en, destino: idiomaDestino)
+            String summary = (String) item.get("summary");
+            recetaMap.put("summary", traduccionService.traducirTextoLibreTranslate(summary, "en", idiomaDestino));
+
+            // Traducir ingredientes
             List<Map<String, String>> ingredientesList = new ArrayList<>();
             List<Map<String, Object>> ingredientesRaw = (List<Map<String, Object>>) detalle.get("extendedIngredients");
             if (ingredientesRaw != null) {
                 for (Map<String, Object> ing : ingredientesRaw) {
                     Map<String, String> ingMap = new HashMap<>();
                     String original = (String) ing.get("original");
-                    ingMap.put("original", traducirTextoLibreTranslate(original));
+                    // Traducir el nombre del ingrediente (origen: en, destino: idiomaDestino)
+                    ingMap.put("original", traduccionService.traducirTextoLibreTranslate(original, "en", idiomaDestino));
                     ingredientesList.add(ingMap);
                 }
             }
             recetaMap.put("extendedIngredients", ingredientesList);
 
-            // Traducción de instrucciones
+            // Traducir instrucciones
             List<Map<String, Object>> instruccionesList = new ArrayList<>();
             List<Map<String, Object>> instruccionesRaw = (List<Map<String, Object>>) detalle.get("analyzedInstructions");
             if (instruccionesRaw != null && !instruccionesRaw.isEmpty()) {
@@ -89,13 +96,14 @@ public class SpooncularService {
                     String stepText = (String) paso.get("step");
                     Map<String, Object> pasoTraducido = new HashMap<>();
                     pasoTraducido.put("number", paso.get("number"));
-                    pasoTraducido.put("step", traducirTextoLibreTranslate(stepText));
+                    // Traducir paso de instrucción (origen: en, destino: idiomaDestino)
+                    pasoTraducido.put("step", traduccionService.traducirTextoLibreTranslate(stepText, "en", idiomaDestino));
                     pasosTraducidos.add(pasoTraducido);
                 }
 
                 instruccionesList.add(Map.of("steps", pasosTraducidos));
             } else {
-                instruccionesList.add(Map.of("steps", List.of(Map.of("step", "Sin pasos disponibles"))));
+                instruccionesList.add(Map.of("steps", List.of(Map.of("step", traduccionService.traducirTextoLibreTranslate("Sin pasos disponibles", "en", idiomaDestino)))));
             }
 
             recetaMap.put("analyzedInstructions", instruccionesList);
@@ -115,26 +123,4 @@ public class SpooncularService {
         return 0;
     }
 
-    public String traducirTextoLibreTranslate(String textoOriginal) {
-        String url = "http://localhost:5000/translate";
-
-        Map<String, String> body = new HashMap<>();
-        body.put("q", textoOriginal);
-        body.put("source", "en");
-        body.put("target", "es");
-        body.put("format", "text");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
-
-        try {
-            Map<String, String> response = restTemplate.postForObject(url, request, Map.class);
-            return response != null ? response.get("translatedText") : textoOriginal;
-        } catch (Exception e) {
-            System.err.println("Error al traducir: " + e.getMessage());
-            return textoOriginal;
-        }
-    }
 }

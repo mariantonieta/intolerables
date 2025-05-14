@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import RecetaCard from "../../components/cardreceta";
-import "./index.css";
+import "../intolerancias/index.css";
 import api from "../../services/axiosConfig";
 import ModalFavoritos from "../../components/modal-favorito";
 import ModalAlerta from "../../components/modal-alerta";
 import { FaSearch } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-
+import i18next from 'i18next';
 interface Receta {
   id: number;
   title: string;
@@ -75,7 +75,7 @@ export default function Recetas() {
     };
 
     cargarFavoritos();
-  }, []);
+  }, [t]);
 
   const buscarRecetas = async () => {
     const intolerancia = localStorage.getItem("intoleranciaSeleccionada");
@@ -88,7 +88,11 @@ export default function Recetas() {
 
     try {
       const res = await api.get(`/api/recetas/buscar`, {
-        params: { intolerancia, query: busqueda },
+         params: {
+    intolerancia,
+    query: busqueda,
+    lang: i18next.language || 'es', 
+  },
       });
 
       // 👇 Solución: Asegúrate de acceder al array correcto
@@ -178,8 +182,8 @@ export default function Recetas() {
   };
 
   return (
-    <>
-      <div className="page">
+    <div className="page">
+   
         <div className="container">
           <h1>{t("tituloPrincipal")}</h1>
           <div className="buscador-container">
@@ -199,8 +203,8 @@ export default function Recetas() {
             </button>
           </div>
 
-          <div className="mapa-container">
-            <div className="contenido">
+       
+            <div className="card-container">
               {isLoading ? (
                 <p>{t("cargandoFavoritos")}</p>
               ) : (
@@ -234,8 +238,8 @@ export default function Recetas() {
               )}
             </div>
           </div>
-        </div>
-      </div>
+     
+    
 
       <ModalFavoritos
         open={modalFavoritosOpen}
@@ -248,6 +252,6 @@ export default function Recetas() {
         onClose={() => setModalError(false)}
         mensaje={mensajeError}
       />
-    </>
+    </div>
   );
 }

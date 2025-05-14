@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,10 +18,12 @@ public class RecetaService {
 
     private final RecetaRepository recetaRepository;
     private final IngredienteRepository ingredienteRepository;
+    private final TraduccionService traduccionService;
 
-    public RecetaService(RecetaRepository recetaRepository, IngredienteRepository ingredienteRepository) {
+    public RecetaService(RecetaRepository recetaRepository, IngredienteRepository ingredienteRepository, TraduccionService traduccionService) {
         this.recetaRepository = recetaRepository;
         this.ingredienteRepository = ingredienteRepository;
+        this.traduccionService = traduccionService;
     }
 
     @Transactional
@@ -152,5 +155,28 @@ public class RecetaService {
 
         return receta;
     }
+    public RecetaDTO traducirRecetaDTO(RecetaDTO recetaDTO, String idiomaDestino) {
+        // Establecer idioma de origen como español ('es') porque la receta está en español en la base de datos
+        String idiomaOrigen = "es"; // El idioma de origen es español
+
+        // Traducir los campos de la receta (título, resumen)
+        recetaDTO.setTitle(traduccionService.traducirTextoLibreTranslate(recetaDTO.getTitle(), idiomaOrigen, idiomaDestino));
+        recetaDTO.setSummary(traduccionService.traducirTextoLibreTranslate(recetaDTO.getSummary(), idiomaOrigen, idiomaDestino));
+
+        // Traducir ingredientes
+        for (IngredienteDTO ingredienteDTO : recetaDTO.getRecetaIngredientes()) {
+            ingredienteDTO.setCantidad(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getCantidad(), idiomaOrigen, idiomaDestino));
+            ingredienteDTO.setNombre(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getNombre(), idiomaOrigen, idiomaDestino));
+        }
+
+        // Traducir pasos de preparación
+        for (PasoPreparacionDTO pasoDTO : recetaDTO.getPasosPreparacion()) {
+            pasoDTO.setDescripcion(traduccionService.traducirTextoLibreTranslate(pasoDTO.getDescripcion(), idiomaOrigen, idiomaDestino));
+        }
+
+        return recetaDTO;
+    }
+
+
 
 }

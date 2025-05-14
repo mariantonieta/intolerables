@@ -161,7 +161,7 @@ nav {
 }
 
 @media (max-width: 950px) {
-  body.menu-open .home-page .container,
+  body.menu-open .home- page .container,
   body.menu-open .page {
     margin-top: 320px; 
     }

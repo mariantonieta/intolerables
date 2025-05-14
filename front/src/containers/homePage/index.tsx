@@ -30,7 +30,7 @@ export default function HomePage() {
             src="/svg/image3d.svg"
             width={700}
             height={700}
-            className="img-flotante"
+            className="img-flotante bounce"
             alt={t('healthy_stomach')}
           ></img>
           <button

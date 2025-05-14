@@ -32,6 +32,7 @@ public class IntoleranciaController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
     @PostMapping("/seleccionar")
     public ResponseEntity<?> asociarIntoleranciaAlUsuario(@RequestBody Map<String, String> body, Principal principal) {
         String intoleranciaNombre = body.get("nombre");

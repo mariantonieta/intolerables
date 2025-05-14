@@ -4,7 +4,7 @@ import api from "../../services/axiosConfig";
 import ModalAlerta from "../../components/modal-alerta";
 import "../recetas/index.css";
 import { useTranslation } from "react-i18next";
-
+import i18next from "i18next";
 interface Receta {
   id: number;
   title: string;
@@ -31,13 +31,17 @@ export default function RecetasComunidad() {
   // Función para cargar recetas
   useEffect(() => {
     const obtenerRecetas = async () => {
+     const idiomaDestino = i18next.language;  
       setIsLoading(true);
       try {
         const token = localStorage.getItem("jwtToken"); // Obtén el token
         const res = await api.get("/api/recetas/todas", {
           headers: {
             Authorization: `Bearer ${token}`,
-          },
+          },  
+           params: {
+          idiomaDestino, // Enviar el idioma al backend
+        },
         });
         console.log("Recetas obtenidas:", res.data);
         setRecetas(res.data as Receta[]);
@@ -50,7 +54,7 @@ export default function RecetasComunidad() {
     };
 
     obtenerRecetas();
-  }, []);
+  }, [t]);
 
   const recetasFiltradas =
     busqueda.trim() === ""
@@ -115,7 +119,7 @@ export default function RecetasComunidad() {
           />
         </div>
 
-        <div className="contenido">
+        <div className="card-container">
           {isLoading ? (
             <p>{t("cargandoRecetas")}</p>
           ) : recetasFiltradas.length > 0 ? (

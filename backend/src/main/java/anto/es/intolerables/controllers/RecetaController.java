@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,9 @@ public class RecetaController {
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarRecetasPorIntoleranciaYNombre(
             @RequestParam String intolerancia,
-            @RequestParam(required = false) String query) {
-        List<Map<String, Object>> recetas = recetaSpooncularService.buscarRecetasPorIntolerancia(intolerancia, query);
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "es") String lang) {
+        List<Map<String, Object>> recetas = recetaSpooncularService.buscarRecetasPorIntolerancia(intolerancia, query, lang);
 
         return ResponseEntity.ok(Map.of("results", recetas));
     }
@@ -36,11 +38,24 @@ public class RecetaController {
         RecetaDTO nuevaReceta = recetaService.crearReceta(recetaDTO);
         return ResponseEntity.ok(nuevaReceta);
     }
-
     @GetMapping("/todas")
-    public ResponseEntity<List<RecetaDTO>> obtenerRecetas() {
-        return ResponseEntity.ok(recetaService.obtenerTodasLasRecetas());
+    public ResponseEntity<List<RecetaDTO>> obtenerRecetas(@RequestParam(required = false, defaultValue = "es") String idiomaDestino) {
+        // Obtener todas las recetas desde el servicio
+        List<RecetaDTO> recetas = recetaService.obtenerTodasLasRecetas();
+
+        // Traducir las recetas si se necesita
+        List<RecetaDTO> recetasTraducidas = new ArrayList<>();
+        for (RecetaDTO recetaDTO : recetas) {
+            // Traducir cada receta usando el servicio de traducción y obtener la receta traducida como RecetaDTO
+            RecetaDTO recetaTraducida = recetaService.traducirRecetaDTO(recetaDTO, idiomaDestino);
+            recetasTraducidas.add(recetaTraducida);
+        }
+
+        return ResponseEntity.ok(recetasTraducidas);
     }
+
+
+
     @PostMapping("/guardar")
     public ResponseEntity<?> guardarRecetaDesdeSpoonacular(@RequestBody Map<String, Object> datosReceta) {
         try {

@@ -91,11 +91,11 @@ export default function Restaurantes() {
             },
           });
 
-          // Si la ciudad está disponible, la asignamos al estado de ubicación
+      
           const ciudadUsuario = response.data.ciudadUsuario;
           if (ciudadUsuario) {
             setUsuarioUbicacion(ciudadUsuario);
-            setUbicacion(ciudadUsuario); // Pre-poblar el campo de ubicación con la ciudad
+            setUbicacion(ciudadUsuario);
           }
         } catch (error) {
           console.error("Error al obtener la ubicación del usuario:", error);
@@ -106,10 +106,10 @@ export default function Restaurantes() {
     obtenerUbicacionUsuario();
   }, []);
 
-  // Asegúrate de que la ubicación esté actualizada y no se vacíe por accidente
+
   useEffect(() => {
     if (usuarioUbicacion && !ubicacion) {
-      setUbicacion(usuarioUbicacion); // Si ya tienes la ubicación del usuario, pre-poblarla.
+      setUbicacion(usuarioUbicacion); 
     }
   }, [usuarioUbicacion, ubicacion]);
 
@@ -239,6 +239,7 @@ export default function Restaurantes() {
               value={ubicacion}
               onChange={(e) => setUbicacion(e.target.value)}
             />
+            <div className="botones">
             <button
               className="ubi-btn"
               onClick={handleUbicacionActual}
@@ -255,9 +256,10 @@ export default function Restaurantes() {
             >
               <FaSearch size={18} />
             </button>
+            </div>
           </div>
           <div className="mapa-container">
-            <div className="contenido">
+            <div className="card-container">
               {isLoading ? (
                 <p>{t("cargandoFavoritos")}</p>
               ) : (
