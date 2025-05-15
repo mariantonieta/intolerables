@@ -1,7 +1,7 @@
 package anto.es.intolerables.dto;
 import java.util.List;
 
-public class YelpDTO {
+public class YelpDto {
     private List<Business> businesses;
 
     // Getters y Setters manuales

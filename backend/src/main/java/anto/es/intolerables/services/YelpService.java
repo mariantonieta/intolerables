@@ -1,6 +1,6 @@
 package anto.es.intolerables.services;
 
-import anto.es.intolerables.dto.YelpDTO;
+import anto.es.intolerables.dto.YelpDto;
 import anto.es.intolerables.entities.Restaurante;
 import anto.es.intolerables.repositories.RestauranteRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +49,10 @@ public class YelpService {
         headers.set("Authorization", "Bearer " + yelpApiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         //llama a la api
-        ResponseEntity<YelpDTO> response = restTemplate.exchange(url, HttpMethod.GET, entity, YelpDTO.class);
+        ResponseEntity<YelpDto> response = restTemplate.exchange(url, HttpMethod.GET, entity, YelpDto.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            List<YelpDTO.Business> businesses = response.getBody().getBusinesses();
+            List<YelpDto.Business> businesses = response.getBody().getBusinesses();
 //transformar los datos a JSON
             return businesses.stream()
                     .map(business -> {
