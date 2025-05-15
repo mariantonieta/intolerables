@@ -9,7 +9,8 @@ COPY pom.xml ./
 # COPY mvnw .
 
 # Descargar dependencias (sin código)
-RUN mvn dependency:go-offline -B
+RUN mvn clean compile
+
 
 # Copiar el código fuente completo
 COPY src ./src
