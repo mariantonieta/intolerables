@@ -1,14 +1,9 @@
 package anto.es.intolerables.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "restaurante_intolerancia")
 public class RestauranteIntolerancia {
 
@@ -26,4 +21,39 @@ public class RestauranteIntolerancia {
     @JoinColumn(name = "id_intolerancia")
     @JsonBackReference("intolerancia-restaurantes")
     private Intolerancia intolerancia;
+
+    // Constructor vacío
+    public RestauranteIntolerancia() {}
+
+    // Constructor con atributos
+    public RestauranteIntolerancia(Integer id, Restaurante restaurante, Intolerancia intolerancia) {
+        this.id = id;
+        this.restaurante = restaurante;
+        this.intolerancia = intolerancia;
+    }
+
+    // Getters y Setters manuales
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Restaurante getRestaurante() {
+        return restaurante;
+    }
+
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
+    }
+
+    public Intolerancia getIntolerancia() {
+        return intolerancia;
+    }
+
+    public void setIntolerancia(Intolerancia intolerancia) {
+        this.intolerancia = intolerancia;
+    }
 }

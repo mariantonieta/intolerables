@@ -64,13 +64,17 @@ public class AuthController {
                     .body(Map.of("error", "Ya existe un usuario con ese nombre"));
         }
 
-        Usuario usuario = Usuario.builder()
-                .nombre(usuarioDto.getNombre())
-                .contrasena(passwordEncoder.encode(usuarioDto.getContrasena()))
-                .paisUsuario(usuarioDto.getPaisUsuario())
-                .ciudadUsuario(usuarioDto.getCiudad())
-                .fechaRegistro(LocalDate.now())
-                .build();
+        Usuario usuario = new Usuario(
+                null, // ID será generado automáticamente
+                usuarioDto.getNombre(),
+                passwordEncoder.encode(usuarioDto.getContrasena()),
+                LocalDate.now(),
+                usuarioDto.getPaisUsuario(),
+                usuarioDto.getCiudad(),
+                null, // Favoritos inicializados como null o lista vacía
+                null, // Favorito de recetas
+                null  // Intolerancias
+        );;
 
         usuarioService.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -62,7 +62,7 @@ public class YelpService {
                         restaurante.setCategoria(business.getCategories().get(0).getTitle());
                         restaurante.setLatitud(business.getCoordinates().getLatitude());
                         restaurante.setLongitud(business.getCoordinates().getLongitude());
-                        restaurante.setImagen(business.getImage_url());
+                        restaurante.setImagen(business.getImageUrl());
                         restaurante.setUrl(business.getUrl());
                         return restaurante;
                     })

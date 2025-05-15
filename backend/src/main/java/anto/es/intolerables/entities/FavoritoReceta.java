@@ -2,14 +2,9 @@ package anto.es.intolerables.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
 @Table(name="favorito_receta")
 public class FavoritoReceta {
     @Id
@@ -28,4 +23,37 @@ public class FavoritoReceta {
     @ManyToOne
     @JoinColumn(name = "id_receta")
     private Receta receta;
+
+    // Getters y Setters manuales
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Receta getReceta() {
+        return receta;
+    }
+
+    public void setReceta(Receta receta) {
+        this.receta = receta;
+    }
 }

@@ -1,11 +1,8 @@
 package anto.es.intolerables.entities;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "usuario_intolerancia")
 public class UsuarioIntolerancia {
@@ -16,8 +13,7 @@ public class UsuarioIntolerancia {
 
     @Column(name = "numero_intolerancia")
     private String numeroIntolerancia;
-    //relacion muchos a uno
-    //utilizo JsonBackReference para evitar la serializacion recursiva
+
     @ManyToOne
     @JoinColumn(name= "id_usuario")
     @JsonBackReference("usuario-intolerancias")
@@ -28,5 +24,47 @@ public class UsuarioIntolerancia {
     @JsonBackReference("intolerancia-usuarios")
     private Intolerancia intolerancia;
 
+    // Constructor vacío
+    public UsuarioIntolerancia() {}
 
+    // Constructor con atributos
+    public UsuarioIntolerancia(Integer id, String numeroIntolerancia, Usuario usuario, Intolerancia intolerancia) {
+        this.id = id;
+        this.numeroIntolerancia = numeroIntolerancia;
+        this.usuario = usuario;
+        this.intolerancia = intolerancia;
+    }
+
+    // Getters y Setters manuales
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNumeroIntolerancia() {
+        return numeroIntolerancia;
+    }
+
+    public void setNumeroIntolerancia(String numeroIntolerancia) {
+        this.numeroIntolerancia = numeroIntolerancia;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Intolerancia getIntolerancia() {
+        return intolerancia;
+    }
+
+    public void setIntolerancia(Intolerancia intolerancia) {
+        this.intolerancia = intolerancia;
+    }
 }

@@ -1,14 +1,8 @@
 package anto.es.intolerables.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @Table(name="ingrediente")
 public class Ingrediente {
     @Id
@@ -25,4 +19,48 @@ public class Ingrediente {
     @ManyToOne
     @JoinColumn(name = "id_receta")
     private Receta receta;
+
+    // Constructor vacío
+    public Ingrediente() {}
+
+    // Constructor con atributos
+    public Ingrediente(Integer id, String nombre, String cantidad, Receta receta) {
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.receta = receta;
+    }
+
+    // Getters y Setters manuales
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Receta getReceta() {
+        return receta;
+    }
+
+    public void setReceta(Receta receta) {
+        this.receta = receta;
+    }
 }
