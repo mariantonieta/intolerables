@@ -9,7 +9,12 @@ COPY pom.xml ./
 # COPY mvnw .
 
 # Descargar dependencias (sin código)
-RUN mvn clean compile
+RUN mvn install:install-file \
+    -DgroupId=org.projectlombok \
+    -DartifactId=lombok \
+    -Dversion=1.18.36 \
+    -Dpackaging=jar \
+    -Dfile=/root/.m2/repository/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar
 
 
 # Copiar el código fuente completo
