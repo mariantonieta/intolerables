@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import "./translations/index"
+import "../public/translations/index"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   Home,
