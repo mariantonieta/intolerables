@@ -1,8 +1,8 @@
 package anto.es.intolerables.services;
 
+import anto.es.intolerables.dto.YelpDTO;
 import anto.es.intolerables.entities.Restaurante;
 import anto.es.intolerables.repositories.RestauranteRepository;
-import anto.es.intolerables.dto.YelpDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
