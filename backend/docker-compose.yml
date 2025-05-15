@@ -6,8 +6,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: intolerables
-      MYSQL_USER: springuser
-      MYSQL_PASSWORD: springpass
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234
     ports:
       - "3306:3306"
     volumes:
