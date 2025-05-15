@@ -1,4 +1,3 @@
-// src/i18n.ts
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';  
@@ -15,7 +14,7 @@ i18next
       escapeValue: false, 
     },
     backend: {
-      loadPath: '/src/translations/{{lng}}/translation.json', 
+      loadPath: '/translations/{{lng}}/translation.json', 
     },
     supportedLngs: ['es', 'en', 'it'], 
     
