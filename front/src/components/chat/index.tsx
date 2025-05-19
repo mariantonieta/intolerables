@@ -1,31 +1,41 @@
 import { useState } from "react";
-import { qaData } from "../../datos/qaDataChat";
 import "./index.css";
 import { useTranslation } from "react-i18next";
-import i18n from "i18next";
+import api from "../../services/axiosConfig";
 
 export function ChatQA() {
   const [input, setInput] = useState("");
   const [chat, setChat] = useState<string[]>([]);
   const [visible, setVisible] = useState(true); 
-const {t} = useTranslation();
-  const handleSend = () => {
-    if (!input.trim()) return;
+const [loading, setLoading] = useState(false);
+        
+  const {t} = useTranslation();
+ const handleSend = async () => {
+        if (!input.trim()) return;
 
-   const lang = i18n.language as "es" | "en" | "it"; // Detecta el idioma actual
+        setChat(prev => [...prev, `🧑‍💬: ${input}`]);
+        setLoading(true);
 
-const matched = qaData.find(item =>
-  input.toLowerCase().includes(item.question[lang].toLowerCase().slice(0, 10))
-);
+        try {
+          const response = await api.post("/api/chat", { message: input });
+          console.log("🛠️ Respuesta backend:", response.data); 
+          const respuesta = response.data.response;
 
-const respuesta = matched
-  ? matched.answer[lang]
-  : t("no_answer");
+          // Detectar si el modelo está cargando para mostrar mensaje especial
+          if (respuesta.includes("modelo sigue cargando")) {
+            setChat(prev => [...prev, `🤖: ⚠️ El modelo está cargando, intenta de nuevo en unos segundos...`]);
+          } else {
+            setChat(prev => [...prev, `🤖: ${respuesta}`]);
+          }
 
-    setChat(prev => [...prev, `🧑‍💬: ${input}`, `🤖: ${respuesta}`]);
-    setInput("");
-  };
-
+        } catch (error) {
+          console.error("Error llamando a la API:", error);
+          setChat(prev => [...prev, `🤖: ${t("no_answer")}`]);
+        } finally {
+          setInput("");
+          setLoading(false);
+        }
+      };
   return (
     <div style={{ position: "relative", width: "100%" }}>
       {visible && (
@@ -46,7 +56,8 @@ const respuesta = matched
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
-            <button onClick={handleSend}>{t("send")}</button>
+            <button onClick={handleSend} disabled={loading}>
+                   {t("send")}</button>
           </div>
         </div>
       )}

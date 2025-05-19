@@ -12,6 +12,6 @@ services:
       MYSQL_DATABASE: intolerables
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./initdb:/docker-entrypoint-initdb.d
 volumes:
   mysql_data:

@@ -50,7 +50,7 @@
 "sinPasosDisponibles": "No steps available",
     "address_restaurant": "Address:",
     "category_restaurant": "Category:",
-    "see_more_yelp": "See more in YELP",
+    "see_more": "See more..",
     "not_alone":"You're not alone!",
     "close": "Close",
     "favorites":"Your favorites",
@@ -98,6 +98,7 @@
 "searchRestaurant": "What would you like to eat today?",
 
 "location": "Location",
+"food_type": "Food Type:",
   
   "welcome": "Hello, welcome back.",
   "nameLabel": "Name:",

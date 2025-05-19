@@ -131,4 +131,4 @@ public class Restaurante {
     public void setFavoritos(List<FavoritoRestaurante> favoritos) {
         this.favoritos = favoritos;
     }
-}
+   }

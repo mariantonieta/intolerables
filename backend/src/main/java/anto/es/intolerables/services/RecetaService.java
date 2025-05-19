@@ -156,27 +156,27 @@ public class RecetaService {
         return receta;
     }
     public RecetaDTO traducirRecetaDTO(RecetaDTO recetaDTO, String idiomaDestino) {
-        // Establecer idioma de origen como español ('es') porque la receta está en español en la base de datos
-        String idiomaOrigen = "es"; // El idioma de origen es español
+        String idiomaOrigen = "es"; // Asumimos que la receta está en español por defecto
 
-        // Traducir los campos de la receta (título, resumen)
         recetaDTO.setTitle(traduccionService.traducirTextoLibreTranslate(recetaDTO.getTitle(), idiomaOrigen, idiomaDestino));
         recetaDTO.setSummary(traduccionService.traducirTextoLibreTranslate(recetaDTO.getSummary(), idiomaOrigen, idiomaDestino));
 
         // Traducir ingredientes
-        for (IngredienteDTO ingredienteDTO : recetaDTO.getRecetaIngredientes()) {
-            ingredienteDTO.setCantidad(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getCantidad(), idiomaOrigen, idiomaDestino));
-            ingredienteDTO.setNombre(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getNombre(), idiomaOrigen, idiomaDestino));
+        if (recetaDTO.getRecetaIngredientes() != null) {
+            for (IngredienteDTO ingredienteDTO : recetaDTO.getRecetaIngredientes()) {
+                ingredienteDTO.setNombre(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getNombre(), idiomaOrigen, idiomaDestino));
+                ingredienteDTO.setCantidad(traduccionService.traducirTextoLibreTranslate(ingredienteDTO.getCantidad(), idiomaOrigen, idiomaDestino));
+            }
         }
 
         // Traducir pasos de preparación
-        for (PasoPreparacionDTO pasoDTO : recetaDTO.getPasosPreparacion()) {
-            pasoDTO.setDescripcion(traduccionService.traducirTextoLibreTranslate(pasoDTO.getDescripcion(), idiomaOrigen, idiomaDestino));
+        if (recetaDTO.getPasosPreparacion() != null) {
+            for (PasoPreparacionDTO pasoDTO : recetaDTO.getPasosPreparacion()) {
+                pasoDTO.setDescripcion(traduccionService.traducirTextoLibreTranslate(pasoDTO.getDescripcion(), idiomaOrigen, idiomaDestino));
+            }
         }
 
         return recetaDTO;
     }
-
-
 
 }

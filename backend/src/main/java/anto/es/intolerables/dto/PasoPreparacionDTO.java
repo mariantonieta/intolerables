@@ -1,9 +1,12 @@
 package anto.es.intolerables.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class PasoPreparacionDTO {
     private String descripcion;
+    public PasoPreparacionDTO() {}
 
-    // Constructor
+    @JsonCreator
     public PasoPreparacionDTO(String descripcion) {
         this.descripcion = descripcion;
     }

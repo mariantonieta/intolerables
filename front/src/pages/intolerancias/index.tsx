@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ModalElegirRoR from "../../components/modalrecetaorestaurante";
 import api from "../../services/axiosConfig";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 // Datos Tipados que se reciben desde el backend
 interface Intolerancia {
@@ -27,8 +28,10 @@ export default function Intolerancias() {
   useEffect(() => {
     const cargarIntole = async () => {
       try {
-        const response = await api.get("/api/intolerancias");
-        setIntolerancias(response.data);
+       const response = await api.get(`/api/intolerancias`, {
+            params: { lang: i18next.language || 'es' }
+        });
+         setIntolerancias(response.data);
         console.log("Intolerancias cargadas:", response.data);
       } catch (error) {
         console.error("Error al cargar la intolerancia", error);

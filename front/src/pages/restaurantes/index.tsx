@@ -17,8 +17,7 @@ interface Restaurante {
   id: number;
   nombre: string;
   direccion: string;
-  categoria: string;
-  imagen: string;
+  tipo_comida: string;
   url: string | null;
 }
 
@@ -223,6 +222,7 @@ export default function Restaurantes() {
         <div className="container">
           <h1>{t("findRestaurant")}</h1>
           <div className="buscador-container">
+              <div className="inputs">
             <input
               type="text"
               name="comida"
@@ -239,6 +239,7 @@ export default function Restaurantes() {
               value={ubicacion}
               onChange={(e) => setUbicacion(e.target.value)}
             />
+            </div>
             <div className="botones">
             <button
               className="ubi-btn"
@@ -258,8 +259,9 @@ export default function Restaurantes() {
             </button>
             </div>
           </div>
-          <div className="mapa-container">
-            <div className="card-container">
+          <div className="container-mapa">
+    <Mapa position={coordenadas} />
+      <div className="tarjetas-container">
               {isLoading ? (
                 <p>{t("cargandoFavoritos")}</p>
               ) : (
@@ -271,20 +273,19 @@ export default function Restaurantes() {
                     id={restaurante.id}
                     nombre={restaurante.nombre}
                     direccion={restaurante.direccion}
-                    categoria={restaurante.categoria}
                     url={restaurante.url}
-                    imagen={restaurante.imagen}
+                     tipo_comida={restaurante.tipo_comida}
+                  
                     isFavorito={favoritosIds.includes(restaurante.id)}
                     onToggleFavorito={() => toggleFavorito(restaurante.id)}
                   />
                 ))
               )}
             </div>
-            <Mapa position={coordenadas} />
+        </div>
           </div>
         </div>
-      </div>
-
+   
       <ModalAlerta
         open={openModal}
         onClose={() => setOpenModal(false)}

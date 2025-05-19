@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,13 +18,10 @@ import java.util.Map;
 public class IntoleranciaController {
     private final IntoleranciaService intoleranciaService;
     @GetMapping
-    public ResponseEntity<List<IntoleranciaDTO>> findAll() {
-        List<IntoleranciaDTO> intolerancias = intoleranciaService.findAll()
-                .stream()
-                .map(IntoleranciaDTO::new)
-                .toList();
 
-        return ResponseEntity.ok(intolerancias);
+    public ResponseEntity<List<IntoleranciaDTO>> getAllIntolerancias(@RequestParam(defaultValue = "es") String lang) {
+        List<IntoleranciaDTO> traducidas = intoleranciaService.findAllTraducido(lang);
+        return ResponseEntity.ok(traducidas);
     }
 
     @GetMapping("/{id}")

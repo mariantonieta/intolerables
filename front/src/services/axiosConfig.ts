@@ -3,6 +3,8 @@ import axios from "axios";
 //la instancia api para llamarla desde mis componentes
 const api = axios.create({
   baseURL: "https://intolerables-backend.onrender.com",
+  //baseURL: "http://localhost:9000/",
+
 });
 //añade el token a cada peticion y lee el token del almacenamiento local
 api.interceptors.request.use((config) => {

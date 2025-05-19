@@ -57,7 +57,8 @@
                                     "/api/intolerancias",
                                     "/api/recetas/buscar",
                                     "/api/restaurantes/buscar",
-                                    "/api/auth/login"
+                                    "/api/auth/login",
+                                    "/api/chat"
 
                             ).permitAll()
                             //privados
