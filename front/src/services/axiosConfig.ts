@@ -2,7 +2,10 @@ import axios from "axios";
 //Utilizo axios para las peticiones al backend
 //la instancia api para llamarla desde mis componentes
 const api = axios.create({
-  baseURL: "https://intolerables-backend.onrender.com",
+  baseURL: "https://intolerables-backend-production.up.railway.app",
+
+  //"https://intolerables-backend.onrender.com",
+  
   //baseURL: "http://localhost:9000/",
 
 });
