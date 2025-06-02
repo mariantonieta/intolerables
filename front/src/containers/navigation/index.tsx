@@ -6,6 +6,9 @@ import ModalFavoritos from "../../components/modal-favorito";
 import api from "../../services/axiosConfig";
 import { FaUnlockAlt, FaSignOutAlt, FaHeart, FaGlobe } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import ModalPerfil from "../../components/modal-perfil/ModalPerfil";
+import { ModalEleccionIntolerancia } from "../../components/modal-usuario";
+import ModalElegirRoR from "../../components/modalrecetaorestaurante";
 type NavigationProps = React.ComponentProps<"div">;
 
 interface FavoritoRecetaDTO {
@@ -23,19 +26,20 @@ export default function Navigation(props: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [favoritosOpen, setFavoritosOpen] = useState(false);
-  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>(
-    []
-  );
-  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<
-    FavoritoRestauranteDTO[]
-  >([]);
-
+  const [favoritosRecetas, setFavoritosRecetas] = useState<FavoritoRecetaDTO[]>([]);
+  const [favoritosRestaurantes, setFavoritosRestaurantes] = useState<FavoritoRestauranteDTO[]>([]);
+  const [modalEleccionIntolerancia, setModalEleccionIntolerancia] = useState(false);
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [intoleranciaGuardada, setIntoleranciaGuardada] = useState("");
   const [navRightTop, setNavRightTop] = useState(0);
   const navCenterRef = useRef<HTMLDivElement>(null);
   const navbarMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { i18n } = useTranslation(); 
+   const [modalElegirRoROpen, setModalElegirRoROpen] = useState(false);
+  const { i18n, t } = useTranslation();
+
   const isLoggedIn = () => !!localStorage.getItem("jwtToken");
+  const [perfilOpen, setPerfilOpen] = useState(false);
 
   useEffect(() => {
     if (menuOpen && navbarMenuRef.current) {
@@ -66,19 +70,14 @@ export default function Navigation(props: NavigationProps) {
         return;
       }
 
-      const [favoritosRecetasResponse, favoritosRestaurantesResponse] =
-        await Promise.all([
-          api.get("/api/favoritos-recetas", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-          api.get("/api/favoritos-restaurantes", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-        ]);
+      const [favoritosRecetasResponse, favoritosRestaurantesResponse] = await Promise.all([
+        api.get("/api/favoritos-recetas", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        api.get("/api/favoritos-restaurantes", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
       setFavoritosRecetas(favoritosRecetasResponse.data);
       setFavoritosRestaurantes(favoritosRestaurantesResponse.data);
@@ -87,10 +86,52 @@ export default function Navigation(props: NavigationProps) {
       console.error("Error al cargar los favoritos", error);
     }
   };
+
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
-   };
-const {t} = useTranslation();
+  };const handleClickIntolerancia = async (e: React.MouseEvent) => {
+  e.preventDefault();
+  setMenuOpen(false);
+
+  if (!isLoggedIn()) {
+    navigate("/intolerancias");
+    return;
+  }
+
+  const token = localStorage.getItem("jwtToken");
+  const usuarioId = localStorage.getItem("usuarioId");
+
+  if (!token || !usuarioId) {
+    console.warn("Faltan token o usuarioId");
+    return;
+  }
+
+  try {
+    const response = await api.get(`/api/auth/usuario/${usuarioId}/perfil`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("Respuesta del perfil:", response.data);
+
+    const { nombre, intolerancias } = response.data;
+
+    if (intolerancias && intolerancias.length > 0) {
+      const intoleranciaSeleccionada = intolerancias[0]; 
+
+      setNombreUsuario(nombre);
+      setIntoleranciaGuardada(intoleranciaSeleccionada);
+      setModalEleccionIntolerancia(true); 
+    } else {
+      console.log("No hay intolerancia, abrimos perfil.");
+      setPerfilOpen(true);
+    }
+  } catch (error) {
+    console.error("Error al obtener el perfil:", error);
+    navigate("/intolerancias");
+  }
+};
+
+
   return (
     <nav {...props}>
       <div className="nav-container">
@@ -108,28 +149,26 @@ const {t} = useTranslation();
           <span></span>
         </div>
 
-        <div
-          className={`nav-center ${menuOpen ? "open" : ""}`}
-          ref={navCenterRef}
-        >
+        <div className={`nav-center ${menuOpen ? "open" : ""}`} ref={navCenterRef}>
           <div className="navbar-menu" ref={navbarMenuRef}>
             <NavLink to="/" onClick={() => setMenuOpen(false)}>
-              {t('home')}
+              {t("home")}
             </NavLink>
-            <NavLink to="/intolerancias" onClick={() => setMenuOpen(false)}>
-             {t('intolerances')}
+            <NavLink to="#" onClick={handleClickIntolerancia}>
+              {t("intolerances")}
             </NavLink>
             <NavLink to="/about" onClick={() => setMenuOpen(false)}>
-            {t('about')}
+              {t("about")}
             </NavLink>
 
             {isLoggedIn() && (
               <>
                 <NavLink to="/addReceta" onClick={() => setMenuOpen(false)}>
-                {t('add_recipe')}
+                  {t("add_recipe")}
                 </NavLink>
                 <NavLink to="/recetasVip" onClick={() => setMenuOpen(false)}>
-                     {t('vip_recipes')}    </NavLink>
+                  {t("vip_recipes")}
+                </NavLink>
               </>
             )}
           </div>
@@ -141,6 +180,7 @@ const {t} = useTranslation();
               onClick={() => {
                 handleOpenFavoritos();
                 setMenuOpen(false);
+             
               }}
               type="button"
               className="favorito-link"
@@ -164,9 +204,7 @@ const {t} = useTranslation();
           ) : (
             <button
               onClick={() => {
-                localStorage.removeItem("jwtToken");
-                setMenuOpen(false);
-                navigate("/");
+                setPerfilOpen(true);
               }}
               aria-label="Cerrar sesión"
               type="button"
@@ -174,12 +212,18 @@ const {t} = useTranslation();
               <FaSignOutAlt />
             </button>
           )}
-               <button
+
+          <button
             onClick={() => {
-              const newLanguage = i18n.language === 'es' ? 'en' : i18n.language === 'en' ? 'it' : 'es';
+              const newLanguage =
+                i18n.language === "es"
+                  ? "en"
+                  : i18n.language === "en"
+                  ? "it"
+                  : "es";
               changeLanguage(newLanguage);
             }}
-           aria-label="Cambiar idioma"
+            aria-label="Cambiar idioma"
             type="button"
           >
             <FaGlobe size={20} />
@@ -199,7 +243,46 @@ const {t} = useTranslation();
         onClose={() => setFavoritosOpen(false)}
         favoritosRecetas={favoritosRecetas}
         favoritosRestaurantes={favoritosRestaurantes}
+
       />
+
+      <ModalPerfil
+        open={perfilOpen}
+        onClose={() => setPerfilOpen(false)}
+        onLogout={() => {
+          localStorage.removeItem("jwtToken");
+          setPerfilOpen(false);
+          navigate("/");
+        }}
+      />
+
+   <ModalEleccionIntolerancia
+        open={modalEleccionIntolerancia}
+        nombreUsuario={nombreUsuario}
+        intolerancia={intoleranciaGuardada}
+        onClose={() => setModalEleccionIntolerancia(false)}
+        onCambiar={() => {
+          setModalEleccionIntolerancia(false);
+          setPerfilOpen(true);
+        }}
+        onSeguir={() => {
+          setModalEleccionIntolerancia(false);
+          setModalElegirRoROpen(true); 
+        }}
+      />
+
+      <ModalElegirRoR
+        open={modalElegirRoROpen}
+        onClose={() => setModalElegirRoROpen(false)}
+   onRecetasClick={() => {
+  setModalElegirRoROpen(false);
+  navigate("/recetas");
+}}
+        onRestaurantesClick={() => {
+          setModalElegirRoROpen(false);
+  
+  navigate("/recetas");
+  }}  />
     </nav>
   );
 }

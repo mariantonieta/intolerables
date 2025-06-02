@@ -51,29 +51,28 @@ export default function Restaurantes() {
 
   useEffect(() => {
     const cargarFavoritos = async () => {
-      setIsLoading(true);
-      const token = localStorage.getItem("jwtToken");
-      if (token) {
-        const usuarioId = localStorage.getItem("usuarioId");
-        console.log(usuarioId);
-      }
-      try {
-        const response = await api.get("/api/favoritos-restaurantes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const ids = (response.data as FavoritoRestaurante[]).map(
-          (fav) => fav.restaurante?.id
-        );
-        setFavoritosIds(ids);
-      } catch {
-        //console.error("Error al cargar favoritos:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
+  setIsLoading(true);
+  const token = localStorage.getItem("jwtToken");
+  if (token) {
+    const usuarioId = localStorage.getItem("usuarioId");
+    console.log(usuarioId);
+  }
+  try {
+    const response = await api.get("/api/favoritos-restaurantes", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const ids = (response.data as FavoritoRestaurante[]).map(
+      (fav) => fav.restaurante?.id
+    );
+    setFavoritosIds(ids);
+  } catch {
+    // console.error("Error al cargar favoritos:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
     cargarFavoritos();
   }, []);
 
@@ -111,21 +110,24 @@ export default function Restaurantes() {
       setUbicacion(usuarioUbicacion); 
     }
   }, [usuarioUbicacion, ubicacion]);
+const obtenerCoordenadasPorDireccion = async (direccion: string) => {
+  try {
+    const response = await api.get('/api/nominatim/search', {
+      params: { q: direccion }
+    });
 
-  const obtenerCoordenadasPorDireccion = async (direccion: string) => {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-        direccion
-      )}&format=json&limit=1`
-    );
-    const data = await response.json();
+    const data = response.data;
     if (data.length > 0) {
       const { lat, lon } = data[0];
       setCoordenadas([parseFloat(lat), parseFloat(lon)]);
     } else {
       mostrarAlerta(t("errorLocation"));
     }
-  };
+  } catch (error) {
+    console.error("Error al obtener coordenadas:", error);
+    mostrarAlerta(t("errorLocation"));
+  }
+};
 
   const handleUbicacionActual = () => {
     if (!navigator.geolocation) {
@@ -139,16 +141,12 @@ export default function Restaurantes() {
         setCoordenadas([latitude, longitude]);
 
         try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await response.json();
-          const ciudad =
-            data.address.city ||
-            data.address.town ||
-            data.address.village ||
-            "";
-          setUbicacion(ciudad);
+       const response = await api.post("/api/nominatim/reverse", {
+        latitude,
+        longitude,
+      });
+       const ciudad = response.data.ciudad;
+      setUbicacion(ciudad);
         } catch (error) {
           console.error("Error al obtener la ciudad:", error);
           mostrarAlerta(t("errorLocation"));
@@ -185,36 +183,46 @@ export default function Restaurantes() {
     }
   };
 
-  const toggleFavorito = async (restauranteId: number) => {
-    try {
-      const usuarioId = localStorage.getItem("usuarioId");
+const toggleFavorito = async (restauranteId: number) => {
+  try {
+    const usuarioId = localStorage.getItem("usuarioId");
+    const token = localStorage.getItem("jwtToken");
 
-      if (!usuarioId) {
-        mostrarAlerta(t("errorId"));
-        return;
-      }
-
-      const yaEsFavorito = favoritosIds.includes(restauranteId);
-
-      if (yaEsFavorito) {
-        await api.delete(`/api/favoritos-restaurantes/${restauranteId}`);
-        setFavoritosIds((prev) => prev.filter((id) => id !== restauranteId));
-      } else {
-        const favorito = {
-          usuario: {
-            id: parseInt(usuarioId),
-          },
-          restaurante: {
-            id: restauranteId,
-          },
-        };
-        await api.post("/api/favoritos-restaurantes", favorito);
-        setFavoritosIds((prev) => [...prev, restauranteId]);
-      }
-    } catch {
-      // console.error("Error con los favoritos", error);
+    if (!usuarioId || !token) {
+      mostrarAlerta("Usuario no autenticado");
+      return;
     }
-  };
+
+    const yaEsFavorito = favoritosIds.includes(restauranteId);
+
+    if (yaEsFavorito) {
+      await api.delete(`/api/favoritos-restaurantes/${restauranteId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFavoritosIds((prev) => prev.filter((id) => id !== restauranteId));
+    } else {
+      const favorito = {
+        usuario: { id: parseInt(usuarioId) },
+        restaurante: { id: restauranteId },
+      };
+
+      console.log("Enviando favorito con token:", token);
+      await api.post("/api/favoritos-restaurantes", favorito, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setFavoritosIds((prev) => [...prev, restauranteId]);
+    }
+  } catch (error) {
+    console.error("Error con los favoritos:", error);
+    mostrarAlerta("Error al actualizar favoritos");
+  }
+};
+
 
   return (
     <>

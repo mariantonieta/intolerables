@@ -1,6 +1,4 @@
-
-  
-  .modal-btns {
+.modal-btns {
     border-radius: 8px;
     text-align: center;
     width: 300px;
@@ -18,7 +16,7 @@
     color: var(--color-6);
     cursor: pointer;
     border-radius: 5px;
-    transition: transform 0.1s ease; /* Añadido para suavizar la transformación */
+    transition: transform 0.1s ease;
   }
   
   .modal-btns button:active {

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../../containers/footer";
 import Navigation from "../../containers/navigation";
-import { ChatQA } from "../chat";
+import ChatQA from "../chat";
 
 
 const Layout = () => {

@@ -110,7 +110,18 @@
 "ingredienteDesconocido": "Ingredient sconosciuto",
 "sinIngredientes": "Nessun ingrediente",
 "sinPasosDisponibles": "Nessun passaggio disponibile",
-
+   "profile_title": "Profilo Utente",
+      "country": "Paese",
+      "city": "Città",
+      "selected_intolerance": "Intolleranza selezionata",
+      "select_intolerance": "Seleziona un'intolleranza",
+      "save": "Salva",
+      "logout": "Disconnetti",
+           "greeting": "Ciao, {{nombreUsuario}} 👋",
+        "question": "Vuoi continuare a cercare con la tua intolleranza \"{{intolerancia}}\"?",
+        "continue": "Sì, continua",
+        "change": "Cambia intolleranza",
+        "cancel": "Annulla",
 
     "about_section": {
       "heading": "Chi Sono",

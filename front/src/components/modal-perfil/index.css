@@ -1,0 +1,85 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(46, 26, 71, 0.7); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-perfil {
+  background-color: var(--color-3);
+  color: var(--color-2);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  font-family: 'Luckiest Guy', cursive;
+  text-align: center;
+}
+
+.modal-perfil h2 {
+  margin-top: 0;
+  font-size: 2rem;
+  color: var(--color-2);
+}
+
+.modal-perfil label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+.modal-perfil input,
+.modal-perfil select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-2);
+  background-color: white;
+  font-size: 1rem;
+  font-family: 'Luckiest Guy', cursive;
+  color: var(--color-2);
+}
+
+.modal-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.modal-buttons button {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Luckiest Guy', cursive;
+  transition: background-color 0.3s ease;
+}
+
+.modal-buttons button:first-child {
+  background-color: var(--color-6); 
+  color: var(--color-2);
+}
+
+.modal-buttons button:nth-child(2) {
+  background-color: var(--color-5); 
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: var(--color-2); 
+  color: var(--color-3); 
+}
+
+.modal-buttons button:hover {
+  opacity: 0.9;
+}

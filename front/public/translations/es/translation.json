@@ -101,6 +101,18 @@
     "findRestaurant": "Encuentra tu safe place en Restaurante",
      "searchRestaurant": "¿Qué te apetece comer hoy?",
      "location": "Ubicación",
+       "profile_title": "Perfil de Usuario",
+        "country": "País",
+        "city": "Ciudad",
+        "selected_intolerance": "Intolerancia seleccionada",
+        "select_intolerance": "Selecciona una intolerancia",
+        "save": "Guardar",
+        "logout": "Cerrar sesión",
+      "greeting": "Hola, {{nombreUsuario}}",
+        "question": "¿Quieres seguir buscando con tu intolerancia \"{{intolerancia}}\"?",
+        "continue": "Sí, seguir",
+        "change": "Cambiar intolerancia",
+        "cancel": "Cancelar",
      
     "about_section": {
       "heading": "Sobre Mí",

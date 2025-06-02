@@ -109,6 +109,18 @@
   "errorConnection": "Error connecting to the server",
   "forgotPassword": "Forgot your password?",
   "signUp": "Sign up",
+   "profile_title": "User Profile",
+      "country": "Country",
+      "city": "City",
+      "selected_intolerance": "Selected Intolerance",
+      "select_intolerance": "Select an intolerance",
+      "save": "Save",
+      "logout": "Log Out",
+        "greeting": "Hello, {{nombreUsuario}} 👋",
+        "question": "Do you want to continue searching with your intolerance \"{{intolerancia}}\"?",
+        "continue": "Yes, continue",
+        "change": "Change intolerance",
+        "cancel": "Cancel",
 
         "about_section": {
       "heading": "About Me",

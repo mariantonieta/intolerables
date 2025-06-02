@@ -70,7 +70,7 @@ export default function RecetaCard({
         {t("see_recipe")}
           </button>
 
-          <button className="favorito-icon" onClick={onToggleFavorito}>
+          <button className="favorito-icon" onClick={onToggleFavorito}  data-testid="favorito-btn">
             {isFavorito ? <FaHeart /> : <FaRegHeart />}
           </button>
         </div>

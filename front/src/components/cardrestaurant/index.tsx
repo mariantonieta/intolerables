@@ -47,7 +47,7 @@ const {t} = useTranslation()
           )}
 
     
-<button className="favorito-icon" onClick={onToggleFavorito}>
+<button className="favorito-icon" onClick={onToggleFavorito} data-testid="favorito-btn">
   {isFavorito ? <FaHeart /> : <FaRegHeart />}
 </button>
         </div>

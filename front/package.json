@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:homePage": "vitest run src/pages/recetas/Recetas.test.tsx"
+    "test:homePage": "vitest run src/pages/about/About.test.tsx"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -62,6 +62,6 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.0.0",
-    "vitest": "^3.1.2"
+    "vitest": "^3.2.0"
   }
 }

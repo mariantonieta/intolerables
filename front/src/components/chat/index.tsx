@@ -3,10 +3,10 @@ import "./index.css";
 import { useTranslation } from "react-i18next";
 import api from "../../services/axiosConfig";
 
-export function ChatQA() {
+export default function ChatQA() {
   const [input, setInput] = useState("");
   const [chat, setChat] = useState<string[]>([]);
-  const [visible, setVisible] = useState(true); 
+  const [visible, setVisible] = useState(false); 
 const [loading, setLoading] = useState(false);
         
   const {t} = useTranslation();
@@ -21,9 +21,8 @@ const [loading, setLoading] = useState(false);
           console.log("🛠️ Respuesta backend:", response.data); 
           const respuesta = response.data.response;
 
-          // Detectar si el modelo está cargando para mostrar mensaje especial
           if (respuesta.includes("modelo sigue cargando")) {
-            setChat(prev => [...prev, `🤖: ⚠️ El modelo está cargando, intenta de nuevo en unos segundos...`]);
+            setChat(prev => [...prev, `El modelo está cargando, intenta de nuevo en unos segundos...`]);
           } else {
             setChat(prev => [...prev, `🤖: ${respuesta}`]);
           }
@@ -55,6 +54,8 @@ const [loading, setLoading] = useState(false);
               placeholder={t("placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                    disabled={loading}
             />
             <button onClick={handleSend} disabled={loading}>
                    {t("send")}</button>
