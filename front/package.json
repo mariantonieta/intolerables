@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:homePage": "vitest run src/pages/about/About.test.tsx"
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

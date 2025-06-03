@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ModalRoL from "../../components/modalRoL";
 import ModalFavoritos from "../../components/modal-favorito";
 import api from "../../services/axiosConfig";
-import { FaUnlockAlt, FaSignOutAlt, FaHeart, FaGlobe } from "react-icons/fa";
+import { FaUnlockAlt, FaSignOutAlt, FaHeart, FaGlobe} from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import ModalPerfil from "../../components/modal-perfil/ModalPerfil";
 import { ModalEleccionIntolerancia } from "../../components/modal-usuario";
@@ -18,6 +18,7 @@ interface FavoritoRecetaDTO {
 }
 
 interface FavoritoRestauranteDTO {
+  id: number;
   nombreRestaurante: string;
   fecha: string | null;
 }
@@ -86,6 +87,26 @@ export default function Navigation(props: NavigationProps) {
       console.error("Error al cargar los favoritos", error);
     }
   };
+  const handleEliminarFavoritoRestaurante = async (id: number) => {
+  console.log("ID recibido para eliminar:", id); // Verifica que el ID es válido
+  try {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      console.error("Token no encontrado");
+      return;
+    }
+
+    await api.delete(`/api/favoritos-restaurantes/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setFavoritosRestaurantes((prev) => prev.filter((r) => r.id !== id));
+  } catch (error) {
+    console.error("Error eliminando restaurante favorito:", error);
+  }
+};
+
+
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -130,7 +151,20 @@ export default function Navigation(props: NavigationProps) {
     navigate("/intolerancias");
   }
 };
+const handleEliminarFavoritoReceta = async (id: number) => {
+  try {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) return;
 
+    await api.delete(`/api/favoritos-recetas/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setFavoritosRecetas((prev) => prev.filter((r) => r.id !== id));
+  } catch (error) {
+    console.error("Error eliminando receta favorita:", error);
+  }
+};
 
   return (
     <nav {...props}>
@@ -243,6 +277,8 @@ export default function Navigation(props: NavigationProps) {
         onClose={() => setFavoritosOpen(false)}
         favoritosRecetas={favoritosRecetas}
         favoritosRestaurantes={favoritosRestaurantes}
+          onEliminarFavoritoReceta={handleEliminarFavoritoReceta}
+           onEliminarFavoritoRestaurante={handleEliminarFavoritoRestaurante}
 
       />
 

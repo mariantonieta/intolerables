@@ -56,7 +56,6 @@
   margin-bottom: 5px;
 }
 
-/* Estilo para los botones */
 .card-receta .add-btn,
 .card-receta .crear-btn {
   background: var(--color-2);

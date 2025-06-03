@@ -135,9 +135,10 @@ const { t } = useTranslation();
             </div>
 
             <div className="form-group">
-              <label>{t("prepTime")}</label>
+              <label  htmlFor="prepTime">{t("prepTime")}</label>
               <input
                 type="number"
+                id="prepTime"
                 value={readyInMinutes}
                 onChange={(e) => setReadyInMinutes(parseInt(e.target.value))}
               />

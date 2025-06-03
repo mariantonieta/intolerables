@@ -72,23 +72,25 @@ const LoginForm: React.FC = () => {
               <h2>{t("welcome")}</h2>
               <form onSubmit={handleSubmit}>
                 <div>
-                  <label>{t("nameLabel")}</label>
+                  <label htmlFor="nombre">{t("nameLabel")}</label>
                   <input
                     type="text"
                     placeholder= {t("namePlaceholder")}
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     required
+                    id="nombre"
                   />
                 </div>
                 <div>
-                  <label>{t("passwordLabel")}</label>
+                  <label htmlFor="contrasena">{t("passwordLabel")}</label>
                   <input
                     type="password"
                     placeholder={t("passwordPlaceholder")}
                     value={contrasena}
                     onChange={(e) => setContrasena(e.target.value)}
                     required
+                    id="contrasena"
                   />
                 </div>
                 <button type="submit">{t("submit")}</button>

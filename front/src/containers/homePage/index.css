@@ -121,14 +121,14 @@
   transform: rotate(20deg) translateX(0);
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1160px) {
   .container {
     padding: 1rem;
     align-items: center;
   }
 
   .img-container {
-    margin-top: 2rem;
+    margin-top: -2rem;
   }
 
   .left-text,
