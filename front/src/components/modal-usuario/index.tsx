@@ -1,10 +1,15 @@
-import React from "react";
+
 import { useTranslation } from "react-i18next";
+
+interface Intolerancia {
+  id: number;
+  nombre: string;
+}
 
 interface Props {
   open: boolean;
   nombreUsuario: string;
-  intolerancia: string | { id: number; nombre: string };
+  intolerancia: string | Intolerancia;
   onClose: () => void;
   onCambiar: () => void;
   onSeguir: () => void;
@@ -19,10 +24,9 @@ export const ModalEleccionIntolerancia: React.FC<Props> = ({
   onSeguir,
 }) => {
   const { t } = useTranslation();
-  if (!open) return null;
 
-  const intoleranciaMostrar =
-    typeof intolerancia === "string" ? intolerancia : intolerancia.nombre;
+const intoleranciaMostrar = intolerancia || "N/A";
+  if (!open) return null;
 
   return (
     <div className="modal-backdrop">

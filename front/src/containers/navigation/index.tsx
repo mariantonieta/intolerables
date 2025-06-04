@@ -110,47 +110,53 @@ export default function Navigation(props: NavigationProps) {
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
-  };const handleClickIntolerancia = async (e: React.MouseEvent) => {
-  e.preventDefault();
-  setMenuOpen(false);
-
-  if (!isLoggedIn()) {
-    navigate("/intolerancias");
-    return;
   }
+  const obtenerPerfilUsuario = async () => {
+    const token = localStorage.getItem("jwtToken");
+    const usuarioId = localStorage.getItem("usuarioId");
 
-  const token = localStorage.getItem("jwtToken");
-  const usuarioId = localStorage.getItem("usuarioId");
+    if (!token || !usuarioId) return;
 
-  if (!token || !usuarioId) {
-    console.warn("Faltan token o usuarioId");
-    return;
-  }
+    try {
+      const response = await api.get(`/api/auth/usuario/${usuarioId}/perfil`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  try {
-    const response = await api.get(`/api/auth/usuario/${usuarioId}/perfil`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    console.log("Respuesta del perfil:", response.data);
-
-    const { nombre, intolerancias } = response.data;
-
-    if (intolerancias && intolerancias.length > 0) {
-      const intoleranciaSeleccionada = intolerancias[0]; 
-
+      const { nombre, intolerancias } = response.data;
       setNombreUsuario(nombre);
-      setIntoleranciaGuardada(intoleranciaSeleccionada);
-      setModalEleccionIntolerancia(true); 
-    } else {
-      console.log("No hay intolerancia, abrimos perfil.");
-      setPerfilOpen(true);
+if (intolerancias?.length > 0) {
+  const ultimaIntolerancia = intolerancias[intolerancias.length - 1];
+  localStorage.setItem("intoleranciaNombre", ultimaIntolerancia.nombre);
+  setIntoleranciaGuardada(ultimaIntolerancia.nombre);
+}
+
+
+    } catch (error) {
+      console.error("Error al obtener el perfil:", error);
+      navigate("/intolerancias");
     }
-  } catch (error) {
-    console.error("Error al obtener el perfil:", error);
-    navigate("/intolerancias");
-  }
-};
+  };
+
+  useEffect(() => {
+    if (modalEleccionIntolerancia) {
+      obtenerPerfilUsuario();
+    }
+  }, [modalEleccionIntolerancia]);
+
+  const handleClickIntolerancia = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setMenuOpen(false);
+
+    if (!isLoggedIn()) {
+      navigate("/intolerancias");
+      return;
+    }
+
+    await obtenerPerfilUsuario();
+     const intolerancia = localStorage.getItem("intoleranciaNombre");
+  if (intolerancia) setIntoleranciaGuardada(intolerancia); // <- NUEVO
+  setModalEleccionIntolerancia(true);
+  };
 const handleEliminarFavoritoReceta = async (id: number) => {
   try {
     const token = localStorage.getItem("jwtToken");
@@ -292,21 +298,22 @@ const handleEliminarFavoritoReceta = async (id: number) => {
         }}
       />
 
-   <ModalEleccionIntolerancia
-        open={modalEleccionIntolerancia}
-        nombreUsuario={nombreUsuario}
-        intolerancia={intoleranciaGuardada}
-        onClose={() => setModalEleccionIntolerancia(false)}
-        onCambiar={() => {
-          setModalEleccionIntolerancia(false);
-          setPerfilOpen(true);
-        }}
-        onSeguir={() => {
-          setModalEleccionIntolerancia(false);
-          setModalElegirRoROpen(true); 
-        }}
-      />
-
+ <ModalEleccionIntolerancia
+  nombreUsuario={nombreUsuario}
+  intolerancia={intoleranciaGuardada}
+  onClose={() => setModalEleccionIntolerancia(false)}
+  onCambiar={async () => {
+    setModalEleccionIntolerancia(false);
+    await obtenerPerfilUsuario(); 
+    navigate("/intolerancias");
+  }}
+  open={modalEleccionIntolerancia}
+  onSeguir={async () => {
+    setModalEleccionIntolerancia(false);
+    await obtenerPerfilUsuario(); 
+    setModalElegirRoROpen(true);
+  }}
+/>
       <ModalElegirRoR
         open={modalElegirRoROpen}
         onClose={() => setModalElegirRoROpen(false)}
@@ -317,7 +324,7 @@ const handleEliminarFavoritoReceta = async (id: number) => {
         onRestaurantesClick={() => {
           setModalElegirRoROpen(false);
   
-  navigate("/recetas");
+  navigate("/restaurantes");
   }}  />
     </nav>
   );

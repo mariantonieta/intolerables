@@ -1,8 +1,7 @@
 .buscador-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
   padding: 10px 20px;
   border-radius: 12px;
@@ -11,33 +10,36 @@
   max-width: 900px;
   margin: 0 auto 20px;
 }
+
+/* Contenedor para los inputs */
 .buscador-container .inputs {
   display: flex;
-  gap: 10px;
   flex: 1;
+  gap: 10px;
+  min-width: 0;
 }
+
+/* Estilo de los inputs */
 .buscador-container input {
   flex: 1;
   padding: 12px 16px;
   font-size: 16px;
   border: 2px solid var(--color-3);
   border-radius: 10px;
-  outline: none;
-  transition: border-color 0.3s ease;
   background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+  outline: none;
 }
 
-.buscador-container input:focus {
-  border-color: #6d4c41;
-  background-color: #fff;
-}
-
+/* Contenedor de los botones */
 .botones {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
-.buscar-btn, .ubi-btn {
+/* Botones individuales */
+.buscar-btn,
+.ubi-btn {
   background-color: var(--color-3);
   color: var(--color-5);
   border: none;
@@ -45,7 +47,34 @@
   padding: 10px 14px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
+  min-width: 100px;
 }
+
+/* RESPONSIVE solo en móvil */
+@media (max-width: 768px) {
+  .buscador-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador-container .inputs {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .botones {
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .buscar-btn,
+  .ubi-btn {
+    flex: 1;
+  }
+}
+
 
 .buscar-btn:hover, .ubi-btn:hover {
   background-color: var(--color-6);
@@ -179,24 +208,4 @@ h1 {
 .botones-busqueda {
   display: flex;
   gap: 10px;
-}
-
-@media (max-width: 768px) {
-  .buscador-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .buscador-container input {
-    width: 100%;
-  }
-
-  .botones-busqueda {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .botones-busqueda button {
-    flex: 1;
-  }
 }

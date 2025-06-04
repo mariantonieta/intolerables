@@ -7,6 +7,9 @@ import ModalAlerta from "../../components/modal-alerta";
 import { FaSearch } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import ModalRoL from "../../components/modalRoL";
+import { useNavigate } from "react-router-dom";
+
 interface FavoritoRestaurante {
   restaurante: {
     id: number;
@@ -33,8 +36,10 @@ export default function Restaurantes() {
   ]);
   const [openModal, setOpenModal] = useState(false);
   const [mensajeModal, setMensajeModal] = useState("");
-  const [usuarioUbicacion, setUsuarioUbicacion] = useState<string | null>(null); // Ubicación del usuario
+  const [usuarioUbicacion, setUsuarioUbicacion] = useState<string | null>(null); 
   const {t}  = useTranslation()
+  const [openModalRoL, setOpenModalRoL] = useState(false);
+const navigate = useNavigate();
   const mostrarAlerta = (mensaje: string) => {
     setMensajeModal(mensaje);
     setOpenModal(true);
@@ -82,7 +87,6 @@ export default function Restaurantes() {
       const usuarioId = localStorage.getItem("usuarioId");
       if (token && usuarioId) {
         try {
-          // Llamamos al endpoint para obtener los datos del usuario
           const response = await api.get(`/api/auth/usuario/${usuarioId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -182,16 +186,26 @@ const obtenerCoordenadasPorDireccion = async (direccion: string) => {
       mostrarAlerta(t("errorRestaurantes"));
     }
   };
+      const handleLoginClick = () => {
+    setOpenModalRoL(false);
+    navigate("/login");
+  };
 
+  const handleRegisterClick = () => {
+    setOpenModalRoL(false);
+    navigate("/register");
+  };
 const toggleFavorito = async (restauranteId: number) => {
   try {
     const usuarioId = localStorage.getItem("usuarioId");
     const token = localStorage.getItem("jwtToken");
 
     if (!usuarioId || !token) {
-      mostrarAlerta("Usuario no autenticado");
-      return;
+       
+  setOpenModalRoL(true);
+  return;
     }
+
 
     const yaEsFavorito = favoritosIds.includes(restauranteId);
 
@@ -299,6 +313,13 @@ const toggleFavorito = async (restauranteId: number) => {
         onClose={() => setOpenModal(false)}
         mensaje={mensajeModal}
       />
+      <ModalRoL
+  open={openModalRoL}
+  onClose={() => setOpenModalRoL(false)}
+  onLoginClick={handleLoginClick}
+  onRegisterClick={handleRegisterClick}
+  
+/>
     </>
   );
 }

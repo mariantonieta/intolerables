@@ -129,7 +129,7 @@ export default function RecetasComunidad() {
                 id={receta.id}
                 nombre={receta.title}
                 imagen={receta.image}
-                tiempo={receta.readyInMiuntes}
+                tiempo={receta.readyInMiuntes ||35}
                 calorias={receta.calories || 100}
                 rating={5} 
                 ingredientes={

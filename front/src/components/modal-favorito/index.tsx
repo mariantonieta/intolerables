@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, Typography, Button } from "@mui/material";
-import "../modal-receta/index.css";
+
 import { useTranslation } from "react-i18next";
 import { FaTrashAlt } from "react-icons/fa";
+import "./index.css"
 
 type FavoritoRecetaDTO = {
   id: number;
@@ -52,7 +53,7 @@ export default function ModalFavoritos({
                 <ul>
                   {favoritosRecetas.map((receta) => (
                     <li key={receta.id} className="favorito-item">
-                      <a href={`/receta/${receta.id}`} className="favorito-link">
+                      <a>
                         {receta.nombreReceta}
                       </a>
                       {onEliminarFavoritoReceta && (

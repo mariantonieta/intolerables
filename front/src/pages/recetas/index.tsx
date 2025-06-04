@@ -209,12 +209,13 @@ export default function Recetas() {
                 <p>{t("cargandoFavoritos")}</p>
               ) : (
                 recetas.map((receta) => (
+                  
                   <RecetaCard
                     key={receta.id}
                     id={receta.id}
                     nombre={receta.title}
                     imagen={receta.image}
-                    tiempo={receta.readyInMinutes}
+                    tiempo={receta.readyInMinutes || 15}
                     calorias={receta.calories || 100}
                     rating={4}
                     ingredientes={
