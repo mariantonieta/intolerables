@@ -101,8 +101,7 @@ const LoginForm: React.FC = () => {
               )}
               {error && <div className="error">{error}</div>}
               <div className="bottom-links">
-                <a href="#">{t("forgotPassword")}</a>
-                <span> | </span>
+             
                 <a href="/register">{t("signUp")}</a>
               </div>
             </div>

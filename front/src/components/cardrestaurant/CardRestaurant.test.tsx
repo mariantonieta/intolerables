@@ -12,7 +12,6 @@ i18next.use(initReactI18next).init({
     es: {
       translation: {
         address_restaurant: "Dirección",
-        food_type: "Tipo de comida",
         see_more: "Ver Más",
       },
     },
@@ -34,7 +33,6 @@ describe("RestauranteCard Component", () => {
           id={1}
           nombre="Restaurante Tagliatela"
           direccion="Calle Madrid 23"
-          tipo_comida="Italiana"
           url="https://ejemplo.com"
           isFavorito={false}
           onToggleFavorito={mockOnToggleFavorito}
@@ -60,7 +58,6 @@ expect(screen.getByText(i18next.t("see_more"))).toBeInTheDocument();
           id={1}
           nombre="Restaurante Ejemplo"
           direccion="Calle Falsa 123"
-          tipo_comida="Italiana"
           url="https://ejemplo.com"
           isFavorito={false}
           onToggleFavorito={mockOnToggleFavorito}
@@ -80,7 +77,6 @@ fireEvent.click(screen.getByTestId("favorito-btn"));
           id={1}
           nombre="Restaurante Ejemplo"
           direccion="Calle Falsa 123"
-          tipo_comida="Italiana"
           url="https://ejemplo.com"
           isFavorito={false}
           onToggleFavorito={mockOnToggleFavorito}

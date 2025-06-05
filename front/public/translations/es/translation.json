@@ -113,6 +113,15 @@
         "continue": "Sí, seguir",
         "change": "Cambiar intolerancia",
         "cancel": "Cancelar",
+      
+  "titleRequired": "El título es obligatorio.",
+  "imageRequired": "La imagen es obligatoria.",
+  "prepTimeRequired": "El tiempo de preparación debe ser mayor que 0.",
+  "caloriesRequired": "Las calorías deben ser mayor que 0.",
+  "recipeTypeRequired": "El tipo de receta es obligatorio.",
+  "ingredientsRequired": "Debe ingresar al menos un ingrediente con nombre y cantidad.",
+  "stepsRequired": "Debe ingresar al menos un paso de preparación.",
+
      
     "about_section": {
       "heading": "Sobre Mí",

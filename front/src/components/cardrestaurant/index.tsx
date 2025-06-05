@@ -8,7 +8,6 @@ import "./index.css";
     id: number;
     nombre: string;
     direccion: string;
-     tipo_comida: string;
     isFavorito?: boolean;
     url: string | null;
     onToggleFavorito?: () => void;
@@ -17,7 +16,6 @@ import "./index.css";
   export default function RestauranteCard({
     nombre,
     direccion,
-    tipo_comida,
     url,
 
     isFavorito = false,
@@ -37,9 +35,6 @@ const {t} = useTranslation()
             <strong>{t("address_restaurant")}</strong> {direccion}
           </p>
         
-           <p className="tarjeta-tipo-comida">
-          <strong>{t("food_type")}</strong> {tipo_comida}
-        </p>
           {url && (
             <button className="ver-mas-btn" onClick={handleVerMas}>
               {t("see_more")}

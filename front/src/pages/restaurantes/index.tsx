@@ -296,7 +296,6 @@ const toggleFavorito = async (restauranteId: number) => {
                     nombre={restaurante.nombre}
                     direccion={restaurante.direccion}
                     url={restaurante.url}
-                     tipo_comida={restaurante.tipo_comida}
                   
                     isFavorito={favoritosIds.includes(restaurante.id)}
                     onToggleFavorito={() => toggleFavorito(restaurante.id)}

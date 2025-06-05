@@ -130,3 +130,12 @@
     padding: 10px;
   }
 }
+.error-text {
+  color: var(--color-5);
+  background-color: var(--color-1);
+  margin-top: 5px;
+  margin-bottom: 8px; 
+    border: 1px solid red;
+    border-radius: 6px;
+  margin: 2px;
+}

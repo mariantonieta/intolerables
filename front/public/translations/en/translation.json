@@ -122,6 +122,14 @@
         "change": "Change intolerance",
         "cancel": "Cancel",
 
+  "titleRequired": "Title is required.",
+  "imageRequired": "Image is required.",
+  "prepTimeRequired": "Preparation time must be greater than 0.",
+  "caloriesRequired": "Calories must be greater than 0.",
+  "recipeTypeRequired": "Recipe type is required.",
+  "ingredientsRequired": "You must enter at least one ingredient with name and quantity.",
+  "stepsRequired": "You must enter at least one preparation step.",
+
         "about_section": {
       "heading": "About Me",
       "cards": {

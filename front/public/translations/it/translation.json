@@ -123,6 +123,13 @@
         "change": "Cambia intolleranza",
         "cancel": "Annulla",
 
+  "titleRequired": "Il titolo è obbligatorio.",
+  "imageRequired": "L'immagine è obbligatoria.",
+  "prepTimeRequired": "Il tempo di preparazione deve essere maggiore di 0.",
+  "caloriesRequired": "Le calorie devono essere superiori a 0.",
+  "recipeTypeRequired": "Il tipo di ricetta è obbligatorio.",
+  "ingredientsRequired": "È necessario inserire almeno un ingrediente con nome e quantità.",
+  "stepsRequired": "È necessario inserire almeno un passaggio di preparazione.",
     "about_section": {
       "heading": "Chi Sono",
       "cards": {
