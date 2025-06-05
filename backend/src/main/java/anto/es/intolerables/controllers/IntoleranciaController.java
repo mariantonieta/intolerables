@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +17,13 @@ import java.util.stream.Collectors;
 public class IntoleranciaController {
     private final IntoleranciaService intoleranciaService;
     @GetMapping
+    public ResponseEntity<List<IntoleranciaDTO>> findAll() {
+        List<IntoleranciaDTO> intolerancias = intoleranciaService.findAll()
+                .stream()
+                .map(IntoleranciaDTO::new)
+                .toList();
 
-    public ResponseEntity<List<IntoleranciaDTO>> getAllIntolerancias(@RequestParam(defaultValue = "es") String lang) {
-        List<IntoleranciaDTO> traducidas = intoleranciaService.findAllTraducido(lang);
-        return ResponseEntity.ok(traducidas);
+        return ResponseEntity.ok(intolerancias);
     }
 
     @GetMapping("/{id}")
@@ -43,5 +45,13 @@ public class IntoleranciaController {
         } else {
             return ResponseEntity.badRequest().body("No se pudo asociar la intolerancia.");
         }
+    }
+    @PutMapping("/usuario/{id}/modificar")
+    public ResponseEntity<?> modificarIntoleranciaUsuario(@PathVariable Integer id, @RequestBody Map<String, Integer> body) {
+        Integer nuevaIntoleranciaId = body.get("intoleranciaId");
+
+        return intoleranciaService.actualizarIntoleranciaUsuario(id, nuevaIntoleranciaId)
+                ? ResponseEntity.ok(Map.of("mensaje", "Intolerancia actualizada correctamente"))
+                : ResponseEntity.badRequest().body(Map.of("error", "No se pudo actualizar la intolerancia"));
     }
 }

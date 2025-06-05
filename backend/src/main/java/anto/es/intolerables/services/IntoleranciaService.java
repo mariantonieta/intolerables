@@ -1,6 +1,5 @@
 package anto.es.intolerables.services;
 
-import anto.es.intolerables.dto.IntoleranciaDTO;
 import anto.es.intolerables.entities.Intolerancia;
 import anto.es.intolerables.entities.Usuario;
 import anto.es.intolerables.entities.UsuarioIntolerancia;
@@ -12,14 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class IntoleranciaService {
     private final IntoleranciaRepository repositorio;
     private  final UsuarioRepository usuarioRepo;
-    private final TraduccionService traduccionService;
 
     @Transactional
     public List<Intolerancia> findAll(){
@@ -53,28 +50,35 @@ public class IntoleranciaService {
 
             return true;
         }
+
         return false;
     }
-    public IntoleranciaDTO traducirIntoleranciaDTO(IntoleranciaDTO dto, String idiomaDestino) {
-        String idiomaOrigen = "es";
-        dto.setNombre(traduccionService.traducirTextoLibreTranslate(dto.getNombre(), idiomaOrigen, idiomaDestino));
-        dto.setDescripcion(traduccionService.traducirTextoLibreTranslate(dto.getDescripcion(), idiomaOrigen, idiomaDestino));
-        dto.setDetalles(traduccionService.traducirTextoLibreTranslate(dto.getDetalles(), idiomaOrigen, idiomaDestino));
-        dto.setMensaje(traduccionService.traducirTextoLibreTranslate(dto.getMensaje(), idiomaOrigen, idiomaDestino));
-        // Si tienes imagen, normalmente no se traduce.
-        return dto;
+    public List<Intolerancia> findAllById(List<Integer> ids) {
+        return repositorio.findByIdIn(ids);
     }
-
     @Transactional
-    public List<IntoleranciaDTO> findAllTraducido(String idiomaDestino) {
-        List<Intolerancia> lista = repositorio.findAll();
+    public boolean actualizarIntoleranciaUsuario(Integer usuarioId, Integer intoleranciaId) {
+        Optional<Usuario> usuarioOpt = usuarioRepo.findById(usuarioId);
 
-        List<IntoleranciaDTO> dtos = lista.stream()
-                .map(IntoleranciaDTO::new)
-                .map(dto -> traducirIntoleranciaDTO(dto, idiomaDestino))
-                .collect(Collectors.toList());
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
 
-        return dtos;
+            if (intoleranciaId != null) {
+                Optional<Intolerancia> intoleranciaOpt = repositorio.findById(intoleranciaId);
+                if (intoleranciaOpt.isPresent()) {
+                    usuario.setIntoleranciaSeleccionada(intoleranciaOpt.get());
+                } else {
+                    return false; // Intolerancia no encontrada
+                }
+            } else {
+                usuario.setIntoleranciaSeleccionada(null); // Elimina la intolerancia
+            }
+
+            usuarioRepo.save(usuario);
+            return true;
+        }
+
+        return false; // Usuario no encontrado
     }
 
 }

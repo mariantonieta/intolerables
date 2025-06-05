@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: libretranslate
+    env: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    healthCheckPath: /
+    ports:
+      - port: 5000

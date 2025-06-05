@@ -3,7 +3,10 @@ package anto.es.intolerables.controllers;
 import anto.es.intolerables.dto.ChatRequestDTO;
 import anto.es.intolerables.dto.ChatResponseDTO;
 import anto.es.intolerables.services.GroqService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/chat")
