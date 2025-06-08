@@ -79,13 +79,16 @@ public class SeguridadConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://intolerables-mariantos-projects.vercel.app/",
-                "https://intolerables-git-main-mariantos-projects.vercel.app/",
-                "https://intolerables-5g7mjrkd9-mariantos-projects.vercel.app/",
-                "http://localhost:5173/"
-                ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of(
+        "https://intolerables-mariantos-projects.vercel.app",
+        "https://intolerables-git-main-mariantos-projects.vercel.app",
+        "https://intolerables-5g7mjrkd9-mariantos-projects.vercel.app",
+        "http://localhost:5173"
+));
+
+        
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
