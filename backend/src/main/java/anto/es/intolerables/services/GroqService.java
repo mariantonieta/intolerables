@@ -10,12 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
 public class GroqService {
 
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+
     @Value("${ai.api.key}")
     private String apiKey;
 
@@ -64,8 +67,6 @@ public class GroqService {
                     ". Para cada restaurante, incluye:\n\n"
                     + "- **Nombre** del restaurante\n"
                     + "- **Dirección** completa\n"
-                    + "- **Tipo de comida** que sirven\n"
-                    + "- **Opciones sin gluten** disponibles\n"
                     + "- **Enlace a su sitio web oficial**\n";
 
             Map<String, Object> requestBody = new HashMap<>();
@@ -83,8 +84,6 @@ public class GroqService {
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
             ResponseEntity<String> response = restTemplate.postForEntity(API_URL, entity, String.class);
-          //  System.out.println("Respuesta bruta de Groq:")
-            //  System.out.println(response.getBody());
 
             JsonNode root = mapper.readTree(response.getBody());
             String respuestaIA = root.path("choices").get(0).path("message").path("content").asText();
@@ -108,9 +107,10 @@ public class GroqService {
                     restauranteActual.put("id", UUID.randomUUID().toString());
 
                     if (!restauranteActual.containsKey("url") || !esUrlSegura(restauranteActual.get("url"))) {
-                        String nombre = restauranteActual.getOrDefault("nombre", "").replace(" ", "+");
-                        String ubicacion = restauranteActual.getOrDefault("direccion", "").replace(" ", "+");
-                        restauranteActual.put("url", "https://www.google.com/search?q=Restaurante+" + nombre + "+" + ubicacion);
+                        String nombreSanitizado = URLEncoder.encode(restauranteActual.getOrDefault("nombre", ""), StandardCharsets.UTF_8);
+                        String ubicacionSanitizada = URLEncoder.encode(restauranteActual.getOrDefault("direccion", ""), StandardCharsets.UTF_8);
+                        String urlMaps = "https://www.google.com/maps/search/?api=1&query=" + nombreSanitizado + "+" + ubicacionSanitizada;
+                        restauranteActual.put("url", urlMaps);
                     }
 
                     restaurantes.add(restauranteActual);
@@ -119,10 +119,6 @@ public class GroqService {
                 restauranteActual.put("nombre", limpiarTexto(linea));
             } else if (linea.contains("Dirección:")) {
                 restauranteActual.put("direccion", limpiarTexto(linea));
-            } else if (linea.contains("Tipo de comida:")) {
-                restauranteActual.put("tipo_comida", limpiarTexto(linea));
-            } else if (linea.contains("Opciones sin gluten:")) {
-                restauranteActual.put("opciones_sin_gluten", limpiarTexto(linea));
             } else if (linea.contains("Enlace a su sitio web oficial:") || linea.contains("Sitio web:") || linea.contains("URL:")) {
                 String url = extraerUrl(linea);
                 restauranteActual.put("url", esUrlSegura(url) ? url : "");
@@ -133,9 +129,10 @@ public class GroqService {
             restauranteActual.put("id", UUID.randomUUID().toString());
 
             if (!restauranteActual.containsKey("url") || !esUrlSegura(restauranteActual.get("url"))) {
-                String nombre = restauranteActual.getOrDefault("nombre", "").replace(" ", "+");
-                String ubicacion = restauranteActual.getOrDefault("direccion", "").replace(" ", "+");
-                restauranteActual.put("url", "https://www.google.com/search?q=Restaurante+" + nombre + "+" + ubicacion);
+                String nombreSanitizado = URLEncoder.encode(restauranteActual.getOrDefault("nombre", ""), StandardCharsets.UTF_8);
+                String ubicacionSanitizada = URLEncoder.encode(restauranteActual.getOrDefault("direccion", ""), StandardCharsets.UTF_8);
+                String urlMaps = "https://www.google.com/maps/search/?api=1&query=" + nombreSanitizado + "+" + ubicacionSanitizada;
+                restauranteActual.put("url", urlMaps);
             }
 
             restaurantes.add(restauranteActual);
@@ -143,8 +140,6 @@ public class GroqService {
 
         return restaurantes;
     }
-
-
 
     private String limpiarTexto(String texto) {
         return texto.replaceAll("\\*+", "")
@@ -158,9 +153,8 @@ public class GroqService {
         return texto.replaceAll(".*?\\[(.*?)\\]\\((https?://[^)]+)\\)", "$2").trim();
     }
 
-
-
     private boolean esUrlSegura(String url) {
-        return url != null && url.startsWith("https://") && !url.contains(" ");
+        if (url == null) return false;
+        return url.matches("^https://[a-zA-Z0-9./\\-_%&=?#]+$");
     }
 }

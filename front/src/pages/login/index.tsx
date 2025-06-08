@@ -102,7 +102,10 @@ const LoginForm: React.FC = () => {
               {error && <div className="error">{error}</div>}
               <div className="bottom-links">
              
-                <a href="/register">{t("signUp")}</a>
+            <button onClick={() => navigate("/register")} className="links">
+  {t("signUp")}
+</button>
+
               </div>
             </div>
           </div>

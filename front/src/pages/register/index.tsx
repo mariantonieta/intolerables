@@ -185,7 +185,10 @@ const {t} = useTranslation()
 
               <div className="bottom-links">
                 <span>{t("anyAccount")}</span>
-                <a href="/login">{t("login")}</a>
+          <button onClick={() => navigate("/login")} className="links">
+  {t("login")}
+</button>
+
               </div>
             </div>
           </div>

@@ -6,6 +6,15 @@
   align-items: center;
   min-height: 100vh;
 }
+.links {
+  background: none !important;
+  border: none;
+  color: var(--color-5) !important;
+  text-decoration: underline;
+  cursor: pointer;
+
+  font: inherit;
+}
 
 .login-card {
   background: rgba(255, 255, 255, 0.34);
