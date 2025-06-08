@@ -1,8 +1,1 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/intolerancias",
-      "destination": "https://intolerables-backend-production.up.railway.app/api/intolerancias"
-    }
-  ]
-}
+{}
