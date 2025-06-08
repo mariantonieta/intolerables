@@ -80,9 +80,7 @@ public class SeguridadConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-        "https://intolerables-mariantos-projects.vercel.app",
-        "https://intolerables-git-main-mariantos-projects.vercel.app",
-        "https://intolerables-5g7mjrkd9-mariantos-projects.vercel.app",
+      "https://intolerables-mariantos-projects.vercel.app/",
         "http://localhost:5173"
 ));
 
