@@ -5,7 +5,8 @@ const isLocalhost = window.location.hostname === "localhost";
 const api = axios.create({
   baseURL: isLocalhost
     ? "http://localhost:9000/"
-    : "https://intolerables-backend-production.up.railway.app",
+    :  "https://intolerables.onrender.com"
+   // : "https://intolerables-backend-production.up.railway.app",
 });
 
 //añade el token a cada peticion y lee el token del almacenamiento local
