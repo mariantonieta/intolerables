@@ -71,7 +71,7 @@ public class SeguridadConfig {
                         ).authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
-                .addFilterBefore(jwtAuthFilter, BasicAuthenticationFilter.class); // Ajuste en la posición del filtro JWT
+             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
@@ -80,7 +80,7 @@ public class SeguridadConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-      "https://intolerables-mariantos-projects.vercel.app/",
+      "https://intolerables-mariantos-projects.vercel.app",
         "http://localhost:5173"
 ));
 
