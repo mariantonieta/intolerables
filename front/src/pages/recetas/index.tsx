@@ -85,7 +85,19 @@ export default function Recetas() {
       setModalError(true);
       return;
     }
+  const restricciones: Record<string, string[]> = {
+    "Alergia a los mariscos": ["mariscos", "camarones", "langosta", "pulpo"],
+    "Intolerancia a la fructosa": ["frutas", "miel", "jarabe", "zumos"],
+    "Intolerancia a la lactosa": ["leche", "queso", "yogur", "mantequilla"],
+    "Intolerancia a la soja": ["soja", "tofu", "salsa de soja"],
+    "Dieta vegana": ["pollo", "carne", "cerdo", "pescado"],
+  };
 
+  if (restricciones[intolerancia]?.some((alimento) => busqueda.toLowerCase().includes(alimento))) {
+    setMensajeError(`No puedes buscar "${busqueda}" porque tienes ${intolerancia}.`);
+    setModalError(true);
+    return;
+  }
     try {
       const res = await api.get(`/api/recetas/buscar`, {
          params: {

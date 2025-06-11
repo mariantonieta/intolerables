@@ -168,7 +168,17 @@ const obtenerCoordenadasPorDireccion = async (direccion: string) => {
       mostrarAlerta(t("errorSearch"));
       return;
     }
-
+   const restricciones: Record<string, string[]> = {
+    "Alergia a los mariscos": ["mariscos", "camarones", "langosta", "pulpo"],
+    "Intolerancia a la fructosa": ["frutas", "miel", "jarabe", "zumos"],
+    "Intolerancia a la lactosa": ["leche", "queso", "yogur", "mantequilla"],
+    "Intolerancia a la soja": ["soja", "tofu", "salsa de soja"],
+    "Dieta vegana": ["pollo", "carne", "cerdo", "pescado"]
+  };
+  if (restricciones[intolerancia]?.some((alimento) => termino.toLowerCase().includes(alimento))) {
+    mostrarAlerta(`No puedes buscar ${termino} porque tienes intolerancia a ${intolerancia}.`);
+    return;
+  }
     try {
       await obtenerCoordenadasPorDireccion(ubicacion);
 
